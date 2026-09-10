@@ -1,0 +1,9 @@
+name: flutter_workspace
+description: Learning workspace for Flutter — labs and the userhub capstone.
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+workspace:
+  - apps/00_hello_flutter

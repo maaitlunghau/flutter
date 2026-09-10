@@ -1,0 +1,43 @@
+{
+  "// Dart & Flutter": "Format on save keeps require_trailing_commas satisfied automatically, so the pre-commit hook rarely has to rewrite anything.",
+  "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.tabCompletion": "onlySnippetPrefix",
+    "editor.wordBasedSuggestions": "off",
+    "editor.suggestSelection": "first"
+  },
+
+  "dart.previewFlutterUiGuides": true,
+  "dart.previewFlutterUiGuidesCustomTracking": true,
+  "dart.openDevTools": "flutter",
+  "dart.debugExternalPackageLibraries": false,
+  "dart.debugSdkLibraries": false,
+
+  "// Monorepo hygiene": "With many Flutter projects under apps/, generated and native folders will exhaust the file watcher and pollute search results if left in.",
+  "files.watcherExclude": {
+    "**/.dart_tool/**": true,
+    "**/build/**": true,
+    "**/ios/Pods/**": true,
+    "**/ios/.symlinks/**": true,
+    "**/macos/Pods/**": true,
+    "**/android/.gradle/**": true,
+    "**/node_modules/**": true
+  },
+  "search.exclude": {
+    "**/.dart_tool": true,
+    "**/build": true,
+    "**/ios/Pods": true,
+    "**/ios/.symlinks": true,
+    "**/android/.gradle": true,
+    "**/node_modules": true,
+    "**/*.g.dart": true,
+    "**/*.freezed.dart": true
+  },
+
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true
+}
