@@ -1,6 +1,52 @@
-# Editor & OS
-.claude/
-.DS_Store
+# Claude — commit chỉ dẫn và skills, chỉ bỏ qua thiết lập máy cá nhân
+.claude/settings.local.json
 
-# Dependencies
+# OS & editor
+.DS_Store
+*.iml
+*.swp
+.idea/
+
+# VS Code — commit thiết lập dùng chung, bỏ qua phần còn lại
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Node (chỉ dùng cho husky)
 node_modules/
+
+# Dart & Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+**/build/
+**/doc/api/
+*.log
+
+# Sinh tự động bởi code generation (drift, riverpod — từ M08 trở đi)
+*.g.dart
+*.freezed.dart
+
+# Android
+android/.gradle/
+android/local.properties
+android/key.properties
+**/android/.gradle/
+**/android/local.properties
+**/android/key.properties
+*.jks
+*.keystore
+
+# iOS / macOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/ephemeral/
+**/macos/Pods/
+
+# Bí mật môi trường
+.env
+.env.local

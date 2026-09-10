@@ -22,7 +22,7 @@ fail() {
 
 [ "$line_count" -eq 1 ] || fail "no body/footer allowed, subject line only"
 
-pattern='^(feat|fix|docs|style|refactor|perf|test|chore|revert|ci)(\([a-z0-9-]+\))?: .+$'
+pattern='^(feat|fix|docs|style|refactor|perf|test|chore|revert|ci)(\([a-z0-9_-]+\))?: .+$'
 printf '%s' "$subject" | grep -qE "$pattern" || fail "must match type(scope): subject"
 
 [ "${#subject}" -le 70 ] || fail "exceeds 70 characters (${#subject})"

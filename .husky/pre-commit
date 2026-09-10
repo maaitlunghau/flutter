@@ -1,1 +1,27 @@
+#!/usr/bin/env sh
+
+# husky v9 runs this with `sh -e`, so a no-match grep would abort the script
+# before the check below. The `|| true` keeps an empty result non-fatal.
+staged_dart=$(git diff --cached --name-only --diff-filter=ACM | grep '\.dart$' || true)
+
+if [ -z "$staged_dart" ]; then
+  echo "husky: pre-commit — no dart files staged, skipping"
+  exit 0
+fi
+
+echo "husky: formatting staged dart files"
+echo "$staged_dart" | xargs dart format || {
+  echo "husky: commit blocked — dart format failed (syntax error?)"
+  exit 1
+}
+echo "$staged_dart" | xargs git add
+
+echo "husky: running flutter analyze"
+flutter analyze --no-fatal-infos || {
+  echo ""
+  echo "husky: commit blocked — flutter analyze found warnings or errors"
+  echo "  (info-level lints do not block; warnings and errors do)"
+  exit 1
+}
+
 echo "husky: pre-commit ok"
