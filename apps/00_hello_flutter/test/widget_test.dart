@@ -1,9 +1,13 @@
-// This is a basic Flutter widget test.
+// Đây là một widget test cơ bản.
 //
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// Widget test dựng widget lên trong bộ nhớ — KHÔNG cần emulator, không cần máy
+// thật — rồi giả lập thao tác và kiểm tra kết quả. Nhờ vậy nó chạy trong vài
+// giây thay vì vài chục giây như build APK.
+//
+// Chạy bằng: flutter test
+//
+// LƯU Ý: repo này hoãn phần testing tới tận M13. File này do `flutter create`
+// sinh sẵn, giữ lại để tới M13 có sẵn điểm bắt đầu. Chưa cần hiểu nó lúc này.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,19 +15,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hello_flutter/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Bấm nút thì số đếm tăng', (WidgetTester tester) async {
+    // Dựng app lên và vẽ một khung hình đầu tiên.
     await tester.pumpWidget(const HelloApp());
 
-    // Verify that our counter starts at 0.
+    // Kiểm tra số đếm bắt đầu từ 0.
     expect(find.text('0'), findsOneWidget);
     expect(find.text('1'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
+    // Bấm vào icon '+' rồi vẽ lại một khung hình.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
+    // Kiểm tra số đếm đã tăng lên 1.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });

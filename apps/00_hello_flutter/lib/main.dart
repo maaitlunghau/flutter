@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-// Everything below is deliberately small. Read it top to bottom once, then go
-// run the four experiments in docs/lessons/0001-*.html — the point of this lab
-// is what happens when you break it, not what it does when it works.
+// Toàn bộ file này cố tình viết ngắn. Đọc một lượt từ trên xuống, rồi chạy
+// 4 thí nghiệm trong docs/lessons/0001-*.html — mục đích của lab là xem chuyện
+// gì xảy ra khi bạn PHÁ nó, không phải xem nó chạy đúng thế nào.
 
 void main() {
-  // Hot reload never re-enters this function. Editing anything here needs a hot
-  // restart (press R) before you will see it.
+  // Hot reload KHÔNG BAO GIỜ quay lại hàm này. Sửa bất cứ thứ gì ở đây đều phải
+  // hot restart (bấm R) mới thấy thay đổi.
   runApp(const HelloApp());
 }
 
@@ -15,9 +15,9 @@ class HelloApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MaterialApp supplies theme, navigation and localization for everything
-    // beneath it. Without it, widgets like Scaffold have no Material context to
-    // read from and throw at runtime.
+    // MaterialApp cung cấp theme, điều hướng và localization cho mọi thứ nằm
+    // bên dưới nó. Không có nó, các widget như Scaffold không tìm thấy Material
+    // context để đọc và sẽ ném lỗi lúc chạy.
     return MaterialApp(
       title: 'Hello Flutter',
       theme: ThemeData(
@@ -31,9 +31,8 @@ class HelloApp extends StatelessWidget {
 class CounterPage extends StatefulWidget {
   const CounterPage({super.key, required this.title});
 
-  // Fields on the Widget are immutable — that is why this is `final` and why
-  // the class is annotated @immutable upstream. Widgets get thrown away and
-  // rebuilt constantly; they are descriptions, not objects with a lifetime.
+  // Thuộc tính của Widget là bất biến — đó là lý do nó phải `final`. Widget bị
+  // vứt đi và dựng lại liên tục; nó là BẢN MÔ TẢ, không phải object có vòng đời.
   final String title;
 
   @override
@@ -41,28 +40,28 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
-  // THIS is the object with a lifetime. It survives hot reload, which is why
-  // changing the `0` below does nothing until you hot restart.
+  // ĐÂY mới là object có vòng đời. Nó sống sót qua hot reload — chính vì vậy
+  // sửa số 0 bên dưới sẽ không có tác dụng gì cho tới khi bạn hot restart.
   int _counter = 0;
 
   @override
   void initState() {
     super.initState();
-    // Runs exactly once, when this State is created. Hot reload will not run it
-    // again — a very common source of "why didn't my change apply?".
+    // Chạy đúng MỘT LẦN, lúc State này được tạo ra. Hot reload sẽ không chạy
+    // lại nó — đây là nguồn gốc rất phổ biến của câu "ơ sao sửa rồi mà không đổi?".
   }
 
   void _increment() {
-    // setState does not "update the UI". It marks this State dirty so Flutter
-    // schedules build() again on the next frame. Mutating _counter outside of
-    // setState would change the value but never repaint.
+    // setState KHÔNG PHẢI là "cập nhật giao diện". Nó đánh dấu State này bẩn để
+    // Flutter xếp lịch gọi lại build() ở khung hình kế tiếp. Nếu sửa _counter
+    // bên ngoài setState thì giá trị vẫn đổi nhưng màn hình không bao giờ vẽ lại.
     setState(() => _counter++);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Called on every frame that needs this subtree repainted — potentially 60
-    // times a second. Keep it cheap: no network calls, no file IO, no parsing.
+    // Được gọi ở mỗi khung hình cần vẽ lại nhánh này — có thể 60 lần mỗi giây.
+    // Nên giữ nó thật nhẹ: không gọi mạng, không đọc ghi file, không parse dữ liệu.
     final theme = Theme.of(context);
 
     return Scaffold(
