@@ -1,0 +1,46 @@
+# Cấu hình lint dùng chung cho toàn workspace.
+#
+# QUAN TRỌNG 1: `flutter create` sinh ra một analysis_options.yaml riêng trong mỗi
+# app. Dart analyzer dùng file GẦN NHẤT tính từ file đang phân tích, nên file của
+# app sẽ đè file này. Mỗi lần tạo lab app mới, phải xoá file đó đi.
+#
+# QUAN TRỌNG 2: `flutter analyze` sẽ TỰ GHI THÊM vào file này nếu không thấy đúng
+# các chuỗi literal `build/**`, `android/**`, `ios/**`, `web/**`, `windows/**`,
+# `macos/**`, `linux/**`. Giữ nguyên khối đó. Các mẫu `**/...` bên dưới mới là
+# thứ thật sự có tác dụng, vì app nằm trong apps/ chứ không nằm ở root.
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # Khối Flutter đòi hỏi phải có nguyên văn — đừng xoá.
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+    # Khối thật sự phủ được apps/*/ trong workspace.
+    - "**/build/**"
+    - "**/android/**"
+    - "**/ios/**"
+    - "**/macos/**"
+    - "**/linux/**"
+    - "**/windows/**"
+    - "**/web/**"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+  language:
+    strict-casts: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    - avoid_print
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - require_trailing_commas
+    - use_super_parameters
+    - unawaited_futures
+    - avoid_relative_lib_imports
