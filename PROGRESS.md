@@ -6,18 +6,14 @@
 ## Đang ở đâu
 
 - **Module hiện tại:** M00 — Khởi động & công cụ
-- **Vòng:** chưa bắt đầu
+- **Vòng:** hạ tầng xong, sẵn sàng vào vòng 1
 - **Cập nhật lần cuối:** 2026-09-10
 
 ## Việc tiếp theo
 
-**Đang chặn — cần bạn làm, Claude không chạy thay được:**
-
-- [ ] Android Studio → SDK Tools → cài **Android SDK Command-line Tools (latest)**
-- [ ] `flutter doctor --android-licenses`
-- [ ] `flutter emulators --create --name pixel_dev`
-
-**Sau đó:**
+**Toolchain Android: XONG.** `apps/userhub` đã chạy được trên emulator
+`pixel_dev` (Android 16, API 36, arm64). Bốn cái bẫy gặp phải đã ghi vào
+[bẫy thường gặp M00](docs/modules/00-khoi-dong.md#bẫy-thường-gặp).
 
 - [ ] M00 vòng 1 — giải phẫu project, hot reload vs hot restart
 - [ ] M00 vòng 2 — DevTools, đọc cây widget
@@ -52,14 +48,18 @@
 - [x] Skill `/flutter-module`
 - [x] `apps/userhub` — đã khởi tạo, `applicationId com.maaitlunghau.userhub`
 - [x] `.env.example` + đề bài M00
+- [x] Emulator `pixel_dev` + `userhub` chạy được trên Android
 
 ## Nợ kỹ thuật đang treo
 
 - **Chưa có spec API Spring Boot.** Cần trước khi vào **M05**: danh sách endpoint,
   hình dạng request/response, JWT thuần hay có refresh token. Quyết định này ảnh
   hưởng kiến trúc `packages/api_client` ở M08.
-- **Android chưa chạy được.** `flutter doctor` còn `[!]`: thiếu cmdline-tools,
-  chưa accept license, chưa có emulator. Chặn tiêu chí Xong của M00.
+- **`flutter doctor` báo giả về license.** `✗ Android license status unknown` sẽ
+  còn đó mãi: cmdline-tools mới bỏ cờ `--licenses`, Flutter 3.47 vẫn gọi cờ cũ.
+  License thực tế đã accept — Gradle xác nhận khi build. Đừng đuổi theo nó.
+- **`flutter emulators --create` không dùng được** vì cùng lý do trên. Tạo AVD
+  bằng `avdmanager`. Đã ghi lệnh đầy đủ trong đề bài M00.
 - **iOS hoãn lại theo chủ ý.** `apps/userhub/ios/` đã sinh sẵn với đúng bundle id
   nhưng **chưa từng build** — placeholder chưa verify. Cần Xcode đầy đủ +
   CocoaPods. Không chặn việc học Android.

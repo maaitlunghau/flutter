@@ -46,17 +46,21 @@ triển thông suốt** — sửa code là thấy kết quả trong vài giây.
 
 ## Tiêu chí Xong
 
-**Toolchain (việc của bạn, ngoài Flutter):**
+**Toolchain — ĐÃ XONG (2026-09-10):**
 
-- [ ] Android Studio → SDK Tools → cài **Android SDK Command-line Tools (latest)**
-- [ ] `flutter doctor --android-licenses` — chấp nhận hết
-- [ ] `flutter doctor` không còn `[!]` ở dòng Android toolchain
-- [ ] Có emulator: `flutter emulators --create --name pixel_dev`
-- [ ] `flutter devices` liệt kê ít nhất một thiết bị Android
+- [x] Android SDK Command-line Tools (latest)
+- [x] License đã accept — xác nhận bằng build thật, **không** bằng `flutter doctor`
+- [x] Gỡ `adb` trùng của Homebrew
+- [x] System image `system-images;android-36;google_apis;arm64-v8a` (4.3GB)
+- [x] AVD `pixel_dev` — tạo bằng `avdmanager`, không phải `flutter emulators --create`
+- [x] `flutter devices` thấy `emulator-5554 • android-arm64 • Android 16 (API 36)`
+
+> `flutter doctor` **vẫn** báo `✗ Android license status unknown`. Đó là báo động
+> giả, xem mục Bẫy bên dưới. Đừng đuổi theo nó.
 
 **Capstone:**
 
-- [ ] `apps/userhub` chạy được trên Android emulator
+- [x] `apps/userhub` chạy được trên Android emulator
 - [ ] Sửa text trong `userhub` rồi hot reload thấy đổi, không cần restart
 - [ ] Mở được DevTools và tìm thấy widget đó trong cây
 - [ ] `flutter analyze` ở root báo `No issues found!`
@@ -82,7 +86,95 @@ Khi nào muốn mở khoá iOS, làm bốn việc rồi tick nốt:
 
 ## Bẫy thường gặp
 
-*(Điền dần khi thật sự vấp phải.)*
+*Ghi lại từ lần setup thật ngày 2026-09-10.*
+
+### 1. `flutter doctor` nói dối về license
+
+**Triệu chứng:** `✗ Android license status unknown`, kể cả sau khi đã chạy
+`flutter doctor --android-licenses` và accept hết.
+
+**Nguyên nhân:** `cmdline-tools` bản mới thay `sdkmanager` bằng **Android CLI** và
+**bỏ hẳn cờ `--licenses`** — chạy lệnh đó giờ chỉ in ra
+`Warning: The --licenses option is no longer needed`. Flutter 3.47 vẫn gọi cờ cũ,
+không đọc được câu trả lời nên ghi "unknown".
+
+**Cách kiểm chứng thật** — build một APK, không tin doctor:
+
+```bash
+cd apps/userhub && flutter build apk --debug
+```
+
+Nếu thấy `License for package Android SDK Platform NN accepted` thì license ổn.
+Cảnh báo trong `flutter doctor` sẽ **còn đó mãi**. Bỏ qua nó.
+
+### 2. `flutter emulators --create` không dùng được
+
+**Triệu chứng:** `No suitable Android AVD system images are available`, kèm gợi ý
+cài image `android-27;google_apis_playstore;x86` từ đời nào — dù image đúng đã có
+sẵn trong SDK.
+
+**Nguyên nhân:** cùng gốc với bẫy 1 — Flutter hỏi `sdkmanager` kiểu cũ.
+
+**Cách đi vòng** — gọi thẳng công cụ Android, bỏ qua Flutter:
+
+```bash
+SDK=~/Library/Android/sdk
+# tải image (máy Apple Silicon → arm64-v8a)
+"$SDK/cmdline-tools/latest/bin/android" sdk install \
+  "system-images/android-36/google_apis/arm64-v8a"
+# tạo AVD
+echo "no" | "$SDK/cmdline-tools/latest/bin/avdmanager" create avd \
+  -n pixel_dev -k "system-images;android-36;google_apis;arm64-v8a" -d pixel_7
+```
+
+Tạo xong thì `flutter emulators` **nhận ra bình thường** — Flutter chỉ hỏng ở khâu
+tạo, không hỏng ở khâu dùng.
+
+### 3. Tải system image bị đứt → im lặng hỏng
+
+**Triệu chứng:** `avdmanager` báo
+`Package ... contains no system images. Valid system image paths are: null`,
+trong khi `android sdk list` vẫn liệt kê image đó là **đã cài**.
+
+**Nguyên nhân:** tải bị ngắt giữa lúc giải nén. Thư mục còn `package.xml` và
+`vendor.img` nhưng **thiếu `system.img`** — và `package.xml` chính là thứ khiến
+`android sdk list` tưởng đã xong.
+
+**Cách nhận ra:** image đầy đủ nặng **~4.3GB**. Kiểm nhanh:
+
+```bash
+du -sh ~/Library/Android/sdk/system-images
+ls ~/Library/Android/sdk/system-images/android-36/google_apis/arm64-v8a/system.img
+```
+
+Dưới 1GB hoặc không có `system.img` là hỏng. Phải **gỡ hẳn rồi cài lại**, cài đè
+không ăn thua:
+
+```bash
+"$SDK/cmdline-tools/latest/bin/android" sdk remove \
+  "system-images/android-36/google_apis/arm64-v8a"
+```
+
+### 4. Hai bản `adb` cùng tồn tại
+
+**Triệu chứng:** `flutter doctor` báo `Multiple adb binaries found` — một bản của
+Android SDK, một bản cài qua Homebrew cask `android-platform-tools`.
+
+**Vì sao phải sửa:** `adb` chạy một server nền. Hai bản khác version sẽ giết server
+của nhau — biểu hiện là thiết bị lúc nhận lúc không, hoặc báo `device offline`.
+
+```bash
+brew uninstall --cask android-platform-tools
+```
+
+Bản trong `~/Library/Android/sdk/platform-tools/` vẫn còn nguyên, và đó là bản
+Flutter dùng. Lưu ý sau khi gỡ thì `adb` không còn trên `PATH` — gõ `adb` trực
+tiếp sẽ báo `command not found`. Flutter vẫn chạy bình thường vì nó gọi theo
+đường dẫn SDK. Muốn gõ `adb` tay thì thêm vào `~/.zshrc`:
+
+```bash
+export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
+```
 
 ## Nguồn
 
