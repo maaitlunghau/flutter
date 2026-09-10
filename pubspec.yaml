@@ -7,3 +7,4 @@ environment:
 
 workspace:
   - apps/00_hello_flutter
+  - apps/userhub

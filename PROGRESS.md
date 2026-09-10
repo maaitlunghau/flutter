@@ -11,11 +11,18 @@
 
 ## Việc tiếp theo
 
-- [ ] Hoàn thiện toolchain Android + iOS — xem Task 0 của
-      [plan scaffold](docs/superpowers/plans/2026-09-10-workspace-scaffold.md)
-- [ ] Khởi tạo `apps/userhub` (Task 6, bị chặn bởi Task 0)
+**Đang chặn — cần bạn làm, Claude không chạy thay được:**
+
+- [ ] Android Studio → SDK Tools → cài **Android SDK Command-line Tools (latest)**
+- [ ] `flutter doctor --android-licenses`
+- [ ] `flutter emulators --create --name pixel_dev`
+
+**Sau đó:**
+
 - [ ] M00 vòng 1 — giải phẫu project, hot reload vs hot restart
 - [ ] M00 vòng 2 — DevTools, đọc cây widget
+
+Đề bài: [docs/modules/00-khoi-dong.md](docs/modules/00-khoi-dong.md)
 
 ## Trạng thái các module
 
@@ -43,13 +50,16 @@
 - [x] `analysis_options.yaml` dùng chung
 - [x] Docs khung: README · CLAUDE.md · MISSION.md · roadmap.md
 - [x] Skill `/flutter-module`
-- [ ] `apps/userhub` — chờ toolchain
+- [x] `apps/userhub` — đã khởi tạo, `applicationId com.maaitlunghau.userhub`
+- [x] `.env.example` + đề bài M00
 
 ## Nợ kỹ thuật đang treo
 
 - **Chưa có spec API Spring Boot.** Cần trước khi vào **M05**: danh sách endpoint,
   hình dạng request/response, JWT thuần hay có refresh token. Quyết định này ảnh
   hưởng kiến trúc `packages/api_client` ở M08.
-- **Toolchain chưa xong.** `flutter doctor` còn báo `[!]` ở Android toolchain
-  (thiếu cmdline-tools, chưa accept license) và Xcode (cài chưa đầy đủ, thiếu
-  CocoaPods). Chặn tiêu chí Xong của M00.
+- **Android chưa chạy được.** `flutter doctor` còn `[!]`: thiếu cmdline-tools,
+  chưa accept license, chưa có emulator. Chặn tiêu chí Xong của M00.
+- **iOS hoãn lại theo chủ ý.** `apps/userhub/ios/` đã sinh sẵn với đúng bundle id
+  nhưng **chưa từng build** — placeholder chưa verify. Cần Xcode đầy đủ +
+  CocoaPods. Không chặn việc học Android.
