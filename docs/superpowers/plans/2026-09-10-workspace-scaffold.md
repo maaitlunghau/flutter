@@ -199,7 +199,7 @@ android/key.properties
 
 - [x] **Step 3: Thay toàn bộ `.husky/pre-commit`**
 
-Hai điều đã kiểm chứng bằng thực nghiệm và quyết định hình dạng hook này:
+Ba điều đã kiểm chứng bằng thực nghiệm và quyết định hình dạng hook này:
 
 1. `dart format --set-exit-if-changed` **ghi đè file luôn** rồi mới exit 1 — nó không phải chế độ chỉ-kiểm-tra. Nên hook format xong phải `git add` lại, giống lint-staged.
 2. `flutter analyze` mặc định coi issue mức **info** là fatal (exit 1). Trong repo học, lint nit như `avoid_print` xuất hiện hợp lệ ở lab. Dùng `--no-fatal-infos` để info không chặn commit, còn warning và error vẫn chặn.
