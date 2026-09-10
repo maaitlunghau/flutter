@@ -122,7 +122,7 @@ Phải xong **trước** khi có bất kỳ file Dart nào trong repo.
 **Interfaces:**
 - Produces: hook `pre-commit` tự format file `.dart` staged rồi restage, và chạy `flutter analyze --no-fatal-infos` ở root; bỏ qua sạch khi không có file `.dart` nào staged. Hook `commit-msg` chấp nhận scope có dấu gạch dưới.
 
-- [ ] **Step 1: Sửa regex scope trong `.husky/commit-msg`**
+- [x] **Step 1: Sửa regex scope trong `.husky/commit-msg`**
 
 Regex hiện tại không cho dấu gạch dưới, trong khi tên package Dart bắt buộc `snake_case` — scope `01_layout_lab` sẽ bị từ chối.
 
@@ -138,7 +138,7 @@ thành:
 pattern='^(feat|fix|docs|style|refactor|perf|test|chore|revert|ci)(\([a-z0-9_-]+\))?: .+$'
 ```
 
-- [ ] **Step 2: Thay toàn bộ `.gitignore`**
+- [x] **Step 2: Thay toàn bộ `.gitignore`**
 
 Nội dung hiện tại ignore cả `.claude/` (làm mất CLAUDE.md và skills) và không có dòng nào cho Flutter. Ghi đè bằng:
 
@@ -151,7 +151,11 @@ Nội dung hiện tại ignore cả `.claude/` (làm mất CLAUDE.md và skills)
 *.iml
 *.swp
 .idea/
-.vscode/
+
+# VS Code — commit thiết lập dùng chung, bỏ qua phần còn lại
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 
 # Node (chỉ dùng cho husky)
 node_modules/
@@ -193,17 +197,20 @@ android/key.properties
 .env.local
 ```
 
-- [ ] **Step 3: Thay toàn bộ `.husky/pre-commit`**
+- [x] **Step 3: Thay toàn bộ `.husky/pre-commit`**
 
 Hai điều đã kiểm chứng bằng thực nghiệm và quyết định hình dạng hook này:
 
 1. `dart format --set-exit-if-changed` **ghi đè file luôn** rồi mới exit 1 — nó không phải chế độ chỉ-kiểm-tra. Nên hook format xong phải `git add` lại, giống lint-staged.
 2. `flutter analyze` mặc định coi issue mức **info** là fatal (exit 1). Trong repo học, lint nit như `avoid_print` xuất hiện hợp lệ ở lab. Dùng `--no-fatal-infos` để info không chặn commit, còn warning và error vẫn chặn.
+3. **Husky v9 chạy hook bằng `sh -e`** (xem `.husky/_/h:17`). Nghĩa là bất kỳ lệnh nào trả về non-zero đều giết script ngay. `grep` không tìm thấy gì trả về 1 — nên dòng gán `staged_dart` **bắt buộc** phải có `|| true`, nếu không hook chết trước khi kịp kiểm tra biến rỗng. Phát hiện lúc chạy thật ở Task 1.
 
 ```sh
 #!/usr/bin/env sh
 
-staged_dart=$(git diff --cached --name-only --diff-filter=ACM | grep '\.dart$')
+# husky v9 runs this with `sh -e`, so a no-match grep would abort the script
+# before the check below. The `|| true` keeps an empty result non-fatal.
+staged_dart=$(git diff --cached --name-only --diff-filter=ACM | grep '\.dart$' || true)
 
 if [ -z "$staged_dart" ]; then
   echo "husky: pre-commit — no dart files staged, skipping"
@@ -228,13 +235,13 @@ flutter analyze --no-fatal-infos || {
 echo "husky: pre-commit ok"
 ```
 
-- [ ] **Step 4: Đảm bảo hook có quyền chạy**
+- [x] **Step 4: Đảm bảo hook có quyền chạy**
 
 ```bash
 chmod +x .husky/pre-commit .husky/commit-msg
 ```
 
-- [ ] **Step 5: Kiểm chứng — hook bỏ qua khi không có file Dart**
+- [x] **Step 5: Kiểm chứng — hook bỏ qua khi không có file Dart**
 
 Run:
 ```bash
@@ -243,7 +250,7 @@ git commit -m "chore(repo): fix gitignore and upgrade git hooks"
 ```
 Expected: in ra `husky: pre-commit — no dart files staged, skipping` rồi commit thành công.
 
-- [ ] **Step 6: Kiểm chứng — commit-msg chấp nhận scope có gạch dưới**
+- [x] **Step 6: Kiểm chứng — commit-msg chấp nhận scope có gạch dưới**
 
 Run:
 ```bash
@@ -256,7 +263,7 @@ Rồi gỡ commit thử này:
 git reset --hard HEAD~1
 ```
 
-- [ ] **Step 7: Kiểm chứng — commit-msg vẫn chặn message sai**
+- [x] **Step 7: Kiểm chứng — commit-msg vẫn chặn message sai**
 
 Run:
 ```bash
@@ -264,7 +271,7 @@ git commit --allow-empty -m "added some stuff"
 ```
 Expected: FAIL với `husky: commit message rejected — must match type(scope): subject`.
 
-- [ ] **Step 8: Kiểm chứng — `.claude/` giờ đã được track**
+- [x] **Step 8: Kiểm chứng — `.claude/` giờ đã được track**
 
 Run: `git status --short .claude/`
 Expected: hiện `?? .claude/CLAUDE.md` và `?? .claude/skills/` (chưa track nhưng **không còn bị ignore**).
