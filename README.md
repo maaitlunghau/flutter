@@ -95,6 +95,8 @@ go_router (M03) · drift + flutter_secure_storage (M09)
 ## Quy ước
 
 - Commit: `type(scope): subject` — một dòng, ≤70 ký tự, không body. Hook sẽ chặn.
-- Docs và bài giảng viết tiếng Việt; code, comment và commit viết tiếng Anh.
+- Docs, bài giảng và **comment trong code** viết tiếng Việt. Tên biến, tên hàm,
+  tên class và commit message viết tiếng Anh — tên API của Flutter giữ nguyên
+  để còn tra được tài liệu chính thống.
 - Thư mục lab đặt `NN_topic_lab`; tên package Dart bỏ phần số ở đầu, vì tên
   package Dart không được bắt đầu bằng chữ số.

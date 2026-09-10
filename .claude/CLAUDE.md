@@ -51,9 +51,18 @@ keep score of how often they ask. When asked, do it, do it well, stop.
 
 ## Language
 
-- Docs, lessons, explanations, README: **Vietnamese**
-- Code, identifiers, comments, commit messages, this file: **English**
+- Docs, lessons, explanations, README, **and every code comment**: **Vietnamese**
+- Identifiers — classes, functions, variables, file names — plus commit messages
+  and this file: **English**
 - Technical terms stay English inside Vietnamese prose: widget, state, provider
+
+**Never translate a Flutter or Dart API name into Vietnamese.** `build`,
+`setState`, `initState` and friends must read exactly as they do in the official
+docs, because that is where the learner will look them up. Comments explain those
+names in Vietnamese; they never rename them.
+
+This applies to `apps/userhub/` too, not just the labs — the owner decided that
+explicitly on 2026-09-10.
 
 ## Code conventions
 
@@ -66,7 +75,7 @@ keep score of how often they ask. When asked, do it, do it well, stop.
   readable after `dart format`.
 - Feature-first folder layout starts at **M08**, not before. Until then, flat and
   obvious beats layered and clever.
-- Comments explain **why**, never **what**
+- Comments explain **why**, never **what** — and they are written in Vietnamese
 
 ## Commands
 

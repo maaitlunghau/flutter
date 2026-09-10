@@ -57,7 +57,8 @@ silently disables the shared lint config for that app.
 
 The lab is a worked example, so:
 
-- Comments explain **why**, never **what**
+- Comments explain **why**, never **what**, and are written **in Vietnamese**
+  (identifiers stay English — see the Language rule in `.claude/CLAUDE.md`)
 - Keep it small enough to read in one sitting
 - Tell the learner explicitly what to go break, and what they should see when it
   breaks. "Remove `Expanded` and watch the RenderFlex overflow" teaches more than
