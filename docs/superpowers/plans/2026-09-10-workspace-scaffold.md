@@ -492,7 +492,7 @@ Năm file này là bộ nhớ dài hạn của workspace. Mỗi phiên Claude l�
 **Interfaces:**
 - Produces: `PROGRESS.md` là nguồn sự thật về vị trí hiện tại; Task 5 (skill) và mọi module sau đều đọc nó trước rồi cập nhật sau.
 
-- [ ] **Step 1: Viết `.claude/CLAUDE.md`** (tiếng Anh, thay toàn bộ file)
+- [x] **Step 1: Viết `.claude/CLAUDE.md`** (tiếng Anh, thay toàn bộ file)
 
 ````markdown
 # Flutter Learning Workspace
@@ -622,7 +622,7 @@ afterwards is the actual lesson of the module.
 Read `PROGRESS.md` first. `docs/roadmap.md` holds the full map.
 ````
 
-- [ ] **Step 2: Viết `MISSION.md`** (tiếng Việt)
+- [x] **Step 2: Viết `MISSION.md`** (tiếng Việt)
 
 ```markdown
 # Mission
@@ -653,7 +653,7 @@ Mỗi bài giảng phải trả lời được: *thứ này giúp gì cho việc
 Nếu không trả lời được, nó chưa tới lúc cần học.
 ```
 
-- [ ] **Step 3: Viết `PROGRESS.md`** (tiếng Việt)
+- [x] **Step 3: Viết `PROGRESS.md`** (tiếng Việt)
 
 ```markdown
 # Tiến độ
@@ -698,7 +698,7 @@ Nếu không trả lời được, nó chưa tới lúc cần học.
   hình dạng request/response, JWT thuần hay có refresh token.
 ```
 
-- [ ] **Step 4: Viết `docs/roadmap.md`** (tiếng Việt)
+- [x] **Step 4: Viết `docs/roadmap.md`** (tiếng Việt)
 
 ````markdown
 # Roadmap — Flutter từ nền tảng tới sản phẩm ship được
@@ -765,7 +765,7 @@ cùng logic với M06 → M07. Chọn `drift` thay Hive/Isar vì đã có sẵn 
 và SQL từ Spring Boot.
 ````
 
-- [ ] **Step 5: Viết `README.md`** (tiếng Việt)
+- [x] **Step 5: Viết `README.md`** (tiếng Việt)
 
 ````markdown
 # Flutter — Không gian luyện tập
@@ -865,7 +865,7 @@ go_router (M03) · drift + flutter_secure_storage (M09)
 - Thư mục lab đặt `NN_topic_lab`; tên package Dart bỏ phần số ở đầu.
 ````
 
-- [ ] **Step 6: Kiểm chứng — file tồn tại và link không gãy**
+- [x] **Step 6: Kiểm chứng — file tồn tại và link không gãy**
 
 Run:
 ```bash
@@ -883,7 +883,7 @@ done
 ```
 Expected: không in ra dòng `GÃY:` nào.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add README.md MISSION.md PROGRESS.md docs/roadmap.md .claude/CLAUDE.md .claude/settings.json .claude/skills
@@ -903,7 +903,7 @@ Không có skill này, vòng lặp học chỉ là chữ trong README. Mỗi phi
 - Consumes: `PROGRESS.md`, `docs/roadmap.md`, `docs/modules/NN-*.md` từ Task 4 và Task 6.
 - Produces: lệnh `/flutter-module <NN>` chạy đúng vòng 4 bước và cập nhật `PROGRESS.md`.
 
-- [ ] **Step 1: Viết `.claude/skills/flutter-module/SKILL.md`**
+- [x] **Step 1: Viết `.claude/skills/flutter-module/SKILL.md`**
 
 ````markdown
 ---
@@ -1033,14 +1033,14 @@ When a misconception is worth remembering, append a record to
 ```
 ````
 
-- [ ] **Step 2: Kiểm chứng — skill được nhận diện**
+- [x] **Step 2: Kiểm chứng — skill được nhận diện**
 
 Run: `head -5 .claude/skills/flutter-module/SKILL.md`
 Expected: frontmatter có `name: flutter-module` và dòng `description:`.
 
 Trong Claude Code, gõ `/flutter-module` và xác nhận nó hiện trong danh sách skill (có thể phải khởi động lại phiên).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .claude/skills/flutter-module
