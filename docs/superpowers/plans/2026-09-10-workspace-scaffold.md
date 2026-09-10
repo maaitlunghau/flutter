@@ -295,7 +295,7 @@ Workspace và app đầu tiên đi cùng một task: root `pubspec.yaml` không 
 - Consumes: hook từ Task 1.
 - Produces: root `pubspec.yaml` có khoá `workspace:` — mọi app sau này phải thêm tên mình vào danh sách đó **và** thêm dòng `resolution: workspace` vào pubspec của chính nó. Sau khi resolve, chỉ tồn tại một `pubspec.lock` và một `.dart_tool/` ở root.
 
-- [ ] **Step 1: Tạo root `pubspec.yaml`**
+- [x] **Step 1: Tạo root `pubspec.yaml`**
 
 Root là workspace root nên **không** có `resolution: workspace` — khoá đó chỉ dành cho thành viên.
 
@@ -311,15 +311,23 @@ workspace:
   - apps/00_hello_flutter
 ```
 
-- [ ] **Step 2: Tạo lab app đầu tiên**
+- [x] **Step 2: Tạo lab app đầu tiên**
+
+`flutter create` **không tự tạo thư mục cha** — thiếu `mkdir` nó sẽ báo `PathNotFoundException`. Phát hiện lúc chạy thật.
 
 ```bash
+mkdir -p apps
 flutter create --template=app --platforms=android,ios --project-name hello_flutter apps/00_hello_flutter
+rm apps/00_hello_flutter/analysis_options.yaml
 ```
 
 Tên package Dart không cho phép chữ số ở đầu, nên thư mục là `00_hello_flutter` còn tên package là `hello_flutter`. Quy ước này áp dụng cho mọi lab về sau.
 
-- [ ] **Step 3: Đăng ký app vào workspace**
+**Dòng `rm` là bắt buộc, không phải dọn dẹp cho đẹp.** `flutter create` sinh ra một `analysis_options.yaml` riêng trong mỗi app. Dart analyzer dùng file **gần nhất** tính từ file đang phân tích, nên file của app sẽ **đè** file root ở Task 3 và làm cấu hình lint dùng chung trở nên vô nghĩa. Mọi lab app tạo về sau đều phải xoá file này.
+
+Sửa `description:` trong pubspec của app cho khớp vai trò của nó, thay cho `"A new Flutter project."` mặc định.
+
+- [x] **Step 3: Đăng ký app vào workspace**
 
 Trong `apps/00_hello_flutter/pubspec.yaml`, thêm `resolution: workspace` ngay trước khối `environment:`:
 
@@ -335,23 +343,44 @@ environment:
   sdk: ^3.13.0
 ```
 
-- [ ] **Step 4: Kiểm chứng — resolve ở root**
+- [x] **Step 4: Kiểm chứng — resolve ở root**
 
 Run: `flutter pub get` (ở root repo)
 Expected: kết thúc bằng `Changed N dependencies!` và có dòng
 `Deleting old lock-file: ./apps/00_hello_flutter/pubspec.lock` — đó là dấu hiệu workspace đã tiếp quản.
 
-- [ ] **Step 5: Kiểm chứng — chỉ còn một lockfile**
+- [x] **Step 5: Kiểm chứng — chỉ còn một lockfile**
 
 Run: `ls pubspec.lock .dart_tool/ && ls apps/00_hello_flutter/pubspec.lock`
 Expected: root có `pubspec.lock` và `.dart_tool/`; lệnh thứ hai FAIL với `No such file or directory`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Thêm cấu hình VS Code dùng chung**
+
+Tạo `.vscode/settings.json` (format on save cho Dart, `files.watcherExclude` và `search.exclude` cho `build/`, `.dart_tool/`, `ios/Pods/` — với hơn chục Flutter project thì file watcher sẽ quá tải nếu không loại trừ) và `.vscode/extensions.json` (gợi ý `Dart-Code.dart-code`, `Dart-Code.flutter`).
+
+Format on save khiến `require_trailing_commas` luôn đúng tự động, nên hook `pre-commit` gần như không bao giờ phải sửa gì.
+
+Kèm theo, `.gitignore` ở Task 1 đã đổi từ chặn sạch `.vscode/` sang:
+
+```gitignore
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+```
+
+Kiểm chứng bằng `git add -n .vscode/` — phải thấy đúng hai file. **Không** dùng `git check-ignore -v` để kiểm: khi rule khớp cuối cùng là một dòng phủ định `!`, nó vẫn in ra rule đó và dễ đọc nhầm thành "bị ignore".
+
+- [x] **Step 7: Commit**
 
 ```bash
-git add pubspec.yaml apps/00_hello_flutter
-git commit -m "chore(repo): enable pub workspace with first lab app"
+git add pubspec.yaml apps/00_hello_flutter .vscode/
+git commit -m "chore(repo): add pub workspace, first lab app and vscode config"
+
+git add pubspec.lock
+git commit -m "chore(repo): commit workspace lockfile for reproducible builds"
 ```
+
+`pubspec.lock` **phải được commit**. Quy ước Dart là chỉ package/plugin mới bỏ qua lockfile; **application thì commit** để build tái lập được. Repo này toàn app, và workspace chỉ sinh một lockfile duy nhất ở root.
 
 ---
 
@@ -364,15 +393,37 @@ git commit -m "chore(repo): enable pub workspace with first lab app"
 - Consumes: `flutter_lints` được `apps/00_hello_flutter` kéo về từ Task 2.
 - Produces: một cấu hình lint duy nhất ở root áp cho mọi app trong workspace. `flutter analyze` chạy ở root quét toàn bộ (đã kiểm chứng: sửa lỗi trong `apps/*/lib/` thì analyze ở root báo đúng).
 
-- [ ] **Step 1: Tạo `analysis_options.yaml`**
+- [x] **Step 1: Tạo `analysis_options.yaml`**
 
-Khối `exclude` là bắt buộc — nếu thiếu, `flutter analyze` sẽ tự ghi thêm vào file, tạo diff bẩn ngoài ý muốn. Ghi sẵn cho đúng ngay từ đầu.
+Khối `exclude` là bắt buộc, và **phải chứa đúng các chuỗi literal** `build/**`, `android/**`, `ios/**`, `web/**`, `windows/**`, `macos/**`, `linux/**`. `flutter analyze` dò đúng những chuỗi đó; viết `**/build/**` thôi thì nó không nhận ra và sẽ tự chèn thêm khối của nó vào file, tạo diff bẩn. Nhưng các mẫu `**/...` mới là thứ thật sự có tác dụng, vì app nằm trong `apps/` chứ không ở root — nên cần **cả hai khối**. Phát hiện lúc chạy thật.
+
+Kiểm chứng tính ổn định: chạy `flutter analyze` hai lần, checksum của `analysis_options.yaml` phải không đổi.
 
 ```yaml
+# Cấu hình lint dùng chung cho toàn workspace.
+#
+# QUAN TRỌNG 1: `flutter create` sinh ra một analysis_options.yaml riêng trong mỗi
+# app. Dart analyzer dùng file GẦN NHẤT tính từ file đang phân tích, nên file của
+# app sẽ đè file này. Mỗi lần tạo lab app mới, phải xoá file đó đi.
+#
+# QUAN TRỌNG 2: `flutter analyze` sẽ TỰ GHI THÊM vào file này nếu không thấy đúng
+# các chuỗi literal `build/**`, `android/**`, `ios/**`, `web/**`, `windows/**`,
+# `macos/**`, `linux/**`. Giữ nguyên khối đó. Các mẫu `**/...` bên dưới mới là
+# thứ thật sự có tác dụng, vì app nằm trong apps/ chứ không nằm ở root.
+
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
+    # Khối Flutter đòi hỏi phải có nguyên văn — đừng xoá.
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+    # Khối thật sự phủ được apps/*/ trong workspace.
     - "**/build/**"
     - "**/android/**"
     - "**/ios/**"
@@ -397,12 +448,12 @@ linter:
     - avoid_relative_lib_imports
 ```
 
-- [ ] **Step 2: Kiểm chứng — analyze ở root sạch**
+- [x] **Step 2: Kiểm chứng — analyze ở root sạch**
 
 Run: `flutter analyze` (ở root)
 Expected: `No issues found!`
 
-- [ ] **Step 3: Kiểm chứng — analyze thật sự với tới app con**
+- [x] **Step 3: Kiểm chứng — analyze thật sự với tới app con**
 
 Tạo file bẩn tạm thời:
 ```bash
@@ -418,7 +469,7 @@ flutter analyze
 ```
 Expected: `No issues found!`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add analysis_options.yaml
