@@ -160,7 +160,7 @@ Mỗi module gồm Lab (Claude làm mẫu) và Capstone (người học tự là
 | 06 | State nền tảng | 4 | `06_state_lab` — cùng 1 app viết 3 cách | Tách auth state ra khỏi widget |
 | 07 | Riverpod | 5 | `07_riverpod_lab` — Notifier, AsyncNotifier, family, autoDispose | Chuyển toàn bộ `userhub` sang Riverpod |
 | 08 | Kiến trúc ứng dụng | 5 | *(không có lab — refactor thuần)* | Feature-first, `Result` thay `throw`, DI, refresh-token interceptor, env dev/prod |
-| 09 | Lưu trữ & offline | 4 | `09_storage_lab` — secure_storage, drift/hive, cache-then-network | Nhớ phiên đăng nhập, xem user offline |
+| 09 | Lưu trữ & offline | 4 | `09_storage_lab` — 4 tầng lưu trữ, `sqflite` thô → `drift`, cache-then-network (xem 4.1) | Nhớ phiên đăng nhập, xem user offline |
 | 10 | Polish & UX | 5 | `10_polish_lab` — Material 3, dark mode, animation, responsive | Theme hệ thống, skeleton loading, animation chuyển màn |
 | 11 | Hiệu năng & debug | 3 | `11_perf_lab` — **app cố tình chậm, người học tối ưu** | Đo & tối ưu `userhub` bằng DevTools |
 | 12 | Release | 3 | — | Icon, splash native, flavor, ký AAB, build iOS, chạy trên máy thật |
@@ -182,6 +182,44 @@ Mỗi module gồm Lab (Claude làm mẫu) và Capstone (người học tự là
 - **Testing tách hẳn ra M13.** Đan test vào từ đầu sẽ làm chậm giai đoạn cần đà
   nhất. Đánh đổi được chấp nhận có ý thức: refactor ở M08 và M10 sẽ không có lưới
   an toàn.
+
+### 4.1 M09 — bốn tầng lưu trữ và lộ trình SQLite
+
+SQLite không phải khái niệm của Flutter: nó là database nhúng có sẵn trong cả
+Android lẫn iOS — một file `.db` chạy SQL thật, không cần server. Flutter chỉ truy
+cập nó qua package. Nên câu hỏi thật sự của M09 không phải "học SQLite" mà là
+**"lưu xuống máy có mấy cách, chọn cách nào"**.
+
+| Cách | Dùng cho | Trong `userhub` |
+|---|---|---|
+| `shared_preferences` | Key-value bé: dark mode, ngôn ngữ, đã xem onboarding chưa | Lưu setting |
+| `flutter_secure_storage` | Bí mật, mã hoá qua Keychain (iOS) / Keystore (Android) | **Lưu JWT** |
+| File thường (`path_provider`) | Ảnh cache, file tải về | Avatar cache |
+| **SQLite** (`sqflite` → `drift`) | Dữ liệu có cấu trúc, nhiều bản ghi, cần query/lọc/sắp xếp | **Cache danh sách user để xem offline** |
+
+Điểm hay bị nhầm và cần dạy tường minh trong lab: **`shared_preferences` không phải
+database.** Nó là một file XML/plist đọc hết vào RAM. Nhét vài trăm bản ghi vào đó
+là phình bộ nhớ và không query nổi.
+
+**Lộ trình đã chốt: học `sqflite` thô trước (~nửa ngày), rồi dùng `drift` cho
+capstone.**
+
+- `sqflite` bọc SQLite ở mức thô — tự viết chuỗi SQL `CREATE TABLE`, `SELECT`.
+- `drift` là tầng type-safe sinh code nằm trên chính SQLite — query trả về đúng
+  class Dart, sai cột là lỗi lúc compile thay vì lúc chạy.
+
+Đi qua `sqflite` trước dù cuối cùng không dùng nó, theo đúng logic M06 → M07:
+`drift` chỉ là SQL được gói lại, thấy được SQL thô bên dưới thì khi `drift` báo lỗi
+mới biết đường lần.
+
+Chọn `drift` thay vì Hive/Isar vì người học đã có sẵn tư duy quan hệ và SQL từ
+Spring Boot. Ép học mô hình NoSQL để lưu dữ liệu vốn dĩ quan hệ (user, role) là đi
+đường vòng.
+
+**Cần xác minh trước khi vào M09:** hệ sinh thái package lưu trữ của Flutter biến
+động nhiều, có package từng phổ biến rồi rơi vào tình trạng ít bảo trì. Kiểm tra
+sức khoẻ `sqflite`, `drift`, `flutter_secure_storage` trên pub.dev tại thời điểm
+bắt đầu M09 thay vì tin vào lựa chọn chốt sẵn ở đây.
 
 ---
 
