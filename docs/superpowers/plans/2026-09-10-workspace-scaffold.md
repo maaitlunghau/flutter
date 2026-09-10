@@ -1051,6 +1051,18 @@ git commit -m "feat(repo): add flutter-module skill for learning loop"
 
 ## Task 6: M00 — khởi tạo capstone và đề bài
 
+> **Phạm vi đã đổi giữa chừng (2026-09-10, người học quyết định):** làm
+> **Android trước**, iOS hoãn lại. Thư mục `apps/userhub/ios/` vẫn được sinh ngay
+> ở bước `flutter create` — vì `--org` chỉ chốt được lúc create, thêm iOS sau mà
+> quên `--org` thì bundle id thành `com.example.userhub`. Đã xác minh `--org` ăn
+> vào **cả hai**: `applicationId` trong `build.gradle.kts` và
+> `PRODUCT_BUNDLE_IDENTIFIER` trong `project.pbxproj`. iOS là placeholder
+> **chưa từng build**. Step 7 (chạy iOS) hoãn; các step iOS chuyển vào mục
+> "iOS — hoãn lại" trong `docs/modules/00-khoi-dong.md`.
+>
+> Task 0 vẫn **chưa xong**: thiếu cmdline-tools, chưa accept license, chưa có
+> emulator — nên Step 6 (chạy trên Android) chưa tick được.
+
 Task cuối của phần scaffold. Kết thúc task này là học được ngay.
 
 **Blocked by Task 0** ở bước kiểm chứng cuối (cần chạy trên cả Android và iOS).
@@ -1066,7 +1078,7 @@ Task cuối của phần scaffold. Kết thúc task này là học được ngay
 - Consumes: workspace từ Task 2, lint từ Task 3, docs từ Task 4.
 - Produces: `apps/userhub/` với application id `com.maaitlunghau.userhub`, chạy được trên Android và iOS.
 
-- [ ] **Step 1: Tạo capstone**
+- [x] **Step 1: Tạo capstone**
 
 Đặt `--org` **ngay bây giờ**. Application id đi vào Gradle, `Info.plist`, ký APK và định danh trên store — đổi nó sau M12 là việc rất phiền.
 
@@ -1075,7 +1087,7 @@ flutter create --template=app --platforms=android,ios \
   --org com.maaitlunghau --project-name userhub apps/userhub
 ```
 
-- [ ] **Step 2: Đăng ký vào workspace**
+- [x] **Step 2: Đăng ký vào workspace**
 
 Thêm `resolution: workspace` vào `apps/userhub/pubspec.yaml` ngay trước `environment:`, rồi sửa root `pubspec.yaml`:
 
@@ -1085,7 +1097,7 @@ workspace:
   - apps/userhub
 ```
 
-- [ ] **Step 3: Kiểm chứng resolve và application id**
+- [x] **Step 3: Kiểm chứng resolve và application id**
 
 Run: `flutter pub get` (ở root)
 Expected: `Changed N dependencies!`, không có lỗi.
@@ -1094,7 +1106,7 @@ Run: `grep -r "com.maaitlunghau.userhub" apps/userhub/android/app/build.gradle.k
 Expected: có dòng `applicationId = "com.maaitlunghau.userhub"`.
 (Nếu Flutter version này sinh ra `build.gradle` thay vì `build.gradle.kts` thì grep file đó.)
 
-- [ ] **Step 4: Tạo `.env.example`**
+- [x] **Step 4: Tạo `.env.example`**
 
 ```dotenv
 # Chép file này thành .env và điền giá trị máy bạn.
@@ -1105,7 +1117,7 @@ Expected: có dòng `applicationId = "com.maaitlunghau.userhub"`.
 API_BASE_URL=http://10.0.2.2:8080
 ```
 
-- [ ] **Step 5: Viết `docs/modules/00-khoi-dong.md`**
+- [x] **Step 5: Viết `docs/modules/00-khoi-dong.md`**
 
 ````markdown
 # M00 — Khởi động & công cụ
@@ -1194,7 +1206,7 @@ Expected: app khởi động trên simulator. Lần đầu chạy `pod install` 
 Run: `flutter analyze` (ở root)
 Expected: `No issues found!`
 
-- [ ] **Step 9: Cập nhật `PROGRESS.md`**
+- [x] **Step 9: Cập nhật `PROGRESS.md`**
 
 Chuyển "Việc tiếp theo" thành:
 
@@ -1207,7 +1219,7 @@ Chuyển "Việc tiếp theo" thành:
 - [ ] Sang M01 — Widget & Layout
 ```
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add apps/userhub pubspec.yaml docs/modules/00-khoi-dong.md .env.example PROGRESS.md
