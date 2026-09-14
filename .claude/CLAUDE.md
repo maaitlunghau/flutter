@@ -152,6 +152,31 @@ afterwards is the actual lesson of the module.
 - Do not reach for a third-party package when the Flutter SDK already covers it
 - Do not scaffold lab directories for modules that have not started
 
+## IDE and tooling
+
+`.vscode/settings.json` is committed and shared. Two settings in it are load-bearing
+— do not remove them:
+
+- **`java.import.gradle.enabled: false`**. Every Flutter app carries an `android/`
+  Gradle build, and none declares `rootProject.name`, so Gradle defaults it to the
+  folder name — `android` — for all of them. The Java extension imports each one
+  and they collide: *"A project with the name android already exists."* This repo
+  has **no Java project at all**, and `flutter run` drives Gradle itself without
+  that importer, so disabling it costs nothing. Excluding paths alone does **not**
+  work: Buildship, the Gradle importer inside the Java extension, discovers builds
+  on its own.
+- **`files.watcherExclude`**. Without it, generated folders under `apps/` exhaust
+  the file watcher once several labs exist.
+
+Changing these settings only takes effect after a fresh import. If the errors
+persist, run **`Java: Clean Java Language Server Workspace`** from the Command
+Palette and choose *Reload and delete* — the old project list is cached.
+
+---
+
 ## Current state
 
-Read `PROGRESS.md` first. `docs/roadmap.md` holds the full map.
+Read `PROGRESS.md` first — it is the source of truth for where the learner is.
+`docs/roadmap.md` holds the full map. `/resume` loads
+`.claude/skills/resume/PROJECT_STATE.md`, which carries the standing decisions and
+technical debt that neither of those files repeats.
