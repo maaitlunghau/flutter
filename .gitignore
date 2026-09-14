@@ -50,3 +50,5 @@ android/key.properties
 # Bí mật môi trường
 .env
 .env.local
+# Widget Preview related
+.widget_preview/
