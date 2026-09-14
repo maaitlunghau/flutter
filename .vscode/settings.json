@@ -39,6 +39,9 @@
   },
 
   "// Java extension": "Every Flutter app carries an android/ Gradle build, and none of them declares rootProject.name — so Gradle falls back to the folder name, 'android', for all of them. The Java extension imports each one it finds and they collide: 'A project with the name android already exists'. These are Flutter's native shells, not Java projects; flutter run drives Gradle directly and never goes through this importer. The first four entries are VS Code's own defaults, repeated because declaring this setting replaces the default list rather than adding to it.",
+  "// Java Gradle import": "Exclusions alone are not enough — Buildship, the Gradle importer inside the Java extension, discovers builds on its own and still loads the android/ folders. Disabling Gradle import is the reliable fix, and it costs nothing here: this repo contains no Java project at all. Every build.gradle.kts under apps/ is a Flutter-generated Android shell, and flutter run drives Gradle directly without this importer.",
+  "java.import.gradle.enabled": false,
+
   "java.import.exclusions": [
     "**/node_modules/**",
     "**/.metadata/**",
