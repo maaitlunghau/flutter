@@ -176,6 +176,30 @@ tiếp sẽ báo `command not found`. Flutter vẫn chạy bình thường vì n
 export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
 ```
 
+### 5. Bàn phím máy thật không gõ được vào emulator
+
+*Ghi thêm ngày 2026-09-14.*
+
+**Triệu chứng:** trong app chạy trên emulator, chạm vào ô nhập thì con trỏ hiện
+ra nhưng gõ từ bàn phím Mac **không ăn**. Dán (`Cmd+V`) thì được, xoá bằng nút
+trên khung emulator cũng được — chỉ riêng gõ là không.
+
+**Nguyên nhân:** hệ quả trực tiếp của **bẫy 2**. AVD tạo bằng `avdmanager` mặc
+định để `hw.keyboard=no`, khác với AVD tạo từ giao diện Android Studio. Không
+liên quan gì tới Flutter hay code.
+
+**Cách sửa — phải tắt emulator TRƯỚC:**
+
+```bash
+~/Library/Android/sdk/platform-tools/adb emu kill      # 1. tắt hẳn
+# 2. sửa hw.keyboard=no thành hw.keyboard=yes
+#    trong ~/.android/avd/pixel_dev.avd/config.ini
+flutter emulators --launch pixel_dev                   # 3. bật lại
+```
+
+**Sửa lúc emulator đang chạy là mất công.** Emulator ghi đè `config.ini` khi
+thoát, nên thay đổi của bạn bị nuốt mất.
+
 ## Nguồn
 
 - Flutter — Get started: https://docs.flutter.dev/get-started/install/macos
