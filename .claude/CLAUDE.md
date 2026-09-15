@@ -50,8 +50,10 @@ Run a cycle with `/flutter-module <NN>`.
 ### The capstone rule
 
 **This rule covers `apps/practice/` too, not just `apps/userhub/`.** The practice
-app is the learner's sandbox; Claude creates the app shell and the per-module
-menu plumbing, and writes nothing else there unless asked outright.
+app is the learner's sandbox; Claude creates the app shell and keeps the single
+root menu in `lib/main.dart` wired up, and writes nothing else there unless asked
+outright. **One menu, one tap** — group exercises with section headers inside that
+list, never with an intermediate per-module menu screen.
 
 **Default: `apps/userhub/` belongs to the learner.** When they are stuck you may
 suggest a direction, point at the wrong line, write pseudocode, or write an
