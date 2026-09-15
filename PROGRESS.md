@@ -5,8 +5,8 @@
 
 ## Đang ở đâu
 
-- **Module hiện tại:** M01 — Widget & Layout *(chưa bắt đầu)*
-- **Vòng:** M00 xong cả 2 vòng ngày 2026-09-15
+- **Module hiện tại:** M01 — Widget & Layout
+- **Vòng:** vòng 1/3 — bài giảng và lab đã xong, chờ người học chạy và phá
 - **Cập nhật lần cuối:** 2026-09-15
 
 ## Việc tiếp theo
@@ -39,7 +39,7 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 | # | Module | Trạng thái |
 |---|---|---|
 | 00 | Khởi động & công cụ | ✅ |
-| 01 | Widget & Layout | ⬜ |
+| 01 | Widget & Layout | 🚧 |
 | 02 | Stateful & vòng đời | ⬜ |
 | 03 | Navigation & Routing | ⬜ |
 | 04 | Forms & Input | ⬜ |

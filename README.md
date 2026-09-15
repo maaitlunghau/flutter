@@ -21,7 +21,7 @@ hay `class`. Phần đó đã học ở repo trước:
 | # | Module | Trạng thái |
 |---|---|---|
 | 00 | Khởi động & công cụ | ✅ |
-| 01 | Widget & Layout | ⬜ |
+| 01 | Widget & Layout | 🚧 |
 | 02 | Stateful & vòng đời | ⬜ |
 | 03 | Navigation & Routing | ⬜ |
 | 04 | Forms & Input | ⬜ |
