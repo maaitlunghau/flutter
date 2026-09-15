@@ -1,6 +1,6 @@
 # PROJECT STATE — Flutter Learning Workspace
 
-**Last synced commit:** `253205f` — *commit ngay sau nó chỉ là chính lần sync này,
+**Last synced commit:** `3c4307f` — *commit ngay sau nó chỉ là chính lần sync này,
 không phải việc mới; đừng đi tìm thay đổi nào khác.*
 **Last synced:** 2026-09-15
 **Repo:** `/Users/maaitlunghau/Documents/SelfStudy/flutter` · branch `main` · working tree sạch
@@ -28,9 +28,10 @@ Neo cho mọi bài giảng: *thứ này giúp gì cho việc ship `userhub`?*
 
 ## Đang ở đâu
 
-**M00 — Khởi động & công cụ.** Hạ tầng đã dựng xong, **chưa vào vòng học nào**.
+**M00 xong ngày 2026-09-15** — cả 2 vòng, checklist tick hết bằng kiểm chứng thật.
+**Tiếp theo: M01 — Widget & Layout**, chưa bắt đầu, chưa có đề bài.
 
-Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`. Đề bài: `docs/modules/00-khoi-dong.md`.
+Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`. Đề bài M00: `docs/modules/00-khoi-dong.md`.
 
 Bản đồ 15 module M00→M14: `docs/roadmap.md`.
 
@@ -67,9 +68,12 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | Skill `/flutter-module` | xong |
 | Emulator `pixel_dev` (Android 16, API 36, arm64) | chạy được |
 | `docs/lessons/0001-giai-phau-project-va-hot-reload.html` | xong |
+| `docs/lessons/0002-devtools-widget-inspector.html` | xong |
+| `docs/reference/hot-reload-va-devtools.html` — cheat sheet M00 | xong |
+| `docs/learning-records/0001-thieu-scaffold-khong-crash.md` | xong |
 
-`docs/learning-records/` và `docs/reference/` **đang rỗng** — sẽ đầy dần theo
-từng module.
+`docs/learning-records/` và `docs/reference/` mỗi thư mục có **1 file** từ M00 —
+sẽ đầy dần theo từng module.
 
 ---
 
