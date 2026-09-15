@@ -29,24 +29,26 @@ Neo cho mọi bài giảng: *thứ này giúp gì cho việc ship `userhub`?*
 ## Đang ở đâu
 
 **M00 xong ngày 2026-09-15** — cả 2 vòng, checklist tick hết bằng kiểm chứng thật.
-**Tiếp theo: M01 — Widget & Layout**, chưa bắt đầu, chưa có đề bài.
+**Đang ở M01 — Widget & Layout**, vòng 1/3: bài giảng và lab đã xong.
 
-Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`. Đề bài M00: `docs/modules/00-khoi-dong.md`.
+Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`. Đề bài M01: `docs/modules/01-widget-va-layout.md`.
 
 Bản đồ 15 module M00→M14: `docs/roadmap.md`.
 
-### Vòng học — 4 bước, khoảng 4 tiếng
+### Vòng học — 5 bước, khoảng 4 tiếng
 
 Chạy bằng `/flutter-module <NN>`. Skill ở `.claude/skills/flutter-module/`.
 
 | Bước | Ai làm | Ra cái gì |
 |---|---|---|
 | Lesson (~45m) | Claude | `docs/lessons/NNNN-<slug>.html`, tiếng Việt |
-| Lab (~1h) | Claude | `apps/NN_*_lab/` — người học chạy và phá |
+| Lab (~1h) | Claude | `apps/NN_*_lab/` — **bản tham chiếu**, không phải đồ chơi để phá |
+| Rebuild (~1h) | **người học** | `apps/practice/lib/mNN/` — tự dựng lại theo đề bài ở module brief |
 | Capstone (~2h) | **người học** | `apps/userhub/` |
-| Review (~30m) | Claude | đọc diff |
+| Review (~30m) | Claude | đọc diff cả `practice` lẫn `userhub` |
 
-**Luật capstone:** `apps/userhub/` là của người học. Claude chỉ gợi hướng, chỉ
+**Luật capstone — áp dụng cho CẢ `apps/practice/`:** hai thư mục này là của
+người học. Với `practice`, Claude chỉ dựng vỏ app và menu từng module. Còn lại, Claude chỉ gợi hướng, chỉ
 đúng dòng sai, viết pseudocode, hoặc viết ví dụ tương tự **trong bối cảnh khác**.
 
 **Ngoại lệ:** khi người học nói thẳng *"code hộ tui"* / *"viết luôn đi"* →
@@ -62,6 +64,8 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 |---|---|
 | Pub workspace ở root (Dart 3.6+, không dùng Melos) | xong |
 | `apps/00_hello_flutter` | xong, comment tiếng Việt |
+| `apps/01_layout_lab` — lab M01, 3 màn constraints | xong, đã verify bằng ảnh chụp |
+| `apps/practice` — sân tập của người học | vỏ app + menu gốc, `lib/m01/` còn trống |
 | `apps/userhub` — capstone, `applicationId com.maaitlunghau.userhub` | đã khởi tạo, **chưa viết gì** |
 | Hook `commit-msg` + `pre-commit` (husky) | xong, hoạt động thật |
 | `analysis_options.yaml` dùng chung | xong |
@@ -88,6 +92,8 @@ sẽ đầy dần theo từng module.
 | **Làm thẳng trên `main`, không PR** | | Trừ **M08** — module refactor kiến trúc thì tách nhánh, để trạng thái "trước" còn lại mà so. Đọc diff đó **chính là bài học** của module. |
 | **Không viết test trước M14** | | M14 là tuỳ chọn, mở khoá khi người học bắt đầu thấy sợ mỗi lần refactor. |
 | **Firebase là M12 — bổ sung, không thay backend** | 2026-09-15 | Roadmap 14 → 15 module; Release xuống M13, Testing xuống M14. Spring Boot vẫn là nguồn dữ liệu của `userhub`; Firebase chỉ lo FCM, Crashlytics, Storage, Analytics. Đặt sau M09 vì Firestore bật offline bằng một dòng, học sớm là M09 mất lý do tồn tại; đặt trước Release vì Crashlytics chỉ có nghĩa với release build trên máy thật. Lý do đầy đủ: `docs/roadmap.md` mục *M12 — Firebase*. |
+| **Bước "phá lab" đổi thành "tự dựng lại"** | 2026-09-15 | Người học thấy đọc code người khác thì chán và khó vào. Lab giờ là bản tham chiếu; người học tự dựng lại trong `apps/practice/lib/mNN/` theo đề bài ở module brief, chỉ mở lab khi bí. Vòng học thành 5 bước. Quyết theo từng module — M11 (lab cố tình viết xấu) thì không dựng lại. |
+| **`apps/practice/` thuộc về người học** | 2026-09-15 | Luật capstone áp dụng luôn cho thư mục này. Claude chỉ dựng vỏ app và menu từng module, không viết gì thêm trừ khi được bảo thẳng. |
 | **Lab M12 làm được lệch thứ tự** | 2026-09-15 | `apps/12_firebase_lab` độc lập với `userhub`, nên làm được ngay khi lớp dạy tới Firebase. Chỉ nửa capstone mới buộc đứng sau M09. |
 
 ---
@@ -137,4 +143,4 @@ tồn tại.
 3. Báo lại cho người học: đang ở module nào, vòng mấy, việc tiếp theo là gì
 4. **Chờ chỉ đạo.** Đừng tự đoán bước kế tiếp.
 
-Vào học thì gọi `/flutter-module 00`.
+Vào học thì gọi `/flutter-module 01`.

@@ -14,6 +14,7 @@ where the learner currently is.
 | Path | What |
 |---|---|
 | `apps/NN_*_lab/` | Lab apps — Claude writes these as worked examples |
+| `apps/practice/` | The learner's sandbox — `lib/mNN/` per module. Theirs, not Claude's. |
 | `apps/userhub/` | The capstone. The learner's app. See the rule below. |
 | `packages/` | Shared code. Created only when a real need appears. |
 | `docs/roadmap.md` | The 15-module map, M00 to M14 |
@@ -32,13 +33,25 @@ capstone's data source. See `docs/roadmap.md`, section *M12 — Firebase*.
 Each module runs in cycles of roughly four hours:
 
 1. **Lesson** (~45m) — Claude writes `docs/lessons/NNNN-<slug>.html` in Vietnamese
-2. **Lab** (~1h) — Claude writes `apps/NN_*_lab/`; the learner runs it and breaks it
-3. **Capstone** (~2h) — **the learner writes** `apps/userhub/`
-4. **Review** (~30m) — Claude reviews the diff
+2. **Lab** (~1h) — Claude writes `apps/NN_*_lab/` as a reference implementation
+3. **Rebuild** (~1h) — **the learner writes** `apps/practice/lib/mNN/`, from the
+   brief's *"Tự dựng lại"* task list, opening the lab only when stuck
+4. **Capstone** (~2h) — **the learner writes** `apps/userhub/`
+5. **Review** (~30m) — Claude reviews both the rebuild and the capstone
+
+Step 3 replaced "run the lab and break it" on 2026-09-15 — the owner found
+reading someone else's code boring and slippery, and wanted to hit the hard parts
+first-hand. Rebuilding is the default, but it is decided **per module**: where a
+lab exists to be read rather than rebuilt (M11's deliberately-slow app is the
+clear case), skip it and say so in that module's brief.
 
 Run a cycle with `/flutter-module <NN>`.
 
 ### The capstone rule
+
+**This rule covers `apps/practice/` too, not just `apps/userhub/`.** The practice
+app is the learner's sandbox; Claude creates the app shell and the per-module
+menu plumbing, and writes nothing else there unless asked outright.
 
 **Default: `apps/userhub/` belongs to the learner.** When they are stuck you may
 suggest a direction, point at the wrong line, write pseudocode, or write an

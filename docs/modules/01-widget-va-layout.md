@@ -52,6 +52,48 @@ Việc của bạn là phá, theo đúng thứ tự này:
 5. Bấm `p` trong `flutter run` để bật `debugPaintSizeEnabled`, làm lại bước 1
    và 4 → giờ nhìn thấy khung thật của từng widget
 
+## Tự dựng lại — `apps/practice/lib/m01/`
+
+*Từ 2026-09-15, bước "phá lab" được thay bằng bước này. Lý do: đọc code người
+khác viết thì chán và trôi tuột; tự dựng thì va vào đúng những chỗ khó.*
+
+**Luật:** đọc `apps/01_layout_lab/` **chỉ khi bí**, và chỉ mở đúng file đang bí.
+Dựng xong rồi mới mở ra so — lúc đó so mới có nghĩa.
+
+### Màn 1 — thước đo constraints
+
+Dựng một widget nhận vào một `label`, và hiện ra **bốn con số constraints** mà
+chính nó nhận được, kèm trạng thái `tight` / `loose` / `unbounded`.
+
+- Gợi ý duy nhất: có một widget của Flutter đưa `BoxConstraints` vào tay bạn.
+  Tìm nó trong bài 0003.
+- Xong màn này thì hai màn sau dùng lại nó.
+
+### Màn 2 — ô vuông lúc phủ kín lúc 100×100
+
+Một `Container(width: 100, height: 100)` **duy nhất, không đổi**, và một công
+tắc bật/tắt việc bọc nó trong `Center`.
+
+- Tiêu chí: code của ô vuông không được đổi một chữ khi gạt công tắc
+- Đặt thước đo của màn 1 ở dưới, bọc y hệt cách bọc ô vuông
+
+### Màn 3 — cùng một `SizedBox` dưới hai loại constraints
+
+Hai cột cạnh nhau, dùng **chung một** `SizedBox(width: 50, height: 50)`. Một bên
+bọc bằng widget đưa xuống loose, bên kia bằng widget đưa xuống tight.
+
+- Tiêu chí: bên loose ra đúng 50×50, bên tight bị phình bằng khung cha
+- **Không được hardcode chiều cao cho thước đo** — đó đúng là lỗi lab đã mắc
+  phải và phải sửa ngày 2026-09-15
+
+### Xong khi nào
+
+- [ ] Ba màn chạy được, vào từ `M01Menu`
+- [ ] `flutter analyze` ở root báo `No issues found!`
+- [ ] Không màn nào overflow khi xoay ngang
+- [ ] Mở `01_layout_lab` ra so, và **nói được một chỗ mình làm khác** — khác
+      không có nghĩa là sai
+
 ## Capstone task
 
 Trong `apps/userhub/`, dựng **hai màn hình tĩnh**:

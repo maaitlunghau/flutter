@@ -6,7 +6,7 @@
 ## Đang ở đâu
 
 - **Module hiện tại:** M01 — Widget & Layout
-- **Vòng:** vòng 1/3 — bài giảng và lab đã xong, chờ người học chạy và phá
+- **Vòng:** vòng 1/3 — bài giảng và lab đã xong, chờ người học **tự dựng lại**
 - **Cập nhật lần cuối:** 2026-09-15
 
 ## Việc tiếp theo
@@ -24,8 +24,13 @@ Sản phẩm M00: [bài 0001](docs/lessons/0001-giai-phau-project-va-hot-reload.
 cố ý dài: constraints là chỗ người học Flutter mắc kẹt lâu nhất, biết Dart không
 giúp được gì.
 
-- [ ] M01 — chưa có đề bài `docs/modules/01-*.md`, viết trước khi dạy
-- [ ] Lab `apps/01_layout_lab` — chưa tạo
+- [x] Đề bài `docs/modules/01-widget-va-layout.md`
+- [x] Bài giảng `docs/lessons/0003-constraints-luat-ba-cau.html`
+- [x] Lab tham chiếu `apps/01_layout_lab` — 3 màn, đã verify bằng ảnh chụp
+- [ ] **Người học tự dựng lại 3 màn** trong `apps/practice/lib/m01/` — đề bài ở
+      [mục *Tự dựng lại*](docs/modules/01-widget-va-layout.md#tự-dựng-lại--appspracticelibm01)
+- [ ] Vòng 2 — `Row`/`Column`/`Expanded`, đọc lỗi `RenderFlex overflow`
+- [ ] Vòng 3 — `Stack`, rồi capstone 2 màn tĩnh trong `userhub`
 
 Chạy bằng `/flutter-module 01`.
 
@@ -56,6 +61,7 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 
 ## Hạ tầng đã dựng
 
+- [x] `apps/practice` — sân tập của người học, một app dùng chung 15 module
 - [x] `.gitignore` + hook `commit-msg` + hook `pre-commit`
 - [x] Pub workspace ở root + `apps/00_hello_flutter`
 - [x] `analysis_options.yaml` dùng chung

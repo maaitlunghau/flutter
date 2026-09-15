@@ -60,21 +60,33 @@ The lab is a worked example, so:
 - Comments explain **why**, never **what**, and are written **in Vietnamese**
   (identifiers stay English — see the Language rule in `.claude/CLAUDE.md`)
 - Keep it small enough to read in one sitting
-- Tell the learner explicitly what to go break, and what they should see when it
-  breaks. "Remove `Expanded` and watch the RenderFlex overflow" teaches more than
-  any paragraph about constraints.
+- The lab is a **reference implementation**, not a toy to break. The learner
+  rebuilds it themselves in step 3 and opens the lab only when stuck.
 
-### 3. Capstone (~2 hours) — the learner writes
+### 3. Rebuild (~1 hour) — the learner writes
+
+Their work happens in `apps/practice/lib/m<NN>/`. **The capstone rule covers this
+directory too** — you create the app shell and the module menu, nothing else.
+
+What you write instead is the **task list**: a *"Tự dựng lại"* section in
+`docs/modules/<NN>-*.md` describing each screen by its behaviour and its done
+criteria, never by its code. One hint per screen, maximum.
+
+Decide per module whether this step applies. Skip it where the lab exists to be
+read rather than rebuilt — M11's deliberately-slow app is the clear case — and
+write that decision into the brief.
+
+### 4. Capstone (~2 hours) — the learner writes
 
 Their work happens in `apps/userhub/`. **Follow the capstone rule in
 `.claude/CLAUDE.md`.** Short version: by default you guide but do not write it;
 when they ask outright, write it completely and add a "Chỗ đáng verify" section;
 never nag.
 
-### 4. Review (~30 min)
+### 5. Review (~30 min)
 
 ```bash
-git diff HEAD -- apps/userhub
+git diff HEAD -- apps/practice apps/userhub
 ```
 
 Review for three things, in this order: does it work, is it idiomatic Flutter,
@@ -118,6 +130,11 @@ Write to `docs/modules/<NN>-<slug>.md`:
 
 ## Lab
 (Claude làm gì, người học quan sát và phá cái gì)
+
+## Tự dựng lại
+(đề bài từng màn cho apps/practice/lib/mNN/ — mô tả hành vi và tiêu chí Xong,
+không bao giờ mô tả code. Tối đa một gợi ý mỗi màn. Bỏ mục này nếu module đó
+không hợp để dựng lại, và ghi rõ vì sao.)
 
 ## Capstone task
 (người học phải làm gì trong apps/userhub/)
