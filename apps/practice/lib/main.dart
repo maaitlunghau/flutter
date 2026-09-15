@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'm00/m00_menu.dart';
 import 'm01/m01_menu.dart';
 
 void main() {
@@ -36,6 +37,13 @@ class RootMenuScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Practice — sân tập')),
       body: ListView(
         children: [
+          ListTile(
+            title: const Text('M00 — Khởi động'),
+            subtitle: const Text('StatefulWidget, setState, hot reload'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute<void>(builder: (_) => const M00Menu())),
+          ),
           ListTile(
             title: const Text('M01 — Widget & Layout'),
             subtitle: const Text('constraints, Row/Column, Stack'),

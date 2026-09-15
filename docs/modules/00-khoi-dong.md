@@ -38,6 +38,33 @@ Việc của bạn là **phá nó**:
    [learning record 0001](../learning-records/0001-thieu-scaffold-khong-crash.md)
 4. Mở DevTools, tìm chính widget `Text` đó trong cây
 
+## Tự dựng lại — `apps/practice/lib/m00/`
+
+*Thêm ngày 2026-09-15, sau khi M00 đã đóng. Đây là **bài khởi động**, không phải
+mở lại module — trạng thái M00 vẫn là ✅. Mục đích: quen nhịp tự-dựng trên app
+đơn giản nhất có thể, trước khi vào constraints ở M01.*
+
+**Luật:** chỉ mở `apps/00_hello_flutter/` khi bí, và chỉ đúng chỗ đang bí.
+
+### Màn 1 — bộ đếm
+
+Một màn duy nhất: thanh tiêu đề, một con số ở giữa màn hình, một nút tròn ở góc
+dưới phải. Bấm nút thì số tăng.
+
+Gợi ý duy nhất: con số phải sống sót qua `build()`, nên nó **không thể** là biến
+khai báo bên trong `build()`.
+
+### Xong khi nào
+
+- [ ] Bấm nút, số tăng
+- [ ] Sửa một chuỗi text rồi bấm `r` → chữ đổi, **số đang đếm giữ nguyên**
+- [ ] Sửa giá trị khởi tạo của biến đếm rồi bấm `r` → **không** đổi; bấm `R` → đổi
+- [ ] **Bài quan trọng nhất:** bỏ `setState`, tăng thẳng biến đếm. Thêm một
+      `debugPrint` để in giá trị ra console. Phải thấy: **console báo số đã tăng,
+      nhưng màn hình đứng im.** Nói được vì sao thì bạn đã hiểu `setState` thật
+      sự làm gì — và nó không phải là "cập nhật giao diện".
+- [ ] `flutter analyze` ở root báo `No issues found!`
+
 ## Capstone task
 
 `apps/userhub` đã được khởi tạo sẵn. Việc của bạn là làm nó **chạy được**, và

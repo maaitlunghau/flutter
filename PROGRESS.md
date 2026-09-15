@@ -24,6 +24,9 @@ Sản phẩm M00: [bài 0001](docs/lessons/0001-giai-phau-project-va-hot-reload.
 cố ý dài: constraints là chỗ người học Flutter mắc kẹt lâu nhất, biết Dart không
 giúp được gì.
 
+- [ ] **Khởi động trước:** dựng lại bộ đếm M00 trong `apps/practice/lib/m00/` —
+      đề bài ở [mục *Tự dựng lại* của M00](docs/modules/00-khoi-dong.md#tự-dựng-lại--appspracticelibm00).
+      Không mở lại M00, module đó vẫn ✅; đây chỉ là bài quen nhịp.
 - [x] Đề bài `docs/modules/01-widget-va-layout.md`
 - [x] Bài giảng `docs/lessons/0003-constraints-luat-ba-cau.html`
 - [x] Lab tham chiếu `apps/01_layout_lab` — 3 màn, đã verify bằng ảnh chụp
