@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cheat sheet — Hot reload &amp; DevTools</title>
+<style>
+  :root {
+    --bg: #fdfcfa;
+    --ink: #1a1a1a;
+    --muted: #6b6862;
+    --rule: #e3ded6;
+    --accent: #7c4a2d;
+    --code-bg: #f4f1ec;
+    --keep: #2d6a4f;
+    --wipe: #9b2c2c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513;
+      --ink: #e8e4dd;
+      --muted: #9a958c;
+      --rule: #33302b;
+      --accent: #d9a273;
+      --code-bg: #201e1b;
+      --keep: #6ac292;
+      --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2.5rem 1.5rem 4rem;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 15px/1.55 ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  .eyebrow {
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: .6rem;
+  }
+  h1 { font: 600 1.7rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .4rem; letter-spacing: -.015em; }
+  .sub { color: var(--muted); margin: 0 0 2rem; font-size: .95rem; }
+  h2 {
+    font: 600 .82rem/1.3 ui-sans-serif, system-ui, sans-serif;
+    text-transform: uppercase; letter-spacing: .1em; color: var(--accent);
+    margin: 2.4rem 0 .7rem; padding-top: .9rem; border-top: 1px solid var(--rule);
+  }
+  p { margin: 0 0 .8rem; }
+  code {
+    font: 400 .87em/1.4 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .1em .35em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: .8rem 1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; }
+  table { border-collapse: collapse; width: 100%; margin: .8rem 0 1.2rem; font-size: .89rem; }
+  th, td { text-align: left; padding: .42rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--muted); font-weight: 600;
+  }
+  kbd {
+    font: 600 .78rem/1 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); border: 1px solid var(--rule); border-bottom-width: 2px;
+    border-radius: 4px; padding: .22em .48em; white-space: nowrap;
+  }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.2rem; }
+  @media (max-width: 40rem) { .cols { grid-template-columns: 1fr; } }
+  .yes { color: var(--keep); font-weight: 600; }
+  .no { color: var(--wipe); font-weight: 600; }
+  .flag { color: var(--muted); font-size: .84em; }
+  .note {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: .75rem 1rem; margin: 1.2rem 0; border-radius: 0 4px 4px 0; font-size: .9rem;
+  }
+  .note p:last-child { margin-bottom: 0; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .84rem; color: var(--muted); }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 10pt; }
+    h2 { page-break-after: avoid; }
+    table, .note { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Cheat sheet · M00</div>
+  <h1>Hot reload &amp; DevTools</h1>
+  <p class="sub">
+    Tra nhanh. Phần giải thích nằm ở
+    <a href="../lessons/0001-giai-phau-project-va-hot-reload.html">bài 0001</a> và
+    <a href="../lessons/0002-devtools-widget-inspector.html">bài 0002</a>.
+  </p>
+
+  <h2>Phím trong <code>flutter run</code></h2>
+
+  <p class="sub" style="margin-bottom:.6rem">
+    Lấy nguyên từ <code>flutter_tools/lib/src/base/command_help.dart</code>. Cột phải
+    là cờ debug mà phím đó bật — gõ được trong code luôn nếu cần.
+    Gõ <kbd>h</kbd> để app tự in lại danh sách này.
+  </p>
+
+  <table>
+    <thead><tr><th style="width:3.5rem">Phím</th><th>Làm gì</th><th>Cờ tương ứng</th></tr></thead>
+    <tbody>
+      <tr><td><kbd>r</kbd></td><td><strong>Hot reload</strong></td><td></td></tr>
+      <tr><td><kbd>R</kbd></td><td><strong>Hot restart</strong></td><td></td></tr>
+      <tr><td><kbd>v</kbd></td><td><strong>Mở Flutter DevTools</strong></td><td></td></tr>
+      <tr><td><kbd>i</kbd></td><td>Bật/tắt widget inspector</td><td class="flag"><code>WidgetsApp.showWidgetInspectorOverride</code></td></tr>
+      <tr><td><kbd>p</kbd></td><td>Hiện đường dựng hình (khung của mọi widget)</td><td class="flag"><code>debugPaintSizeEnabled</code></td></tr>
+      <tr><td><kbd>w</kbd></td><td>Đổ cây widget ra console</td><td class="flag"><code>debugDumpApp</code></td></tr>
+      <tr><td><kbd>t</kbd></td><td>Đổ cây render ra console</td><td class="flag"><code>debugDumpRenderTree</code></td></tr>
+      <tr><td><kbd>L</kbd></td><td>Đổ cây layer ra console</td><td class="flag"><code>debugDumpLayerTree</code></td></tr>
+      <tr><td><kbd>f</kbd></td><td>Đổ cây focus ra console</td><td class="flag"><code>debugDumpFocusTree</code></td></tr>
+      <tr><td><kbd>b</kbd></td><td>Đổi sáng/tối của hệ thống</td><td class="flag"><code>debugBrightnessOverride</code></td></tr>
+      <tr><td><kbd>o</kbd></td><td>Giả lập hệ điều hành khác</td><td class="flag"><code>defaultTargetPlatform</code></td></tr>
+      <tr><td><kbd>P</kbd></td><td>Bật lớp phủ hiệu năng</td><td class="flag"><code>WidgetsApp.showPerformanceOverlay</code></td></tr>
+      <tr><td><kbd>a</kbd></td><td>Ghi timeline cho mọi <code>build()</code></td><td class="flag"><code>debugProfileWidgetBuilds</code></td></tr>
+      <tr><td><kbd>I</kbd></td><td>Đảo màu ảnh bị quá khổ</td><td class="flag"><code>debugInvertOversizedImages</code></td></tr>
+      <tr><td><kbd>s</kbd></td><td>Chụp màn hình ra <code>flutter.png</code></td><td></td></tr>
+      <tr><td><kbd>c</kbd></td><td>Xoá màn hình console</td><td></td></tr>
+      <tr><td><kbd>d</kbd></td><td>Thoát <code>flutter run</code> nhưng <strong>để app chạy tiếp</strong></td><td></td></tr>
+      <tr><td><kbd>q</kbd></td><td>Thoát và tắt luôn app trên máy</td><td></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Hot reload ăn hay không ăn</h2>
+
+  <div class="cols">
+    <div>
+      <table>
+        <thead><tr><th><span class="yes">Ăn</span> — bấm <kbd>r</kbd> là đủ</th></tr></thead>
+        <tbody>
+          <tr><td>Sửa thân <code>build()</code></td></tr>
+          <tr><td>Sửa thân hàm bất kỳ (<code>onPressed</code>, handler…)</td></tr>
+          <tr><td>Đổi chuỗi, màu, số trong <code>build()</code></td></tr>
+          <tr><td>Thêm / bớt widget trong cây</td></tr>
+          <tr><td>Thêm hàm, thêm class mới</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table>
+        <thead><tr><th><span class="no">Không ăn</span> — phải <kbd>R</kbd></th></tr></thead>
+        <tbody>
+          <tr><td>Sửa <code>main()</code></td></tr>
+          <tr><td>Sửa <code>initState()</code></td></tr>
+          <tr><td>Đổi giá trị khởi tạo field của <code>State</code></td></tr>
+          <tr><td>Biến <code>static</code>, biến global đã khởi tạo</td></tr>
+          <tr><td>Đổi <code>StatelessWidget</code> ⇄ <code>StatefulWidget</code></td></tr>
+          <tr><td>Sửa <code>pubspec.yaml</code> → phải <code>q</code> rồi chạy lại</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    <p>
+      <strong>Một câu để suy ra phần còn lại:</strong> hot reload <em>thay code, nhưng
+      không tua lại thời gian</em>. Cái gì đã chạy xong rồi thì vẫn đã chạy —
+      <code>main()</code> đã gọi, <code>State</code> đã tồn tại. Hot restart vứt hết
+      state Dart và chạy lại <code>main()</code>, nhưng <strong>không</strong> khởi
+      động lại phần native.
+    </p>
+  </div>
+
+  <h2>DevTools — dùng cái gì khi nào</h2>
+
+  <table>
+    <thead><tr><th style="width:11rem">Tab</th><th>Dùng khi</th><th style="width:5rem">Module</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Widget Inspector</strong></td><td>Không biết pixel trên màn hình ứng với dòng code nào</td><td>M00</td></tr>
+      <tr><td><strong>Layout Explorer</strong></td><td>Layout lệch, không rõ ai đang ép kích thước ai</td><td>M01</td></tr>
+      <tr><td><strong>Network</strong></td><td>Xem request thật, header, body, mã lỗi</td><td>M05</td></tr>
+      <tr><td><strong>Performance</strong></td><td>Khung hình rớt, cuộn giật</td><td>M11</td></tr>
+      <tr><td><strong>Memory</strong></td><td>Nghi rò bộ nhớ, ảnh không được giải phóng</td><td>M11</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    Nút dùng nhiều nhất là <strong>Select widget mode</strong>: bật lên, chạm vào
+    widget trên máy, Inspector nhảy tới đúng node. Đi ngược từ pixel về code.
+  </p>
+
+  <h2>Triệu chứng → nguyên nhân</h2>
+
+  <table>
+    <thead><tr><th style="width:16rem">Thấy gì</th><th>Gần như chắc chắn là</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Chữ đỏ 48px, gạch chân vàng đôi</strong></td>
+        <td>Không có <code>Material</code> nào ở trên. Không phải lỗi — là style mặc định được làm xấu có chủ đích.
+          <a href="../learning-records/0001-thieu-scaffold-khong-crash.md">record 0001</a></td>
+      </tr>
+      <tr><td>Nền đen trơn, chữ dính góc trên trái</td><td>Thiếu <code>Scaffold</code> — không ai vẽ nền, không ai căn lề</td></tr>
+      <tr><td>Sửa code mà màn hình không đổi</td><td>Thứ vừa sửa nằm ở cột <span class="no">Không ăn</span> bên trên. Bấm <kbd>R</kbd></td></tr>
+      <tr><td>Sọc vàng đen ở mép widget</td><td><code>RenderFlex overflow</code> — con to hơn chỗ cha cho. Gặp nhiều từ M01</td></tr>
+      <tr><td>Màn hình đỏ kèm stack trace</td><td>Exception thật trong <code>build()</code>. Đọc dòng đầu, nó nói thẳng widget nào</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Lệnh hay quên</h2>
+
+  <pre><code>flutter pub get                    # LUÔN ở gốc repo — đây là pub workspace
+flutter analyze                    # cũng ở gốc, quét toàn bộ apps/
+flutter devices                    # xem máy nào đang nối
+flutter emulators --launch pixel_dev
+cd apps/&lt;dir&gt; && flutter run -d emulator-5554</code></pre>
+
+  <footer>
+    Nguồn: <a href="https://docs.flutter.dev/tools/hot-reload">Hot reload</a> ·
+    <a href="https://docs.flutter.dev/tools/devtools/inspector">Flutter inspector</a>.
+    Bảng phím đọc trực tiếp từ source <code>flutter_tools</code> của SDK đang cài,
+    không chép từ blog.
+  </footer>
+
+</div>
+</body>
+</html>

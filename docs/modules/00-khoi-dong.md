@@ -33,7 +33,9 @@ Việc của bạn là **phá nó**:
 
 1. Sửa một chuỗi text → hot reload → thấy đổi ngay
 2. Sửa `main()` → hot reload → **không** đổi. Hot restart → đổi. Hiểu vì sao.
-3. Xoá `Scaffold`, chỉ để lại `Text` trần → xem lỗi hiện ra thế nào
+3. Xoá `Scaffold`, chỉ để lại `Text` trần → đoán trước xem app có crash không, rồi
+   chạy. **Nó không crash** — vì sao thì xem
+   [learning record 0001](../learning-records/0001-thieu-scaffold-khong-crash.md)
 4. Mở DevTools, tìm chính widget `Text` đó trong cây
 
 ## Capstone task
@@ -61,10 +63,16 @@ triển thông suốt** — sửa code là thấy kết quả trong vài giây.
 **Capstone:**
 
 - [x] `apps/userhub` chạy được trên Android emulator
-- [ ] Sửa text trong `userhub` rồi hot reload thấy đổi, không cần restart
-- [ ] Mở được DevTools và tìm thấy widget đó trong cây
-- [ ] `flutter analyze` ở root báo `No issues found!`
-- [ ] Giải thích được bằng lời: vì sao sửa `main()` thì hot reload không ăn
+- [x] Sửa text trong `userhub` rồi hot reload thấy đổi, không cần restart
+- [x] Mở được DevTools và tìm thấy widget đó trong cây
+- [x] `flutter analyze` ở root báo `No issues found!`
+- [x] Giải thích được bằng lời: vì sao sửa `main()` thì hot reload không ăn
+
+**M00 xong ngày 2026-09-15.** Sản phẩm của module:
+[bài 0001](../lessons/0001-giai-phau-project-va-hot-reload.html) ·
+[bài 0002](../lessons/0002-devtools-widget-inspector.html) ·
+[cheat sheet](../reference/hot-reload-va-devtools.html) ·
+[record 0001](../learning-records/0001-thieu-scaffold-khong-crash.md)
 
 ## iOS — hoãn lại
 

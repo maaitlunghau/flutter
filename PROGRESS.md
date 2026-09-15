@@ -5,20 +5,29 @@
 
 ## Đang ở đâu
 
-- **Module hiện tại:** M00 — Khởi động & công cụ
-- **Vòng:** hạ tầng xong, sẵn sàng vào vòng 1
+- **Module hiện tại:** M01 — Widget & Layout *(chưa bắt đầu)*
+- **Vòng:** M00 xong cả 2 vòng ngày 2026-09-15
 - **Cập nhật lần cuối:** 2026-09-15
 
 ## Việc tiếp theo
 
-**Toolchain Android: XONG.** `apps/userhub` đã chạy được trên emulator
-`pixel_dev` (Android 16, API 36, arm64). Bốn cái bẫy gặp phải đã ghi vào
+**M00 xong ngày 2026-09-15**, cả hai vòng. Toolchain Android chạy thông, vòng lặp
+sửa-code-thấy-kết-quả đã thông suốt trên `pixel_dev`. Năm cái bẫy gặp phải ghi ở
 [bẫy thường gặp M00](docs/modules/00-khoi-dong.md#bẫy-thường-gặp).
 
-- [ ] M00 vòng 1 — giải phẫu project, hot reload vs hot restart
-- [ ] M00 vòng 2 — DevTools, đọc cây widget
+Sản phẩm M00: [bài 0001](docs/lessons/0001-giai-phau-project-va-hot-reload.html) ·
+[bài 0002](docs/lessons/0002-devtools-widget-inspector.html) ·
+[cheat sheet](docs/reference/hot-reload-va-devtools.html) ·
+[record 0001](docs/learning-records/0001-thieu-scaffold-khong-crash.md)
 
-Đề bài: [docs/modules/00-khoi-dong.md](docs/modules/00-khoi-dong.md)
+**Tiếp theo — M01 Widget & Layout, 5 ngày.** Module dài nhất phần đầu roadmap, và
+cố ý dài: constraints là chỗ người học Flutter mắc kẹt lâu nhất, biết Dart không
+giúp được gì.
+
+- [ ] M01 — chưa có đề bài `docs/modules/01-*.md`, viết trước khi dạy
+- [ ] Lab `apps/01_layout_lab` — chưa tạo
+
+Chạy bằng `/flutter-module 01`.
 
 **Có thể làm lệch thứ tự:** lab `apps/12_firebase_lab` độc lập với `userhub`, nên
 khi trên lớp dạy tới Firebase thì làm nửa lab của M12 luôn, không cần chờ tới M12.
@@ -29,7 +38,7 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 
 | # | Module | Trạng thái |
 |---|---|---|
-| 00 | Khởi động & công cụ | 🚧 |
+| 00 | Khởi động & công cụ | ✅ |
 | 01 | Widget & Layout | ⬜ |
 | 02 | Stateful & vòng đời | ⬜ |
 | 03 | Navigation & Routing | ⬜ |
