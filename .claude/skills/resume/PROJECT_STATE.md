@@ -31,7 +31,7 @@ Neo cho mọi bài giảng: *thứ này giúp gì cho việc ship `userhub`?*
 
 Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`. Đề bài: `docs/modules/00-khoi-dong.md`.
 
-Bản đồ 14 module M00→M13: `docs/roadmap.md`.
+Bản đồ 15 module M00→M14: `docs/roadmap.md`.
 
 ### Vòng học — 4 bước, khoảng 4 tiếng
 
@@ -81,7 +81,9 @@ từng module.
 | **Không bao giờ dịch tên API Flutter/Dart** | | `build`, `setState`, `initState` phải giống hệt tài liệu chính thức, vì đó là chỗ người học tra cứu. |
 | **Feature-first chỉ bắt đầu từ M08** | | Trước đó phẳng và hiển nhiên tốt hơn nhiều tầng và khôn lỏi. |
 | **Làm thẳng trên `main`, không PR** | | Trừ **M08** — module refactor kiến trúc thì tách nhánh, để trạng thái "trước" còn lại mà so. Đọc diff đó **chính là bài học** của module. |
-| **Không viết test trước M13** | | M13 là tuỳ chọn, mở khoá khi người học bắt đầu thấy sợ mỗi lần refactor. |
+| **Không viết test trước M14** | | M14 là tuỳ chọn, mở khoá khi người học bắt đầu thấy sợ mỗi lần refactor. |
+| **Firebase là M12 — bổ sung, không thay backend** | 2026-09-15 | Roadmap 14 → 15 module; Release xuống M13, Testing xuống M14. Spring Boot vẫn là nguồn dữ liệu của `userhub`; Firebase chỉ lo FCM, Crashlytics, Storage, Analytics. Đặt sau M09 vì Firestore bật offline bằng một dòng, học sớm là M09 mất lý do tồn tại; đặt trước Release vì Crashlytics chỉ có nghĩa với release build trên máy thật. Lý do đầy đủ: `docs/roadmap.md` mục *M12 — Firebase*. |
+| **Lab M12 làm được lệch thứ tự** | 2026-09-15 | `apps/12_firebase_lab` độc lập với `userhub`, nên làm được ngay khi lớp dạy tới Firebase. Chỉ nửa capstone mới buộc đứng sau M09. |
 
 ---
 
@@ -92,6 +94,10 @@ Danh sách đầy đủ ở `PROGRESS.md`. Cái **chặn tiến độ** chỉ c�
 > **Chưa có spec API Spring Boot.** Cần trước khi vào **M05** (Async & tầng dữ
 > liệu): danh sách endpoint, hình dạng request/response, JWT thuần hay có refresh
 > token. Quyết định này ảnh hưởng kiến trúc `packages/api_client` ở M08.
+
+Ngoài ra **chưa dựng Firebase project** — cần trước lab M12, và phải chốt xem
+`google-services.json` có commit hay không (mặc định hiện tại: `.gitignore`, vì
+repo có thể public sau). Chưa chặn gì.
 
 Ba cái còn lại là nhiễu của toolchain, **không chặn gì**, đã ghi đầy đủ trong
 `docs/modules/00-khoi-dong.md` mục *"Bẫy thường gặp"* (5 bẫy, kèm cách kiểm

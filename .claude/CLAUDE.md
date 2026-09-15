@@ -16,7 +16,7 @@ where the learner currently is.
 | `apps/NN_*_lab/` | Lab apps — Claude writes these as worked examples |
 | `apps/userhub/` | The capstone. The learner's app. See the rule below. |
 | `packages/` | Shared code. Created only when a real need appears. |
-| `docs/roadmap.md` | The 14-module map, M00 to M13 |
+| `docs/roadmap.md` | The 15-module map, M00 to M14 |
 | `docs/modules/NN-*.md` | Per-module brief: goal, task, definition of done |
 | `docs/lessons/*.html` | Generated lessons, in Vietnamese |
 | `docs/reference/*.html` | Cheat sheets for quick lookup |
@@ -24,6 +24,10 @@ where the learner currently is.
 | `PROGRESS.md` | Current position. Read first, update last. |
 
 ## The learning loop
+
+The 14-module map became 15 on 2026-09-15: **M12 is Firebase**, Release moved to
+M13, optional Testing to M14. Firebase is additive — the Spring Boot API stays the
+capstone's data source. See `docs/roadmap.md`, section *M12 — Firebase*.
 
 Each module runs in cycles of roughly four hours:
 
@@ -128,7 +132,7 @@ Enforced by `.husky/commit-msg`, which rejects anything else.
 |---|---|---|
 | Capstone | `userhub` | `feat(userhub): add jwt interceptor` |
 | Lab app | app directory name | `feat(03_navigation_lab): add nested routes` |
-| Docs, lessons | `m00`–`m13` | `docs(m03): add navigation lesson` |
+| Docs, lessons | `m00`–`m14` | `docs(m03): add navigation lesson` |
 | Repo infra | `repo` | `chore(repo): enable pub workspace` |
 
 `.husky/pre-commit` formats staged Dart files and re-stages them, then runs
@@ -147,7 +151,7 @@ afterwards is the actual lesson of the module.
 - Do not bump dependency versions unprompted
 - Do not create empty packages "for later" — YAGNI. A `packages/*` entry appears
   only when a third copy-paste has proved the need.
-- Do not write tests before M13 unless explicitly asked
+- Do not write tests before M14 unless explicitly asked
 - Do not write code in `apps/userhub/` unless explicitly asked (capstone rule)
 - Do not reach for a third-party package when the Flutter SDK already covers it
 - Do not scaffold lab directories for modules that have not started

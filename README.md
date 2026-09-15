@@ -1,6 +1,6 @@
 # Flutter — Không gian luyện tập
 
-Luyện Flutter từ nền tảng tới một sản phẩm ship được, theo 14 module có cấu trúc.
+Luyện Flutter từ nền tảng tới một sản phẩm ship được, theo 15 module có cấu trúc.
 
 ## Repo này là gì
 
@@ -32,8 +32,12 @@ hay `class`. Phần đó đã học ở repo trước:
 | 09 | Lưu trữ & offline | ⬜ |
 | 10 | Polish & UX | ⬜ |
 | 11 | Hiệu năng & debug | ⬜ |
-| 12 | Release | ⬜ |
-| 13 | Testing & CI (tuỳ chọn) | ⬜ |
+| 12 | Firebase | ⬜ |
+| 13 | Release | ⬜ |
+| 14 | Testing & CI (tuỳ chọn) | ⬜ |
+
+Firebase ở M12 là **bổ sung**, không thay backend: FCM, Crashlytics, Storage,
+Analytics — còn dữ liệu vẫn đi qua API Spring Boot.
 
 Chi tiết từng module: [docs/roadmap.md](docs/roadmap.md) ·
 Tiến độ: [PROGRESS.md](PROGRESS.md) ·
@@ -47,7 +51,7 @@ apps/                 mỗi thư mục là một Flutter project độc lập
   userhub/            capstone — app thật, gọi API Spring Boot
 packages/             code dùng chung, chỉ sinh ra khi thật sự cần
 docs/
-  roadmap.md          bản đồ 14 module
+  roadmap.md          bản đồ 15 module
   modules/            đề bài và tiêu chí Xong từng module
   lessons/            bài giảng dạng HTML
   reference/          cheat sheet tra nhanh
@@ -82,15 +86,16 @@ máy host.
 ## Capstone — `userhub`
 
 App quản lý người dùng, gọi tới API Spring Boot ở repo riêng. Đăng nhập bằng JWT,
-danh sách và chi tiết user, xem được khi mất mạng, có dark mode, release lên máy
-thật ở M12.
+danh sách và chi tiết user, xem được khi mất mạng, có dark mode, nhận push
+notification qua FCM ở M12, release lên máy thật ở M13.
 
 Ảnh chụp màn hình sẽ bổ sung dần.
 
 ## Tech stack
 
 Flutter 3.47 · Dart 3.13 · Pub workspaces · Riverpod (từ M07) · Dio (M05) ·
-go_router (M03) · drift + flutter_secure_storage (M09)
+go_router (M03) · drift + flutter_secure_storage (M09) · Firebase — FCM,
+Crashlytics, Storage, Analytics (M12)
 
 ## Quy ước
 

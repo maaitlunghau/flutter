@@ -7,7 +7,7 @@
 
 - **Module hiện tại:** M00 — Khởi động & công cụ
 - **Vòng:** hạ tầng xong, sẵn sàng vào vòng 1
-- **Cập nhật lần cuối:** 2026-09-10
+- **Cập nhật lần cuối:** 2026-09-15
 
 ## Việc tiếp theo
 
@@ -19,6 +19,11 @@
 - [ ] M00 vòng 2 — DevTools, đọc cây widget
 
 Đề bài: [docs/modules/00-khoi-dong.md](docs/modules/00-khoi-dong.md)
+
+**Có thể làm lệch thứ tự:** lab `apps/12_firebase_lab` độc lập với `userhub`, nên
+khi trên lớp dạy tới Firebase thì làm nửa lab của M12 luôn, không cần chờ tới M12.
+Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
+[roadmap, mục M12](docs/roadmap.md#m12--firebase-bổ-sung-không-thay-thế).
 
 ## Trạng thái các module
 
@@ -36,8 +41,9 @@
 | 09 | Lưu trữ & offline | ⬜ |
 | 10 | Polish & UX | ⬜ |
 | 11 | Hiệu năng & debug | ⬜ |
-| 12 | Release | ⬜ |
-| 13 | Testing & CI (tuỳ chọn) | ⬜ |
+| 12 | Firebase | ⬜ |
+| 13 | Release | ⬜ |
+| 14 | Testing & CI (tuỳ chọn) | ⬜ |
 
 ## Hạ tầng đã dựng
 
@@ -60,6 +66,11 @@
   License thực tế đã accept — Gradle xác nhận khi build. Đừng đuổi theo nó.
 - **`flutter emulators --create` không dùng được** vì cùng lý do trên. Tạo AVD
   bằng `avdmanager`. Đã ghi lệnh đầy đủ trong đề bài M00.
+- **Chưa dựng Firebase project.** Cần trước khi vào lab M12: một Firebase project
+  trên tài khoản Google, `flutterfire` CLI, và chốt xem `google-services.json` có
+  commit hay không. File đó **không phải secret** — nó nằm sẵn trong APK đã ship —
+  nhưng repo này có thể public sau, nên mặc định là `.gitignore` cho tới khi có lý
+  do khác. Chưa chặn gì: M12 còn xa, và lab làm sớm được nếu lớp dạy tới.
 - **iOS hoãn lại theo chủ ý.** `apps/userhub/ios/` đã sinh sẵn với đúng bundle id
   nhưng **chưa từng build** — placeholder chưa verify. Cần Xcode đầy đủ +
   CocoaPods. Không chặn việc học Android.

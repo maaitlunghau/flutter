@@ -146,6 +146,13 @@ commit**, clone lại là mất. Sửa thành:
 
 ## 4. Roadmap — M00 đến M13 (14 module, M13 tuỳ chọn)
 
+> **Sửa đổi 2026-09-15 — mục này đã lạc hậu.** Roadmap thành **15 module, M00 đến
+> M14**: chèn **M12 — Firebase** (bổ sung, không thay backend), Release xuống M13,
+> Testing & CI xuống M14. Bảng dưới đây giữ nguyên làm bản ghi thiết kế gốc;
+> **`docs/roadmap.md` là nguồn sự thật**, và lý do chọn vị trí M12 nằm ở đó, mục
+> *M12 — Firebase*. Mọi tham chiếu "M13" bên dưới (testing, scope commit) giờ đọc
+> thành "M14", "M12" (release) đọc thành "M13".
+
 Mỗi module gồm Lab (Claude làm mẫu) và Capstone (người học tự làm).
 Ước lượng theo nhịp 3-4h/ngày.
 

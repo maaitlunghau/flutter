@@ -1,7 +1,7 @@
 # Roadmap — Flutter từ nền tảng tới sản phẩm ship được
 
-14 module, M00 đến M13 (M13 tuỳ chọn). Ước lượng ~50 ngày làm việc với nhịp
-3-4h/ngày → khoảng 7-10 tuần.
+15 module, M00 đến M14 (M14 tuỳ chọn). Ước lượng ~54 ngày làm việc với nhịp
+3-4h/ngày → khoảng 8-11 tuần.
 
 Mỗi module có hai nửa:
 
@@ -25,8 +25,9 @@ Thiết kế đầy đủ và lý do đằng sau từng lựa chọn:
 | 09 | Lưu trữ & offline | 4 | `09_storage_lab` — 4 tầng lưu trữ, `sqflite` thô → `drift`, cache-then-network | Nhớ phiên đăng nhập, xem user offline |
 | 10 | Polish & UX | 5 | `10_polish_lab` — Material 3, dark mode, animation, responsive | Theme hệ thống, skeleton loading, animation chuyển màn |
 | 11 | Hiệu năng & debug | 3 | `11_perf_lab` — **app cố tình chậm, người học tối ưu** | Đo & tối ưu `userhub` bằng DevTools |
-| 12 | Release | 3 | — | Icon, splash native, flavor, ký AAB, build iOS, chạy trên máy thật |
-| 13 | *(tuỳ chọn)* Testing & CI | — | — | Mở khoá khi bắt đầu thấy sợ mỗi lần refactor |
+| 12 | Firebase | 4 | `12_firebase_lab` — Auth, Firestore, offline persistence (xem bên dưới) | FCM + deep link, Crashlytics, Storage cho avatar, Analytics |
+| 13 | Release | 3 | — | Icon, splash native, flavor, ký AAB, build iOS, chạy trên máy thật |
+| 14 | *(tuỳ chọn)* Testing & CI | — | — | Mở khoá khi bắt đầu thấy sợ mỗi lần refactor |
 
 Tiến độ hiện tại: [PROGRESS.md](../PROGRESS.md)
 
@@ -41,7 +42,10 @@ Tiến độ hiện tại: [PROGRESS.md](../PROGRESS.md)
   năng trên một app vốn đã nhanh.
 - **Chạm API Spring thật từ M05**, sớm hơn giáo trình thông thường, vì backend đã
   có sẵn — không cần luyện trên API giả.
-- **Testing tách hẳn ra M13.** Đan test vào từ đầu sẽ làm chậm giai đoạn cần đà
+- **Firebase đứng ở M12, sau M09 và ngay trước Release.** Lý do đầy đủ ở mục
+  *"M12 — Firebase"* bên dưới. Ngắn gọn: học Firestore trước M09 thì M09 mất sạch
+  lý do tồn tại, còn Crashlytics chỉ có nghĩa khi app đã sắp ship.
+- **Testing tách hẳn ra M14.** Đan test vào từ đầu sẽ làm chậm giai đoạn cần đà
   nhất. Đánh đổi có ý thức: refactor ở M08 và M10 sẽ không có lưới an toàn.
 
 ## M09 — bốn tầng lưu trữ
@@ -64,3 +68,63 @@ kinh điển của người mới.
 Lộ trình: học `sqflite` thô trước (~nửa ngày) rồi dùng `drift` cho capstone —
 cùng logic với M06 → M07. Chọn `drift` thay Hive/Isar vì đã có sẵn tư duy quan hệ
 và SQL từ Spring Boot.
+
+## M12 — Firebase: bổ sung, không thay thế
+
+**Quyết định gốc: Spring Boot vẫn là nguồn dữ liệu của `userhub`.** Firebase vào
+repo này để làm những việc backend chạy trên laptop không làm được, chứ không để
+thay nó. Đây là hình dạng của app production thật — backend riêng cộng Firebase lo
+dịch vụ nền tảng — và nó giữ nguyên lợi thế lớn nhất người học mang vào repo: một
+API thật đã viết xong.
+
+### Vì sao không sớm hơn
+
+Firebase chồng lấn gần hết những gì M05, M08 và M09 bắt tự làm bằng tay:
+
+| Roadmap dạy tự làm | Firebase làm sẵn |
+|---|---|
+| M05 — Dio, JSON, gắn JWT thủ công, Repository | SDK giấu hết HTTP; Auth tự quản token |
+| M08 — refresh-token interceptor | không tồn tại, SDK tự refresh |
+| M09 — `sqflite` → `drift`, cache-then-network | Firestore bật offline persistence bằng **một dòng** |
+
+Học Firestore trước M09 thì M09 không còn lý do tồn tại: người học sẽ không bao
+giờ hiểu vì sao cache-then-network là việc khó. **Sau M09 là ràng buộc cứng.**
+
+### Vì sao không muộn hơn
+
+Crashlytics chỉ có nghĩa với **release build chạy trên máy thật** — crash trong
+debug thì đã thấy ngay ở console. FCM cũng vậy: notification nền cần app cài thật,
+không phải `flutter run`. Đặt Firebase **ngay trước** Release nghĩa là M13 ship
+một app đã có Crashlytics bên trong. Đặt sau Release thì gắn Crashlytics vào app
+đã ship xong — vô nghĩa.
+
+Thêm nữa, `flutterfire configure` sửa `android/app/build.gradle`, thêm plugin, thả
+`google-services.json`. Đúng họ công việc native mà M13 làm (icon, splash native,
+flavor, ký AAB), nên hai module cạnh nhau thì không phải nạp lại kiến thức Gradle
+hai lần.
+
+### Hai nửa của module
+
+**Lab `apps/12_firebase_lab`** — app rời, vứt đi được, **không nối vào `userhub`**:
+`flutterfire configure`, Firebase Auth email/password, Firestore CRUD, bật offline
+persistence. Mục đích là chạm đủ khái niệm một lần, rồi viết một
+`docs/learning-records/` so sánh thẳng: *chỗ nào Firebase làm sẵn thứ M05 và M09
+bắt mình tự làm.*
+
+**Capstone trong `userhub`** — chỉ bốn thứ, tất cả là năng lực mới, không đụng vào
+tầng dữ liệu đã có:
+
+| Thứ | Làm gì | Nối vào đâu |
+|---|---|---|
+| **FCM** | xin quyền, handler foreground/background, bấm notification → deep link | route tree của M03, auth state của M07 |
+| **Crashlytics** | bật, ném crash thử, đọc dashboard | chuẩn bị cho M13 |
+| **Storage** | upload avatar | UI đã polish ở M10 |
+| **Analytics** | log 2-3 event, không hơn | — |
+
+Bỏ hẳn Remote Config và Firebase Hosting — YAGNI.
+
+### Lab M12 làm được sớm, không cần chờ tới tuần 8
+
+Nửa lab **độc lập hoàn toàn** với `userhub` — nó là một app riêng trong `apps/`.
+Khi trên lớp dạy tới Firebase, cứ làm lab trước, kể cả đang ở M01. Chỉ **nửa
+capstone** mới bị ràng buộc phải đứng sau M09.
