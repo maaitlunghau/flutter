@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:practice/m01/center_mystery_screen.dart';
+import 'package:practice/m01/constraints_probe_screen.dart';
+import 'package:practice/m01/tight_vs_loose_screen.dart';
 
 import 'm00/counter_screen.dart';
 
@@ -28,9 +31,6 @@ class PracticeMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Practice — sân tập')),
-
-      // ListView chứ không Column: tới M07 danh sách này sẽ dài hơn màn hình,
-      // Column thì tràn còn ListView thì cuộn.
       body: ListView(
         children: const [
           _SectionHeader('M00 — Khởi động'),
@@ -41,12 +41,21 @@ class PracticeMenuScreen extends StatelessWidget {
           ),
 
           _SectionHeader('M01 — Widget & Layout'),
-          _NotBuiltYet(
-            'docs/modules/01-widget-va-layout.md — mục "Tự dựng lại"',
+          _ExerciseTile(
+            title: 'Center Mystery',
+            subtitle: 'Cùng một ô vuông, lúc phủ kín - lúc chính xác 100x100',
+            screen: CenterMysteryScreen(),
           ),
-
-          // Dựng xong màn nào thì thêm một _ExerciseTile ngay dưới tiêu đề
-          // module tương ứng, và xoá dòng _NotBuiltYet của module đó đi.
+          _ExerciseTile(
+            title: 'Constraints Probe',
+            subtitle: 'Đọc bốn con số ở từng tầng của cây',
+            screen: ConstraintsProbeScreen(),
+          ),
+          _ExerciseTile(
+            title: 'Tight vs Loose',
+            subtitle: 'Cùng một SizedBox(50, 50) dưới hai loại constraints',
+            screen: TightVsLooseScreen(),
+          ),
         ],
       ),
     );
