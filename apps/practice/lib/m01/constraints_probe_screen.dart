@@ -5,6 +5,19 @@ class ConstraintsProbeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Constraints Probe')),
+      body: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text(
+            'Chưa dựng.\n\n'
+            'Đề bài: docs/modules/01-widget-va-layout.md\n'
+            'mục "Tự dựng lại" — màn 2.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
   }
 }

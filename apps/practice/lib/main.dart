@@ -107,24 +107,3 @@ class _ExerciseTile extends StatelessWidget {
     );
   }
 }
-
-class _NotBuiltYet extends StatelessWidget {
-  const _NotBuiltYet(this.where);
-
-  final String where;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Text(
-        'Chưa dựng màn nào. Đề bài: $where',
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.outline,
-        ),
-      ),
-    );
-  }
-}
