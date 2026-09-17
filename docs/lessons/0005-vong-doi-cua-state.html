@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0005 — Vòng đời của State</title>
+<style>
+  :root {
+    --bg: #fdfcfa; --ink: #1a1a1a; --muted: #6b6862; --rule: #e3ded6;
+    --accent: #7c4a2d; --code-bg: #f4f1ec; --keep: #2d6a4f; --wipe: #9b2c2c;
+    --measure: 34rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513; --ink: #e8e4dd; --muted: #9a958c; --rule: #33302b;
+      --accent: #d9a273; --code-bg: #201e1b; --keep: #6ac292; --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 4rem 1.5rem 6rem;
+    background: var(--bg); color: var(--ink);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 46rem; margin: 2.5rem auto; }
+  .eyebrow {
+    font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .9rem;
+  }
+  h1 { font: 600 2.1rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .6rem; letter-spacing: -.015em; }
+  .standfirst { color: var(--muted); font-size: 1.06rem; margin: 0 0 2.5rem; }
+  h2 {
+    font: 600 1.28rem/1.3 ui-serif, Georgia, serif;
+    margin: 3rem 0 .9rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--rule); letter-spacing: -.01em;
+  }
+  h3 { font: 600 1rem/1.4 ui-sans-serif, system-ui, sans-serif; margin: 1.8rem 0 .5rem; }
+  p { margin: 0 0 1.1rem; }
+  strong { font-weight: 600; }
+  code {
+    font: 400 .88em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .12em .38em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: 1rem 1.1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1.3rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; line-height: 1.6; }
+  table { border-collapse: collapse; width: 100%; margin: 1.4rem 0; font-size: .93rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 .78rem/1.3 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  td code { font-size: .84em; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: 1rem 1.2rem; margin: 1.6rem 0; border-radius: 0 4px 4px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: .5rem;
+  }
+  .callout.warn { border-left-color: var(--wipe); background: color-mix(in srgb, var(--wipe) 7%, transparent); }
+  .callout.warn .label { color: var(--wipe); }
+  figure { margin: 2.2rem 0; }
+  figcaption { font-size: .85rem; color: var(--muted); margin-top: .8rem; text-align: center; }
+  svg { width: 100%; height: auto; display: block; }
+  .exp { counter-reset: exp; list-style: none; padding: 0; margin: 1.4rem 0; }
+  .exp li {
+    counter-increment: exp; border: 1px solid var(--rule); border-radius: 5px;
+    padding: 1rem 1.1rem 1rem 3rem; margin-bottom: .9rem; position: relative;
+  }
+  .exp li::before {
+    content: counter(exp); position: absolute; left: 1rem; top: 1rem;
+    font: 600 .8rem/1.5 ui-sans-serif, system-ui, sans-serif;
+    width: 1.5rem; height: 1.5rem; text-align: center;
+    background: var(--accent); color: var(--bg); border-radius: 50%;
+  }
+  .exp li p:last-child { margin-bottom: 0; }
+  .exp .expect { font-size: .9rem; color: var(--muted); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  footer { margin-top: 4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--muted); }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+    h2 { page-break-after: avoid; }
+    figure, pre, .exp li, .callout { page-break-inside: avoid; }
+    footer { page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Bài 0005 · Module M02 · Vòng 1</div>
+  <h1>Vòng đời của State</h1>
+  <p class="standfirst">
+    Ở bộ đếm M00 bạn đã chứng minh được <code>setState</code> không vẽ lại gì.
+    Vậy <em>cái gì</em> vẽ, và con số kia sống ở đâu để sống sót qua mỗi lần vẽ?
+  </p>
+
+  <h2>1. Vì sao phải hai class</h2>
+
+  <p>
+    Viết một <code>StatefulWidget</code> luôn phải gõ <strong>hai</strong> class.
+    Trông thừa, nhưng nó giải quyết một mâu thuẫn thật:
+  </p>
+
+  <table>
+    <thead><tr><th></th><th>Widget</th><th><code>State</code></th></tr></thead>
+    <tbody>
+      <tr><td>Là gì</td><td><strong>Bản mô tả</strong> — một tờ giấy ghi “chỗ này có cái nút”</td><td><strong>Object có vòng đời</strong> — thứ thật sự nhớ mọi chuyện</td></tr>
+      <tr><td>Sống bao lâu</td><td>Bị vứt đi và dựng lại <strong>mỗi lần vẽ</strong>, có thể 60 lần/giây</td><td><strong>Sống sót</strong> qua tất cả những lần đó</td></tr>
+      <tr><td>Thuộc tính</td><td>Bắt buộc <code>final</code> — bất biến</td><td>Thoải mái thay đổi</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    Nếu chỉ có một class, thì mỗi lần vẽ lại là con số đếm về 0 — vì cả object bị
+    vứt đi. Tách làm hai cho phép Flutter <strong>vứt bản mô tả nhưng giữ trí
+    nhớ</strong>.
+  </p>
+
+  <figure class="wide">
+    <svg viewBox="0 0 640 210" role="img" aria-label="Widget bị dựng lại nhiều lần trong khi State chỉ tạo một lần">
+      <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="12">
+        <text x="16" y="28" fill="var(--muted)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">WIDGET — vứt đi, dựng lại</text>
+        <g fill="color-mix(in srgb, var(--wipe) 14%, transparent)" stroke="var(--wipe)">
+          <rect x="16" y="40" width="96" height="34" rx="4"/>
+          <rect x="128" y="40" width="96" height="34" rx="4"/>
+          <rect x="240" y="40" width="96" height="34" rx="4"/>
+          <rect x="352" y="40" width="96" height="34" rx="4"/>
+          <rect x="464" y="40" width="96" height="34" rx="4"/>
+        </g>
+        <g fill="var(--ink)" font-size="11">
+          <text x="38" y="61">build 1</text><text x="150" y="61">build 2</text>
+          <text x="262" y="61">build 3</text><text x="374" y="61">build 4</text>
+          <text x="486" y="61">build 5</text>
+        </g>
+
+        <g stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 3">
+          <path d="M64 74 V 128"/><path d="M176 74 V 128"/><path d="M288 74 V 128"/>
+          <path d="M400 74 V 128"/><path d="M512 74 V 128"/>
+        </g>
+
+        <text x="16" y="152" fill="var(--muted)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">STATE — tạo một lần, sống suốt</text>
+        <rect x="16" y="160" width="544" height="34" rx="4" fill="color-mix(in srgb, var(--keep) 14%, transparent)" stroke="var(--keep)"/>
+        <text x="36" y="181" fill="var(--ink)">_counter = 7 &nbsp;&nbsp;·&nbsp;&nbsp; initState() chạy đúng MỘT lần, ở đây</text>
+      </g>
+    </svg>
+    <figcaption>
+      Năm lần vẽ, năm widget mới. Nhưng chỉ một <code>State</code>, và nó nhớ
+      <code>_counter</code> suốt.
+    </figcaption>
+  </figure>
+
+  <h2>2. Vòng đời — đặt việc gì ở đâu</h2>
+
+  <table>
+    <thead><tr><th>Hàm</th><th>Chạy khi nào</th><th>Đặt gì vào</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>initState()</code></td>
+        <td><strong>Đúng một lần</strong>, lúc <code>State</code> ra đời</td>
+        <td>Tạo controller, mở subscription, gọi API lần đầu</td>
+      </tr>
+      <tr>
+        <td><code>didChangeDependencies()</code></td>
+        <td>Sau <code>initState</code>, và mỗi khi thứ đọc qua <code>context</code> đổi</td>
+        <td>Việc phụ thuộc <code>Theme</code>, <code>MediaQuery</code></td>
+      </tr>
+      <tr>
+        <td><code>build()</code></td>
+        <td><strong>Rất nhiều lần</strong> — mỗi khung hình cần vẽ lại</td>
+        <td><strong>Chỉ dựng widget.</strong> Không gọi mạng, không đọc file, không parse</td>
+      </tr>
+      <tr>
+        <td><code>didUpdateWidget()</code></td>
+        <td>Khi cha dựng lại với tham số mới</td>
+        <td>Phản ứng với tham số đổi — ví dụ đổi URL thì tải lại</td>
+      </tr>
+      <tr>
+        <td><code>dispose()</code></td>
+        <td>Một lần, khi <code>State</code> bị gỡ hẳn</td>
+        <td><strong>Trả lại mọi thứ đã mượn ở <code>initState</code></strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <span class="label">Quy tắc dùng được ngay</span>
+    <p>
+      Mượn ở <code>initState</code> thì trả ở <code>dispose</code>. Hai hàm đó đi
+      thành cặp — viết cái này thì viết luôn cái kia, đừng để lát nữa.
+    </p>
+  </div>
+
+  <h2>3. <code>setState</code> làm gì thật sự</h2>
+
+  <p>Bạn đã thấy tận mắt ở M00. Giờ gọi đúng tên ba bước:</p>
+
+  <pre><code>setState(() => _counter++);
+
+// 1. chạy hàm bạn đưa vào — giá trị đổi NGAY
+// 2. đánh dấu State này "bẩn"
+// 3. xin Flutter xếp lịch gọi build() ở khung hình SAU</code></pre>
+
+  <p>
+    Bỏ <code>setState</code> đi thì bước 1 vẫn xảy ra — giá trị vẫn đổi thật, đó
+    là lý do console in ra số đã tăng. Thiếu bước 2 và 3 nên không ai vẽ lại.
+  </p>
+
+  <p>
+    Hệ quả ngược lại cũng đúng và hay bị quên: <strong>gọi
+    <code>setState</code> mà không đổi gì thì vẫn tốn một lần <code>build</code>.</strong>
+  </p>
+
+  <h2>4. <code>dispose</code> — không ai làm hộ</h2>
+
+  <p>
+    Dart có garbage collector, nên dễ tưởng không cần dọn. Nhưng những thứ này
+    <strong>tự giữ mình sống</strong> bằng cách đăng ký vào chỗ khác:
+  </p>
+
+  <table>
+    <thead><tr><th>Thứ</th><th>Quên <code>dispose</code> thì sao</th></tr></thead>
+    <tbody>
+      <tr><td><code>Timer</code> / <code>Timer.periodic</code></td><td>Vẫn nổ đều sau khi màn đã đóng</td></tr>
+      <tr><td><code>StreamSubscription</code></td><td>Vẫn nhận dữ liệu, gọi <code>setState</code> trên <code>State</code> đã chết → ném lỗi</td></tr>
+      <tr><td><code>TextEditingController</code></td><td>Giữ listener, rò rỉ bộ nhớ</td></tr>
+      <tr><td><code>AnimationController</code></td><td>Giữ ticker, đốt CPU mãi mãi</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <span class="label">Dấu hiệu nhận ra</span>
+    <p>
+      <code>setState() called after dispose()</code> — gặp câu này gần như luôn
+      là bạn quên huỷ một <code>Timer</code> hoặc một subscription. Nó không nói
+      chỗ sai ở đâu, nhưng nó nói <em>loại</em> lỗi là gì.
+    </p>
+  </div>
+
+  <h2>5. Ba thí nghiệm</h2>
+
+  <ol class="exp">
+    <li>
+      <p><strong>Đếm số lần.</strong> Màn <em>Lifecycle Logger</em>, bấm nút ép
+      rebuild năm lần.</p>
+      <p class="expect">Phải thấy: <code>build</code> tăng lên 6, còn
+      <code>initState</code> vẫn đứng ở 1. Thoát màn rồi vào lại thì cả hai về 1
+      — vì đó là một <code>State</code> mới.</p>
+    </li>
+    <li>
+      <p><strong>Đổi tham số của widget.</strong> Vẫn màn đó, bấm nút đổi tiêu đề.</p>
+      <p class="expect">Phải thấy <code>didUpdateWidget</code> chạy, và
+      <code>initState</code> <em>không</em> chạy lại. Widget là cái mới, nhưng
+      <code>State</code> vẫn là cái cũ.</p>
+    </li>
+    <li>
+      <p><strong>Để nó rò rỉ.</strong> Màn <em>Dispose Leak</em>, tắt công tắc
+      “gọi dispose”, thoát màn, rồi nhìn console.</p>
+      <p class="expect">Phải thấy <code>Timer</code> vẫn in ra đều đặn dù màn đã
+      đóng. Bật công tắc lại, làm lại — console im bặt.</p>
+    </li>
+  </ol>
+
+  <div class="callout">
+    <span class="label">Nhớ một câu</span>
+    <p>
+      <strong><code>build()</code> phải rẻ và không có tác dụng phụ.</strong> Nó
+      sẽ chạy nhiều hơn bạn tưởng rất nhiều. Mọi thứ chỉ được làm một lần đều
+      thuộc về <code>initState</code>.
+    </p>
+  </div>
+
+  <footer>
+    Nguồn chính thống:
+    <a href="https://api.flutter.dev/flutter/widgets/State-class.html">Flutter API — State</a> ·
+    <a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a>.
+    <br>
+    Bài trước: <a href="0004-flex-va-loi-tran.html">0004 — Flex &amp; lỗi tràn</a>.
+    <br>
+    Vòng 2 sẽ trả lời: nếu <code>State</code> sống sót, thì Flutter dựa vào đâu để
+    biết <code>State</code> cũ thuộc về widget mới nào? Đó là <code>Key</code>.
+  </footer>
+</div>
+
+</body>
+</html>

@@ -8,5 +8,6 @@ environment:
 workspace:
   - apps/00_hello_flutter
   - apps/01_layout_lab
+  - apps/02_stateful_lab
   - apps/practice
   - apps/userhub

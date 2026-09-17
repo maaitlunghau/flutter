@@ -50,11 +50,46 @@ Học xong module này bạn có thể:
 
 ## Tự dựng lại — `apps/practice/lib/m02/`
 
-Đề bài chi tiết viết sau khi bạn xem lab. Nguyên tắc giữ nguyên: mô tả **hành vi
-và tiêu chí Xong**, không mô tả code; chỉ mở lab khi bí.
+Đề bài từng màn nằm ở cuối mỗi vòng bên dưới. Nguyên tắc giữ nguyên: mô tả
+**hành vi và tiêu chí Xong**, không mô tả code; chỉ mở lab khi bí.
 
-> **Có thể bỏ.** M01 vòng 2 người học chọn bỏ bước tự dựng lại cho nhanh. Nếu M02
-> cũng vậy thì bỏ, nhưng **capstone thì không bỏ được** — nó là `userhub`.
+> Bước này là **mặc định**, làm đủ trừ khi người học nói bỏ. M01 vòng 2 đã bỏ một
+> lần theo yêu cầu; quyết định đó không áp dụng tiếp cho M02.
+
+### Vòng 1 — hai màn
+
+*Bài giảng: [0005 — Vòng đời của State](../lessons/0005-vong-doi-cua-state.html).*
+
+**Màn 1 — đếm callback**
+
+Một widget con hiện **số lần** mỗi callback vòng đời đã chạy: `initState`,
+`didChangeDependencies`, `didUpdateWidget`, `build`. Màn cha có hai nút: một nút
+ép dựng lại, một nút đổi tham số truyền xuống con.
+
+- Tiêu chí: bấm "ép rebuild" 5 lần → `build` tăng 5, `initState` **vẫn là 1**
+- Tiêu chí: bấm "đổi tham số" → `didUpdateWidget` tăng, `initState` **không** tăng
+- Tiêu chí: thoát màn rồi vào lại → mọi số về 1, và `dispose` in ra console
+- Gợi ý duy nhất: biến đếm phải sống ở đâu để không bị reset mỗi lần vẽ?
+
+**Màn 2 — để nó rò rỉ**
+
+Một màn con chạy `Timer.periodic` mỗi giây, in ra console. Màn cha có công tắc
+quyết định `dispose` **có** gọi `timer.cancel()` hay không.
+
+- Tiêu chí: tắt công tắc, mở màn con, thoát ra → console **vẫn đếm tiếp**
+- Tiêu chí: bật công tắc, làm lại → console im bặt ngay khi thoát
+- Tiêu chí: chỉ ra được vì sao cần kiểm tra `mounted` trước khi gọi `setState`
+  trong callback của `Timer`
+- Bằng chứng nằm ở **console**, không phải trên màn hình. Đừng tìm trên UI
+
+## Chia vòng
+
+3 ngày, 2 vòng học:
+
+| Vòng | Nội dung | Ra cái gì |
+|---|---|---|
+| 1 | Vòng đời, `setState`, `dispose` | bài `0005` + lab Lifecycle Logger, Dispose Leak |
+| 2 | `Key` — vì sao state nhảy sang widget khác | bài `0006` + lab Key Trap + capstone Login |
 
 ## Capstone task
 
