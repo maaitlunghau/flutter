@@ -14,8 +14,8 @@ Thiết kế đầy đủ và lý do đằng sau từng lựa chọn:
 | # | Module | Trạng thái | Ngày | Lab | Capstone |
 |---|---|:--:|:--:|---|---|
 | 00 | Khởi động & công cụ | ✅ | 2 | `00_hello_flutter` — giải phẫu project, hot reload vs restart, DevTools | Khởi tạo `userhub`, chạy được trên Android *(iOS hoãn)* |
-| 01 | Widget & Layout | 🚧 | 5 | `01_layout_lab` — Row/Column/Flex, Stack, **constraints** | UI tĩnh: Login + User list, data hardcode |
-| 02 | Stateful & vòng đời | ⬜ | 3 | `02_stateful_lab` — setState, initState/dispose, Key | Tương tác local: hiện/ẩn mật khẩu, validate rỗng |
+| 01 | Widget & Layout | ✅ | 5 | `01_layout_lab` — Row/Column/Flex, Stack, **constraints** | UI tĩnh: Login + User list, data hardcode |
+| 02 | Stateful & vòng đời | 🚧 | 3 | `02_stateful_lab` — setState, initState/dispose, Key | Tương tác local: hiện/ẩn mật khẩu, validate rỗng |
 | 03 | Navigation & Routing | ⬜ | 3 | `03_navigation_lab` — Navigator, go_router, deep link | Route tree: Splash → Login → Home → User detail |
 | 04 | Forms & Input | ⬜ | 3 | `04_forms_lab` — Form, validator, FocusNode, bàn phím | Login + Register hoàn chỉnh có validate |
 | 05 | Async & tầng dữ liệu | ⬜ | 5 | `05_api_lab` — Future/Stream, Dio, JSON, Repository | **Nối thật vào Spring API**: login → JWT → GET /users |

@@ -5,38 +5,33 @@
 
 ## Đang ở đâu
 
-- **Module hiện tại:** M01 — Widget & Layout
-- **Vòng:** vòng 2/3 — bài giảng và lab đã xong, chờ người học **tự dựng lại**
+- **Module hiện tại:** M02 — Stateful & vòng đời
+- **Vòng:** M01 đóng 2026-09-17; M02 mới có đề bài, chưa vào vòng nào
 - **Cập nhật lần cuối:** 2026-09-17
 
 ## Việc tiếp theo
 
-**M00 xong ngày 2026-09-15**, cả hai vòng. Toolchain Android chạy thông, vòng lặp
-sửa-code-thấy-kết-quả đã thông suốt trên `pixel_dev`. Năm cái bẫy gặp phải ghi ở
-[bẫy thường gặp M00](docs/modules/00-khoi-dong.md#bẫy-thường-gặp).
+**M01 đóng ngày 2026-09-17.** Vòng 1 người học tự dựng lại đủ 3 màn constraints
+trong `apps/practice/lib/m01/`. Vòng 2 (Flex, overflow) người học **chọn bỏ bước
+tự dựng lại** sau khi đã chạy và hiểu lab. Vòng 3 (`Stack`) và capstone **không
+làm** — capstone được gộp sang M02, xem lý do trong brief M02.
 
-Sản phẩm M00: [bài 0001](docs/lessons/0001-giai-phau-project-va-hot-reload.html) ·
-[bài 0002](docs/lessons/0002-devtools-widget-inspector.html) ·
-[cheat sheet](docs/reference/hot-reload-va-devtools.html) ·
-[record 0001](docs/learning-records/0001-thieu-scaffold-khong-crash.md)
+Sản phẩm M01: [bài 0003](docs/lessons/0003-constraints-luat-ba-cau.html) ·
+[bài 0004](docs/lessons/0004-flex-va-loi-tran.html) ·
+lab `apps/01_layout_lab` 6 màn · `apps/practice/lib/m01/` 3 màn
 
-**Tiếp theo — M01 Widget & Layout, 5 ngày.** Module dài nhất phần đầu roadmap, và
-cố ý dài: constraints là chỗ người học Flutter mắc kẹt lâu nhất, biết Dart không
-giúp được gì.
+**Tiếp theo — M02 Stateful & vòng đời, 3 ngày.**
+Đề bài: [docs/modules/02-stateful-va-vong-doi.md](docs/modules/02-stateful-va-vong-doi.md)
 
-- [ ] **Khởi động trước:** dựng lại bộ đếm M00 trong `apps/practice/lib/m00/` —
-      đề bài ở [mục *Tự dựng lại* của M00](docs/modules/00-khoi-dong.md#tự-dựng-lại--appspracticelibm00).
-      Không mở lại M00, module đó vẫn ✅; đây chỉ là bài quen nhịp.
-- [x] Đề bài `docs/modules/01-widget-va-layout.md`
-- [x] Bài giảng `docs/lessons/0003-constraints-luat-ba-cau.html`
-- [x] Lab tham chiếu `apps/01_layout_lab` — 3 màn, đã verify bằng ảnh chụp
-- [x] **Vòng 1** — người học đã tự dựng 3 màn constraints trong `apps/practice/lib/m01/`
-- [x] Bài giảng `docs/lessons/0004-flex-va-loi-tran.html` + 3 màn lab vòng 2
-- [ ] **Vòng 2** — người học tự dựng lại 3 màn Flex, đề bài ở
-      [mục *Tự dựng lại*](docs/modules/01-widget-va-layout.md#vòng-2--thêm-ba-màn-nữa)
-- [ ] Vòng 3 — `Stack`, rồi capstone 2 màn tĩnh trong `userhub`
+- [x] Đề bài M02
+- [ ] Bài giảng `0005` — vòng đời, `setState`, `Key`
+- [ ] Lab `apps/02_stateful_lab` — Lifecycle Logger · Key Trap · Dispose Leak
+- [ ] **Capstone: màn Login trong `userhub`** — gộp cả phần layout còn nợ của M01
 
-Chạy bằng `/flutter-module 01`.
+> **Nợ từ M01:** `apps/userhub` vẫn **chưa có dòng code nào của người học**. Màn
+> User list hoãn tới M03, khi đã có điều hướng để đi tới nó.
+
+Chạy bằng `/flutter-module 02`.
 
 **Có thể làm lệch thứ tự:** lab `apps/12_firebase_lab` độc lập với `userhub`, nên
 khi trên lớp dạy tới Firebase thì làm nửa lab của M12 luôn, không cần chờ tới M12.
@@ -48,8 +43,8 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 | # | Module | Trạng thái |
 |---|---|---|
 | 00 | Khởi động & công cụ | ✅ |
-| 01 | Widget & Layout | 🚧 |
-| 02 | Stateful & vòng đời | ⬜ |
+| 01 | Widget & Layout | ✅ |
+| 02 | Stateful & vòng đời | 🚧 |
 | 03 | Navigation & Routing | ⬜ |
 | 04 | Forms & Input | ⬜ |
 | 05 | Async & tầng dữ liệu | ⬜ |
