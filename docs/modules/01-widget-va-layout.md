@@ -86,6 +86,41 @@ bọc bằng widget đưa xuống loose, bên kia bằng widget đưa xuống ti
 - **Không được hardcode chiều cao cho thước đo** — đó đúng là lỗi lab đã mắc
   phải và phải sửa ngày 2026-09-15
 
+### Vòng 2 — thêm ba màn nữa
+
+*Bài giảng: [0004 — Flex & lỗi tràn](../lessons/0004-flex-va-loi-tran.html).
+Lab tham chiếu: ba màn mới trong `apps/01_layout_lab`.*
+
+**Màn 4 — tự tay làm nó tràn**
+
+Một `Row` chứa N ô cùng bề rộng cố định, có nút thêm/bớt ô. Đầu màn hiện sẵn
+phép tính: *tổng bề rộng · chỗ có · thừa hay tràn bao nhiêu*.
+
+- Tiêu chí: khi sọc vàng đen hiện ra, con số bạn tính phải **khớp đúng** với con
+  số trong `RenderFlex overflowed by N pixels`
+- Cạm bẫy đã biết: `margin` cũng chiếm chỗ trên trục chính. Dùng `margin` mà quên
+  cộng vào thì phép tính lệch — đây là lỗi lab đã mắc phải và phải sửa
+- Thêm một công tắc: bọc ô cuối bằng `Expanded` → hết tràn. Nói được vì sao
+
+**Màn 5 — `Expanded` vs `Flexible` vs `Spacer`**
+
+Cùng **một** ô xin 60px, đặt dưới bốn cách bọc: trần · `Flexible` · `Expanded` ·
+`Spacer`.
+
+- Tiêu chí: nhìn một lần là thấy `Expanded` bị kéo giãn còn `Flexible` giữ 60
+- Gợi ý duy nhất: mở `basic.dart` trong SDK, tìm `class Expanded`. Khác biệt nằm
+  gọn trong một dòng
+
+**Màn 6 — `ListView` trong `Column`**
+
+Dựng màn chạy được với `ListView` cuộn bên trong `Column`, và cho phép đổi qua
+lại giữa hai cách chữa.
+
+- Tiêu chí: hiểu được vì sao `Expanded` là cách dùng cho hầu hết trường hợp, còn
+  `shrinkWrap: true` chỉ hợp với danh sách ngắn
+- **Màn phải ship ở trạng thái chạy được.** Muốn xem nó nổ thì để một dòng
+  comment sẵn kèm chú thích, bỏ comment khi cần rồi comment lại
+
 ### Xong khi nào
 
 - [ ] Ba màn chạy được, vào từ `M01Menu`

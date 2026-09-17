@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0004 — Flex &amp; lỗi tràn</title>
+<style>
+  :root {
+    --bg: #fdfcfa;
+    --ink: #1a1a1a;
+    --muted: #6b6862;
+    --rule: #e3ded6;
+    --accent: #7c4a2d;
+    --code-bg: #f4f1ec;
+    --keep: #2d6a4f;
+    --wipe: #9b2c2c;
+    --measure: 34rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513;
+      --ink: #e8e4dd;
+      --muted: #9a958c;
+      --rule: #33302b;
+      --accent: #d9a273;
+      --code-bg: #201e1b;
+      --keep: #6ac292;
+      --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 4rem 1.5rem 6rem;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 46rem; margin: 2.5rem auto; }
+
+  .eyebrow {
+    font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .9rem;
+  }
+  h1 { font: 600 2.1rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .6rem; letter-spacing: -.015em; }
+  .standfirst { color: var(--muted); font-size: 1.06rem; margin: 0 0 2.5rem; }
+  h2 {
+    font: 600 1.28rem/1.3 ui-serif, Georgia, serif;
+    margin: 3rem 0 .9rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--rule); letter-spacing: -.01em;
+  }
+  h3 { font: 600 1rem/1.4 ui-sans-serif, system-ui, sans-serif; margin: 1.8rem 0 .5rem; }
+  p { margin: 0 0 1.1rem; }
+  strong { font-weight: 600; }
+  code {
+    font: 400 .88em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .12em .38em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: 1rem 1.1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1.3rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; line-height: 1.6; }
+
+  table { border-collapse: collapse; width: 100%; margin: 1.4rem 0; font-size: .93rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 .78rem/1.3 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  td code { font-size: .84em; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: 1rem 1.2rem; margin: 1.6rem 0; border-radius: 0 4px 4px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: .5rem;
+  }
+
+  figure { margin: 2.2rem 0; }
+  figcaption { font-size: .85rem; color: var(--muted); margin-top: .8rem; text-align: center; }
+  svg { width: 100%; height: auto; display: block; }
+
+  .exp { counter-reset: exp; list-style: none; padding: 0; margin: 1.4rem 0; }
+  .exp li {
+    counter-increment: exp; border: 1px solid var(--rule); border-radius: 5px;
+    padding: 1rem 1.1rem 1rem 3rem; margin-bottom: .9rem; position: relative;
+  }
+  .exp li::before {
+    content: counter(exp); position: absolute; left: 1rem; top: 1rem;
+    font: 600 .8rem/1.5 ui-sans-serif, system-ui, sans-serif;
+    width: 1.5rem; height: 1.5rem; text-align: center;
+    background: var(--accent); color: var(--bg); border-radius: 50%;
+  }
+  .exp li p:last-child { margin-bottom: 0; }
+  .exp .expect { font-size: .9rem; color: var(--muted); }
+
+  .sum {
+    font: 600 1.05rem/1.9 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); border-radius: 6px;
+    padding: 1rem 1.2rem; margin: 1.4rem 0;
+  }
+  .sum .bad { color: var(--wipe); }
+  .sum .good { color: var(--keep); }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  footer { margin-top: 4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--muted); }
+
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+    h2 { page-break-after: avoid; }
+    figure, pre, .exp li, .callout, .sum { page-break-inside: avoid; }
+    footer { page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Bài 0004 · Module M01 · Vòng 2</div>
+  <h1>Flex &amp; lỗi tràn</h1>
+  <p class="standfirst">
+    Sọc vàng đen không phải điều bí ẩn. Nó là <em>một phép cộng bị vượt</em> — và
+    sau bài này bạn đọc ra nguyên nhân trong năm giây.
+  </p>
+
+  <h2>1. <code>Row</code> và <code>Column</code> là cùng một widget</h2>
+
+  <p>
+    Cả hai đều kế thừa <code>Flex</code>. Khác nhau đúng một thứ: <strong>trục
+    chính</strong> — <code>Row</code> nằm ngang, <code>Column</code> nằm dọc.
+  </p>
+
+  <table>
+    <thead><tr><th></th><th><code>Row</code></th><th><code>Column</code></th></tr></thead>
+    <tbody>
+      <tr><td><code>mainAxisAlignment</code></td><td>trái ↔ phải</td><td>trên ↕ dưới</td></tr>
+      <tr><td><code>crossAxisAlignment</code></td><td>trên ↕ dưới</td><td>trái ↔ phải</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    Mọi thứ nói về <code>Row</code> dưới đây áp dụng y hệt cho
+    <code>Column</code>, chỉ việc xoay chín mươi độ.
+  </p>
+
+  <h2>2. Flex chia việc làm hai lượt</h2>
+
+  <p>Đây là toàn bộ cơ chế. Nhớ hai lượt này là hiểu hết phần còn lại:</p>
+
+  <table>
+    <thead><tr><th>Lượt</th><th>Hỏi ai</th><th>Đưa xuống constraints gì</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Con <strong>không</strong> bọc <code>Expanded</code>/<code>Flexible</code></td>
+        <td>Trục chính <strong>UNBOUNDED</strong> — “mày muốn rộng bao nhiêu thì nói”</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Con <strong>có</strong> bọc <code>Expanded</code>/<code>Flexible</code></td>
+        <td>Chia phần <strong>còn thừa</strong> theo tỉ lệ <code>flex</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Chữ <strong>UNBOUNDED</strong> đó bạn đã gặp rồi — ở màn
+    <em>Constraints Probe</em> của vòng 1. Giờ nó có tên gọi và có hậu quả.
+  </p>
+
+  <h2>3. Tràn chỉ là phép cộng bị vượt</h2>
+
+  <p>Một <code>Row</code> rộng 380. Ba ô, mỗi ô xin 150:</p>
+
+  <figure class="wide">
+    <svg viewBox="0 0 640 230" role="img" aria-label="So sánh một Row vừa khít và một Row bị tràn">
+      <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="12">
+        <!-- available width marker -->
+        <g stroke="var(--muted)" stroke-width="1" fill="none">
+          <path d="M20 18 V 210"/>
+          <path d="M400 18 V 210" stroke-dasharray="4 3"/>
+        </g>
+        <text x="24" y="14" fill="var(--muted)" font-size="11">chỗ có: 380</text>
+
+        <!-- case A -->
+        <text x="20" y="44" fill="var(--keep)" font-size="11" font-family="ui-sans-serif, system-ui, sans-serif">VỪA — ô thứ ba bọc Expanded</text>
+        <rect x="20" y="54" width="150" height="40" fill="color-mix(in srgb, var(--accent) 18%, transparent)" stroke="var(--accent)"/>
+        <text x="60" y="79" fill="var(--ink)">150</text>
+        <rect x="170" y="54" width="150" height="40" fill="color-mix(in srgb, var(--accent) 18%, transparent)" stroke="var(--accent)"/>
+        <text x="210" y="79" fill="var(--ink)">150</text>
+        <rect x="320" y="54" width="80" height="40" fill="color-mix(in srgb, var(--keep) 20%, transparent)" stroke="var(--keep)"/>
+        <text x="338" y="79" fill="var(--keep)">80</text>
+        <text x="410" y="79" fill="var(--muted)" font-size="11" font-family="ui-sans-serif, system-ui, sans-serif">380 − 300 = 80 còn thừa</text>
+
+        <!-- case B -->
+        <text x="20" y="134" fill="var(--wipe)" font-size="11" font-family="ui-sans-serif, system-ui, sans-serif">TRÀN — cả ba đều cứng 150</text>
+        <rect x="20" y="144" width="150" height="40" fill="color-mix(in srgb, var(--accent) 18%, transparent)" stroke="var(--accent)"/>
+        <text x="60" y="169" fill="var(--ink)">150</text>
+        <rect x="170" y="144" width="150" height="40" fill="color-mix(in srgb, var(--accent) 18%, transparent)" stroke="var(--accent)"/>
+        <text x="210" y="169" fill="var(--ink)">150</text>
+        <rect x="320" y="144" width="150" height="40" fill="color-mix(in srgb, var(--wipe) 18%, transparent)" stroke="var(--wipe)"/>
+        <text x="360" y="169" fill="var(--ink)">150</text>
+
+        <!-- overflow stripes -->
+        <g>
+          <rect x="400" y="144" width="70" height="40" fill="none" stroke="var(--wipe)" stroke-width="1.5"/>
+          <path d="M400 184 L440 144 M415 184 L455 144 M430 184 L470 144 M445 184 L470 159 M400 169 L425 144"
+                stroke="var(--wipe)" stroke-width="3" opacity=".55"/>
+        </g>
+        <text x="480" y="169" fill="var(--wipe)" font-size="11" font-family="ui-sans-serif, system-ui, sans-serif">tràn 70</text>
+      </g>
+    </svg>
+    <figcaption>
+      Cùng ba ô, cùng chỗ trống. Khác nhau ở chỗ có ai chịu co lại hay không.
+    </figcaption>
+  </figure>
+
+  <div class="sum">
+    150 + 150 + 150 = 450<br>
+    450 − 380 = <span class="bad">70</span> &nbsp;→&nbsp; <span class="bad">RenderFlex overflowed by 70 pixels</span>
+  </div>
+
+  <p>
+    Con số trong thông báo lỗi <strong>chính là phần dư của phép trừ đó</strong>.
+    Đọc được nó thì biết ngay phải bớt bao nhiêu, hoặc widget nào cần chịu co.
+  </p>
+
+  <h2>4. <code>Expanded</code> và <code>Flexible</code> — khác đúng một dòng</h2>
+
+  <p>Không cần học thuộc. Mở SDK trên máy bạn ra mà xem:</p>
+
+  <pre><code>// packages/flutter/lib/src/widgets/basic.dart:6021
+class Expanded extends Flexible {
+  const Expanded({super.key, super.flex, required super.child})
+      : super(fit: FlexFit.tight);
+}</code></pre>
+
+  <p>
+    <code>Expanded</code> <strong>là</strong> <code>Flexible</code>, chỉ khoá sẵn
+    <code>fit</code> thành <code>tight</code>. Và <code>tight</code> với
+    <code>loose</code> là đúng hai chữ bạn đã học ở
+    <a href="0003-constraints-luat-ba-cau.html">bài 0003</a>.
+  </p>
+
+  <table>
+    <thead><tr><th></th><th>Nói với con</th><th>Con xin 50, được chia 120</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong><code>Expanded</code></strong><br><code>fit: tight</code></td>
+        <td>“Lấy hết 120, dù mày không cần”</td>
+        <td>ra <strong>120</strong></td>
+      </tr>
+      <tr>
+        <td><strong><code>Flexible</code></strong><br><code>fit: loose</code></td>
+        <td>“Tối đa 120, bé hơn cũng được”</td>
+        <td>ra <strong>50</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3><code>Spacer</code> không phải widget mới</h3>
+
+  <pre><code>// packages/flutter/lib/src/widgets/spacer.dart:58
+Widget build(BuildContext context) {
+  return Expanded(flex: flex, child: const SizedBox.shrink());
+}</code></pre>
+
+  <p>
+    Một <code>Expanded</code> bọc ô rỗng. Biết vậy rồi thì không phải nhớ nó như
+    một thứ riêng — và bạn cũng đoán được ngay là nó chỉ dùng được bên trong
+    <code>Flex</code>.
+  </p>
+
+  <h2>5. <code>ListView</code> trong <code>Column</code> thì nổ</h2>
+
+  <p>Bạn đã nhìn thấy nguyên nhân từ vòng 1, giờ ghép lại:</p>
+
+  <ul>
+    <li><code>Column</code> đưa xuống cho con chiều cao <strong>UNBOUNDED</strong> — “cao bao nhiêu tuỳ mày”</li>
+    <li><code>ListView</code> trả lời: “tao cũng muốn cao vô hạn”</li>
+    <li>Không ai chốt được con số. Flutter ném:
+      <br><code>Vertical viewport was given unbounded height</code></li>
+  </ul>
+
+  <p>Hai cách chữa, chọn theo ý định chứ đừng chọn bừa:</p>
+
+  <table>
+    <thead><tr><th>Cách</th><th>Ý nghĩa</th><th>Dùng khi</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>Expanded(child: ListView(…))</code></td>
+        <td>“Chiếm hết chỗ còn thừa, và cuộn bên trong”</td>
+        <td><strong>Hầu hết trường hợp</strong></td>
+      </tr>
+      <tr>
+        <td><code>shrinkWrap: true</code></td>
+        <td>“Đo hết các item rồi tự cao bằng tổng”</td>
+        <td>Danh sách <strong>ngắn và hữu hạn</strong>. Danh sách dài thì đây là bẫy hiệu năng — nó dựng mọi item ngay lập tức</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Ba thí nghiệm</h2>
+
+  <ol class="exp">
+    <li>
+      <p><strong>Tự tay làm nó tràn.</strong> Trong màn <em>Flex Overflow</em>,
+      bấm thêm ô cho tới khi sọc vàng đen hiện ra.</p>
+      <p class="expect">Phải thấy: con số trong thông báo lỗi khớp đúng với
+      <em>tổng bề rộng các ô − bề rộng màn hình</em>. Thêm một ô nữa thì con số
+      tăng đúng bằng bề rộng ô đó.</p>
+    </li>
+    <li>
+      <p><strong>Cùng một con, hai cách bọc.</strong> Màn
+      <em>Expanded vs Flexible</em>: một ô xin 50 đặt trong hai widget.</p>
+      <p class="expect">Phải thấy: bên <code>Expanded</code> bị kéo giãn hết phần
+      được chia; bên <code>Flexible</code> giữ nguyên 50 và chừa lại chỗ trống.</p>
+    </li>
+    <li>
+      <p><strong>Cho nổ thật.</strong> Màn <em>Unbounded Height</em> có một dòng
+      bị comment sẵn kèm chú thích. Bỏ comment và hot restart.</p>
+      <p class="expect">Phải thấy màn đỏ với đúng câu
+      <code>Vertical viewport was given unbounded height</code>. Đọc xong thì
+      comment lại.</p>
+    </li>
+  </ol>
+
+  <div class="callout">
+    <span class="label">Nhớ một câu</span>
+    <p>
+      Trong một <code>Flex</code>, <strong>ai không nói gì thì được hỏi trước và
+      được ưu tiên</strong>. Chỗ thừa mới đến lượt <code>Expanded</code>. Tràn
+      nghĩa là lượt một đã tiêu hết tiền.
+    </p>
+  </div>
+
+  <footer>
+    Nguồn chính thống:
+    <a href="https://docs.flutter.dev/ui/layout/constraints">Understanding constraints</a> ·
+    <a href="https://docs.flutter.dev/testing/common-errors#a-renderflex-overflowed">Common Flutter errors — RenderFlex overflowed</a>.
+    <br>
+    Bài trước: <a href="0003-constraints-luat-ba-cau.html">0003 — Constraints &amp; luật ba câu</a> ·
+    Tra nhanh: <a href="../reference/hot-reload-va-devtools.html">cheat sheet M00</a>.
+    <br>
+    Vòng 3 sẽ là <code>Stack</code>, rồi dựng hai màn thật trong <code>userhub</code>.
+  </footer>
+</div>
+
+</body>
+</html>

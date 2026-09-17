@@ -6,8 +6,8 @@
 ## Đang ở đâu
 
 - **Module hiện tại:** M01 — Widget & Layout
-- **Vòng:** vòng 1/3 — bài giảng và lab đã xong, chờ người học **tự dựng lại**
-- **Cập nhật lần cuối:** 2026-09-15
+- **Vòng:** vòng 2/3 — bài giảng và lab đã xong, chờ người học **tự dựng lại**
+- **Cập nhật lần cuối:** 2026-09-17
 
 ## Việc tiếp theo
 
@@ -30,9 +30,10 @@ giúp được gì.
 - [x] Đề bài `docs/modules/01-widget-va-layout.md`
 - [x] Bài giảng `docs/lessons/0003-constraints-luat-ba-cau.html`
 - [x] Lab tham chiếu `apps/01_layout_lab` — 3 màn, đã verify bằng ảnh chụp
-- [ ] **Người học tự dựng lại 3 màn** trong `apps/practice/lib/m01/` — đề bài ở
-      [mục *Tự dựng lại*](docs/modules/01-widget-va-layout.md#tự-dựng-lại--appspracticelibm01)
-- [ ] Vòng 2 — `Row`/`Column`/`Expanded`, đọc lỗi `RenderFlex overflow`
+- [x] **Vòng 1** — người học đã tự dựng 3 màn constraints trong `apps/practice/lib/m01/`
+- [x] Bài giảng `docs/lessons/0004-flex-va-loi-tran.html` + 3 màn lab vòng 2
+- [ ] **Vòng 2** — người học tự dựng lại 3 màn Flex, đề bài ở
+      [mục *Tự dựng lại*](docs/modules/01-widget-va-layout.md#vòng-2--thêm-ba-màn-nữa)
 - [ ] Vòng 3 — `Stack`, rồi capstone 2 màn tĩnh trong `userhub`
 
 Chạy bằng `/flutter-module 01`.
