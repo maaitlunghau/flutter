@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Màn đăng nhập.
-///
-/// Phải là `StatefulWidget` vì màn này có **ba thứ cần nhớ** giữa các lần vẽ:
-/// mật khẩu đang ẩn hay hiện, và hai thông báo lỗi. Ba thứ đó sống trong
-/// `State`, không sống trong `build()`.
-///
-/// Chưa gọi API (M05), chưa dùng `Form`/`validator` (M04), chưa điều hướng (M03).
+/// Chưa gọi API (M05)
+/// Chưa dùng `Form`/`validator` (M04)
+/// Chưa điều hướng (M03).
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -22,11 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // true = đang che ký tự. Đổi giá trị này rồi setState là nút con mắt hoạt động.
   bool _obscurePassword = true;
 
-  // null = chưa có lỗi. Dùng String? thay vì bool để chính chuỗi lỗi nằm luôn
-  // trong state, khỏi phải map từ bool sang câu chữ ở chỗ khác.
   String? _emailError;
   String? _passwordError;
 
@@ -76,9 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-
-            // mainAxisSize.min để cụm nội dung co đúng bằng nó — có vậy Center
-            // mới có cái để căn giữa.
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -103,17 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 TextField(
                   controller: _emailController,
-                  // Bàn phím hiện sẵn @ và dấu chấm — chi tiết nhỏ nhưng người
-                  // dùng cảm nhận được ngay.
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     prefixIcon: const Icon(Icons.mail_outline),
                     border: const OutlineInputBorder(),
-                    // errorText null thì không có gì hiện. Khác null thì ô tự
-                    // chuyển sang màu lỗi và chừa chỗ cho dòng chữ bên dưới —
-                    // không phải tự vẽ Text lỗi bằng tay.
                     errorText: _emailError,
                   ),
                   // Xoá lỗi ngay khi người dùng bắt đầu sửa. Bắt họ nhìn chữ đỏ
@@ -137,8 +122,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     border: const OutlineInputBorder(),
                     errorText: _passwordError,
-                    // Nút con mắt. Toàn bộ cơ chế chỉ là: đảo một bool rồi
-                    // setState — Flutter dựng lại TextField với obscureText mới.
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
@@ -161,8 +144,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Align để nút co đúng bằng chữ. Không có nó thì
-                // crossAxisAlignment.stretch ở trên sẽ kéo nó rộng cả hàng.
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -181,8 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 FilledButton(
                   onPressed: _submit,
                   style: FilledButton.styleFrom(
-                    // Chiều CAO cố định thì an toàn; chiều RỘNG cố định mới là
-                    // thứ làm vỡ layout ở máy khác. Ở đây rộng do stretch quyết.
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const Text('Đăng nhập'),
