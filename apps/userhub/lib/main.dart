@@ -1,64 +1,33 @@
 import 'package:flutter/material.dart';
 
+import 'login_screen.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const UserHubApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// Gốc của app. Đây là `MaterialApp` **duy nhất** trong toàn bộ userhub —
+/// mọi màn khác chỉ trả về `Scaffold`.
+///
+/// Lồng thêm một `MaterialApp` nữa sẽ đẻ ra một `Navigator` riêng, và hậu quả
+/// đầu tiên nhìn thấy được là nút back biến mất khỏi `AppBar`.
+class UserHubApp extends StatelessWidget {
+  const UserHubApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+      title: 'UserHub',
+      debugShowCheckedModeBanner: false,
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+      // fromSeed sinh ra cả bảng màu Material 3 từ một màu gốc. Tới M10 sẽ
+      // thay bằng theme riêng; hiện tại chỉ cần nó nhất quán.
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times (testing):'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+
+      // Chưa có điều hướng — đó là M03. Tạm thời trỏ thẳng vào màn Login.
+      home: const LoginScreen(),
     );
   }
 }
