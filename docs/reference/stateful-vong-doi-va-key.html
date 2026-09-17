@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cheat sheet — Stateful, vòng đời &amp; Key</title>
+<style>
+  :root {
+    --bg: #fdfcfa; --ink: #1a1a1a; --muted: #6b6862; --rule: #e3ded6;
+    --accent: #7c4a2d; --code-bg: #f4f1ec; --keep: #2d6a4f; --wipe: #9b2c2c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513; --ink: #e8e4dd; --muted: #9a958c; --rule: #33302b;
+      --accent: #d9a273; --code-bg: #201e1b; --keep: #6ac292; --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2.5rem 1.5rem 4rem;
+    background: var(--bg); color: var(--ink);
+    font: 400 15px/1.55 ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  .eyebrow {
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: .6rem;
+  }
+  h1 { font: 600 1.7rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .4rem; letter-spacing: -.015em; }
+  .sub { color: var(--muted); margin: 0 0 2rem; font-size: .95rem; }
+  h2 {
+    font: 600 .82rem/1.3 ui-sans-serif, system-ui, sans-serif;
+    text-transform: uppercase; letter-spacing: .1em; color: var(--accent);
+    margin: 2.4rem 0 .7rem; padding-top: .9rem; border-top: 1px solid var(--rule);
+  }
+  p { margin: 0 0 .8rem; }
+  code {
+    font: 400 .87em/1.4 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .1em .35em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: .8rem 1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; }
+  table { border-collapse: collapse; width: 100%; margin: .8rem 0 1.2rem; font-size: .89rem; }
+  th, td { text-align: left; padding: .42rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--muted); font-weight: 600;
+  }
+  .note {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: .75rem 1rem; margin: 1.2rem 0; border-radius: 0 4px 4px 0; font-size: .9rem;
+  }
+  .note.warn { border-left-color: var(--wipe); background: color-mix(in srgb, var(--wipe) 7%, transparent); }
+  .note p:last-child { margin-bottom: 0; }
+  .yes { color: var(--keep); font-weight: 600; }
+  .no { color: var(--wipe); font-weight: 600; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .84rem; color: var(--muted); }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 10pt; }
+    h2 { page-break-after: avoid; }
+    table, .note, pre { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Cheat sheet · M02</div>
+  <h1>Stateful, vòng đời &amp; Key</h1>
+  <p class="sub">
+    Tra nhanh. Giải thích đầy đủ ở
+    <a href="../lessons/0005-vong-doi-cua-state.html">bài 0005</a> và
+    <a href="../lessons/0006-key-va-cach-ghep-state.html">bài 0006</a>.
+  </p>
+
+  <h2>Vòng đời — chạy khi nào, đặt gì vào</h2>
+
+  <table>
+    <thead><tr><th style="width:12rem">Hàm</th><th>Chạy khi nào</th><th>Đặt gì</th></tr></thead>
+    <tbody>
+      <tr><td><code>createState()</code></td><td>Một lần, trước tất cả</td><td><strong>Không gì cả</strong> — chỉ <code>=> _State()</code></td></tr>
+      <tr><td><code>initState()</code></td><td><strong>Đúng một lần</strong></td><td>Tạo controller, mở subscription, gọi API lần đầu</td></tr>
+      <tr><td><code>didChangeDependencies()</code></td><td>Sau <code>initState</code> + mỗi khi thứ đọc qua <code>context</code> đổi</td><td>Việc phụ thuộc <code>Theme</code>, <code>MediaQuery</code></td></tr>
+      <tr><td><code>build()</code></td><td><strong>Rất nhiều lần</strong></td><td>Chỉ dựng widget. Không mạng, không file, không parse</td></tr>
+      <tr><td><code>didUpdateWidget()</code></td><td><strong>Mỗi lần cha dựng lại</strong> — kể cả khi không gì đổi</td><td>So <code>oldWidget</code> trước, rồi mới phản ứng</td></tr>
+      <tr><td><code>dispose()</code></td><td>Một lần, khi bị gỡ hẳn</td><td>Trả lại mọi thứ mượn ở <code>initState</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note warn">
+    <p>
+      <strong><code>didUpdateWidget</code> không so giá trị giùm bạn.</strong>
+      Không có <code>if (oldWidget.x != widget.x)</code> bên trong là bug đang chờ —
+      xem <a href="../learning-records/0002-didupdatewidget-chay-moi-lan-cha-dung-lai.md">record 0002</a>.
+    </p>
+  </div>
+
+  <h2><code>setState</code> làm ba việc</h2>
+
+  <pre><code>setState(() => _counter++);
+// 1. chạy hàm bạn đưa vào — giá trị đổi NGAY, đồng bộ
+// 2. đánh dấu State này "bẩn"
+// 3. xin Flutter xếp lịch gọi build() ở khung hình SAU</code></pre>
+
+  <table>
+    <thead><tr><th>Tình huống</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td>Sửa biến <span class="no">ngoài</span> <code>setState</code></td><td>Giá trị đổi thật, <strong>màn hình đứng im</strong></td></tr>
+      <tr><td><code>setState</code> mà không đổi gì</td><td>Vẫn tốn một lần <code>build</code></td></tr>
+      <tr><td><code>setState</code> sau khi <code>dispose</code></td><td>Ném lỗi — chắn bằng <code>if (mounted)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Quên <code>dispose</code> thì sao</h2>
+
+  <table>
+    <thead><tr><th style="width:15rem">Thứ</th><th>Hậu quả</th></tr></thead>
+    <tbody>
+      <tr><td><code>Timer</code> / <code>Timer.periodic</code></td><td>Vẫn nổ đều sau khi màn đã đóng</td></tr>
+      <tr><td><code>StreamSubscription</code></td><td>Vẫn nhận dữ liệu, gọi <code>setState</code> trên State đã chết</td></tr>
+      <tr><td><code>TextEditingController</code></td><td>Giữ listener, rò rỉ bộ nhớ</td></tr>
+      <tr><td><code>AnimationController</code></td><td>Giữ ticker, đốt CPU mãi mãi</td></tr>
+      <tr><td><code>FocusNode</code>, <code>ScrollController</code></td><td>Rò rỉ tương tự</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <p><strong>Mượn ở <code>initState</code> thì trả ở <code>dispose</code>.</strong> Viết cặp với nhau, đừng để lát nữa.</p>
+  </div>
+
+  <h2>Chọn loại <code>Key</code></h2>
+
+  <table>
+    <thead><tr><th style="width:9rem">Loại</th><th>Ghép theo</th><th>Dùng khi</th></tr></thead>
+    <tbody>
+      <tr><td><code>ValueKey</code></td><td>Một giá trị — <code>id</code>, email</td><td><strong>Mặc định</strong>, 90% trường hợp</td></tr>
+      <tr><td><code>ObjectKey</code></td><td>Danh tính của object</td><td>Không có id nhưng object thì duy nhất</td></tr>
+      <tr><td><code>UniqueKey</code></td><td>Không gì — luôn khác chính nó</td><td>Muốn <strong>ép vứt State cũ</strong>, reset sạch</td></tr>
+      <tr><td><code>GlobalKey</code></td><td>Toàn app</td><td>Chạm State từ ngoài, hoặc giữ State khi đổi chỗ trong cây. <strong>Đắt</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Chỉ cần <code>Key</code> khi cả ba điều cùng đúng:</strong></p>
+  <table>
+    <tbody>
+      <tr><td>1</td><td>Có danh sách widget anh em <strong>cùng kiểu</strong></td></tr>
+      <tr><td>2</td><td>Danh sách bị <strong>xoá / thêm / đảo thứ tự</strong></td></tr>
+      <tr><td>3</td><td>Các widget đó <strong>có <code>State</code></strong> để mà mất</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    <code>Key</code> phải nằm trên <strong>chính widget bị xê dịch</strong>, cùng
+    tầng với anh em của nó. Dán vào widget con bên trong là vô tác dụng.
+  </p>
+
+  <h2>Triệu chứng → nguyên nhân</h2>
+
+  <table>
+    <thead><tr><th style="width:20rem">Thấy gì</th><th>Gần như chắc chắn là</th></tr></thead>
+    <tbody>
+      <tr><td><code>setState() called after dispose()</code></td><td>Quên huỷ <code>Timer</code> hoặc subscription</td></tr>
+      <tr><td>Xoá 1 dòng, các dòng khác hiện sai dữ liệu</td><td>Thiếu <code>Key</code> trong danh sách</td></tr>
+      <tr><td>API bị gọi nhiều lần bất thường</td><td><code>didUpdateWidget</code> không so <code>oldWidget</code></td></tr>
+      <tr><td>Sửa biến mà màn hình không đổi</td><td>Sửa ngoài <code>setState</code></td></tr>
+      <tr><td>App giật khi cuộn</td><td>Việc nặng nằm trong <code>build()</code></td></tr>
+      <tr><td>Animation tự chạy lại khi chạm widget khác</td><td>Cũng là <code>didUpdateWidget</code> không so</td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    Nguồn: <a href="https://api.flutter.dev/flutter/widgets/State-class.html">State</a> ·
+    <a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>.
+    Cheat sheet khác: <a href="hot-reload-va-devtools.html">Hot reload &amp; DevTools (M00)</a>.
+  </footer>
+
+</div>
+</body>
+</html>

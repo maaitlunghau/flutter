@@ -126,13 +126,13 @@ Chưa điều hướng (M03).
 
 ## Tiêu chí Xong
 
-- [ ] Màn Login dựng xong, không overflow khi xoay ngang và khi bật cỡ chữ lớn
-- [ ] Nút con mắt đổi qua lại được giữa ẩn và hiện mật khẩu
-- [ ] Bỏ trống rồi bấm Đăng nhập → hiện lỗi; gõ vào → lỗi biến mất
-- [ ] `TextEditingController` được `dispose` — chỉ ra được dòng code làm việc đó
-- [ ] Giải thích được bằng lời: vì sao `StatefulWidget` phải tách làm hai class
-- [ ] Giải thích được bằng lời: `Key` chữa được chuyện gì
-- [ ] `flutter analyze` ở root báo `No issues found!`
+- [x] Màn Login dựng xong, không overflow khi xoay ngang và khi bật cỡ chữ lớn
+- [x] Nút con mắt đổi qua lại được giữa ẩn và hiện mật khẩu
+- [x] Bỏ trống rồi bấm Đăng nhập → hiện lỗi; gõ vào → lỗi biến mất
+- [x] `TextEditingController` được `dispose` — chỉ ra được dòng code làm việc đó
+- [x] Giải thích được bằng lời: vì sao `StatefulWidget` phải tách làm hai class
+- [x] Giải thích được bằng lời: `Key` chữa được chuyện gì
+- [x] `flutter analyze` ở root báo `No issues found!`
 
 ## Bẫy thường gặp
 
@@ -146,3 +146,13 @@ Chưa điều hướng (M03).
 - Flutter — Using keys: https://docs.flutter.dev/resources/architectural-overview
 - Widget of the Week (kênh YouTube chính chủ đội Flutter) — tìm tập về `Key`.
   Không ghi link trực tiếp vì chưa kiểm chứng được ID video.
+
+---
+
+**M02 xong ngày 2026-09-17.** Sản phẩm:
+[bài 0005](../lessons/0005-vong-doi-cua-state.html) ·
+[bài 0006](../lessons/0006-key-va-cach-ghep-state.html) ·
+[cheat sheet](../reference/stateful-vong-doi-va-key.html) ·
+[record 0002](../learning-records/0002-didupdatewidget-chay-moi-lan-cha-dung-lai.md) ·
+lab `apps/02_stateful_lab` 3 màn · `apps/practice/lib/m02/` 3 màn ·
+**capstone `apps/userhub/lib/login_screen.dart`**
