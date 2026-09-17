@@ -79,6 +79,79 @@
     <a href="../lessons/0006-key-va-cach-ghep-state.html">bài 0006</a>.
   </p>
 
+  <h2>Giải phẫu một màn stateful</h2>
+
+  <p>
+    Mô hình do người học tự vẽ sau khi dựng xong màn Login của
+    <code>userhub</code>. Đọc từ trên xuống là thấy chỗ nào giữ dữ liệu, chỗ nào
+    chỉ vẽ.
+  </p>
+
+  <pre><code>main()
+  │
+  ▼
+MaterialApp                    ← duy nhất một cái, ở gốc
+  │
+  └── home: LoginScreen
+                │
+                ▼
+        StatefulWidget         ← bản mô tả, bị vứt đi mỗi lần vẽ
+                │
+                ▼
+        _LoginScreenState      ← TRÍ NHỚ, sống sót qua mọi lần vẽ
+           │
+           ├── emailController
+           ├── passwordController
+           ├── obscurePassword
+           ├── emailError
+           └── passwordError
+                │
+                ▼
+              build()          ← chạy lại rất nhiều lần
+                │
+                └── Scaffold
+                     └── SafeArea
+                          └── Center
+                               └── SingleChildScrollView
+                                    └── Column
+                                         ├── TextField ──▶ emailController
+                                         ├── TextField ──▶ passwordController
+                                         └── FilledButton ──▶ _submit()</code></pre>
+
+  <div class="note warn">
+    <p>
+      <strong>Bốn widget layout là lồng nhau, không phải anh em.</strong> Mỗi cái
+      chứa đúng một con. Đó là chuỗi mà constraints đi xuống: <code>Center</code>
+      nhận tight từ <code>SafeArea</code> rồi đưa <em>loose</em> xuống
+      <code>SingleChildScrollView</code>. Vẽ thành anh em thì không ai truyền
+      constraints cho ai — xem <a href="../lessons/0003-constraints-luat-ba-cau.html">bài 0003</a>.
+    </p>
+  </div>
+
+  <h2>Một vòng tương tác đi qua đâu</h2>
+
+  <table>
+    <thead><tr><th style="width:3rem">#</th><th style="width:14rem">Ở đâu</th><th>Xảy ra gì</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Người dùng</td><td>Gõ email vào ô</td></tr>
+      <tr><td>2</td><td><code>TextField</code></td><td>Nhận ký tự, đẩy vào controller</td></tr>
+      <tr><td>3</td><td><code>TextEditingController</code></td><td><strong>Giữ nội dung hiện tại</strong> — đây là lý do nó tồn tại</td></tr>
+      <tr><td>4</td><td><code>_submit()</code></td><td>Đọc <code>controller.text</code>, tính ra lỗi</td></tr>
+      <tr><td>5</td><td><code>setState()</code></td><td>Gán giá trị <strong>ngay</strong>, rồi đánh dấu State bẩn</td></tr>
+      <tr><td>6</td><td><code>State</code></td><td>Trường dữ liệu đã đổi</td></tr>
+      <tr><td>7</td><td><code>build()</code></td><td>Flutter gọi lại ở <strong>khung hình sau</strong></td></tr>
+      <tr><td>8</td><td>Màn hình</td><td>Vẽ lại với dữ liệu mới</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <p>
+      Bước 5 và 7 <strong>không cùng lúc</strong>. Giá trị đổi đồng bộ, việc vẽ
+      thì bị xếp lịch. Bỏ <code>setState</code> đi là mất bước 7 — giá trị vẫn
+      đổi, màn hình đứng im.
+    </p>
+  </div>
+
   <h2>Vòng đời — chạy khi nào, đặt gì vào</h2>
 
   <table>
