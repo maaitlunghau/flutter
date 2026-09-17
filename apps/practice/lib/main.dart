@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:practice/m01/center_mystery_screen.dart';
 import 'package:practice/m01/constraints_probe_screen.dart';
 import 'package:practice/m01/tight_vs_loose_screen.dart';
+import 'package:practice/m02/key_trap_screen.dart';
+import 'package:practice/m02/lifecycle_logger_screen.dart';
 
 import 'm00/counter_screen.dart';
+import 'm02/dispose_leak_screen.dart';
 
 void main() {
   runApp(const PracticeApp());
@@ -55,6 +58,23 @@ class PracticeMenuScreen extends StatelessWidget {
             title: 'Tight vs Loose',
             subtitle: 'Cùng một SizedBox(50, 50) dưới hai loại constraints',
             screen: TightVsLooseScreen(),
+          ),
+
+          _SectionHeader('M02 — StatefulWidget'),
+          _ExerciseTile(
+            title: 'Key Trap',
+            subtitle: 'State đi theo VỊ TRÍ hay theo KEY?',
+            screen: KeyTrapScreen(),
+          ),
+          _ExerciseTile(
+            title: 'Dispose Leak',
+            subtitle: 'Bỏ quên timer.cancel() trong dispose',
+            screen: DisposeLeakScreen(),
+          ),
+          _ExerciseTile(
+            title: 'StatefulBuilder',
+            subtitle: 'Cách dùng StatefulBuilder để setState trong builder',
+            screen: LifecycleLoggerScreen(),
           ),
         ],
       ),
