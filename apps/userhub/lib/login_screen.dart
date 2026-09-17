@@ -11,10 +11,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Controller là cầu nối để ĐỌC nội dung ô nhập. Không có nó thì `build()`
-  // không biết người dùng đã gõ gì.
-  //
-  // Nó tự đăng ký listener nên phải trả lại ở dispose(), nếu không là rò rỉ.
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -25,10 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // Cặp đôi của phần khởi tạo bên trên. Viết ngay lúc tạo controller, đừng
-    // để "lát nữa" — vì lát nữa là lúc quên.
     _emailController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -38,8 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // Tính lỗi trước, gán sau. Gộp cả hai vào MỘT setState để màn hình chỉ vẽ
-    // lại một lần thay vì hai.
     setState(() {
       _emailError = email.isEmpty ? 'Email không được để trống' : null;
       _passwordError = password.isEmpty ? 'Mật khẩu không được để trống' : null;
@@ -58,14 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      // SafeArea tránh tai thỏ và thanh điều hướng của hệ thống.
       body: SafeArea(
-        // Center + SingleChildScrollView là cặp giải quyết BA vấn đề cùng lúc:
-        //   - màn cao: nội dung nằm giữa, đẹp
-        //   - màn thấp / xoay ngang: cuộn được, không tràn
-        //   - bàn phím bật lên: Scaffold co vùng body lại, chỗ còn lại cuộn
-        //     được nên nút Đăng nhập không bị che
-        // Thử đổi thành Column thường rồi xoay ngang là thấy ngay nó vỡ.
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -101,8 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: const OutlineInputBorder(),
                     errorText: _emailError,
                   ),
-                  // Xoá lỗi ngay khi người dùng bắt đầu sửa. Bắt họ nhìn chữ đỏ
-                  // cho tới lần bấm nút tiếp theo là cảm giác rất khó chịu.
                   onChanged: (_) {
                     if (_emailError != null) {
                       setState(() => _emailError = null);
@@ -115,7 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   textInputAction: TextInputAction.done,
-                  // Gõ xong bấm Enter trên bàn phím là gửi luôn.
                   onSubmitted: (_) => _submit(),
                   decoration: InputDecoration(
                     labelText: 'Mật khẩu',
