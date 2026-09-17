@@ -67,7 +67,10 @@ Một widget con hiện **số lần** mỗi callback vòng đời đã chạy: 
 ép dựng lại, một nút đổi tham số truyền xuống con.
 
 - Tiêu chí: bấm "ép rebuild" 5 lần → `build` tăng 5, `initState` **vẫn là 1**
-- Tiêu chí: bấm "đổi tham số" → `didUpdateWidget` tăng, `initState` **không** tăng
+- Tiêu chí: `didUpdateWidget` tăng theo **mọi** lần cha dựng lại, kể cả khi
+  không tham số nào đổi. Đếm riêng số lần giá trị **thật sự** đổi và cho thấy
+  hai con số lệch nhau — đó là lý do trong `didUpdateWidget` phải so
+  `oldWidget` với `widget` trước khi làm việc nặng
 - Tiêu chí: thoát màn rồi vào lại → mọi số về 1, và `dispose` in ra console
 - Gợi ý duy nhất: biến đếm phải sống ở đâu để không bị reset mỗi lần vẽ?
 
@@ -81,6 +84,23 @@ quyết định `dispose` **có** gọi `timer.cancel()` hay không.
 - Tiêu chí: chỉ ra được vì sao cần kiểm tra `mounted` trước khi gọi `setState`
   trong callback của `Timer`
 - Bằng chứng nằm ở **console**, không phải trên màn hình. Đừng tìm trên UI
+
+### Vòng 2 — một màn
+
+*Bài giảng: [0006 — Key & cách Flutter ghép State](../lessons/0006-key-va-cach-ghep-state.html).*
+
+**Màn 3 — state nhảy sang widget khác**
+
+Hai cột cạnh nhau, cùng một danh sách nhãn, mỗi ô là widget **có `State`** và
+`State` đó tự chọn một màu lúc `initState`. Cột trái không `Key`, cột phải có
+`ValueKey`. Một nút xoá phần tử đầu.
+
+- Tiêu chí: xoá xong, cột trái **màu ở lại vị trí cũ** còn nhãn trượt lên; cột
+  phải màu đi theo nhãn
+- Tiêu chí: đổi `ValueKey` thành `UniqueKey` → **toàn bộ** ô đổi màu, kể cả ô
+  không liên quan. Nói được vì sao
+- Gợi ý duy nhất: màu phải do `State` chọn, không phải do widget truyền vào —
+  nếu widget truyền màu xuống thì thí nghiệm không chứng minh được gì
 
 ## Chia vòng
 

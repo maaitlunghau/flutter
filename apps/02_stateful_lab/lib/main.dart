@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'dispose_leak_screen.dart';
+import 'key_trap_screen.dart';
 import 'lifecycle_logger_screen.dart';
 
 void main() {
@@ -28,7 +29,7 @@ class LabMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('M02 — Stateful lab · vòng 1')),
+      appBar: AppBar(title: const Text('M02 — Stateful lab')),
       body: ListView(
         children: const [
           _LabTile(
@@ -41,7 +42,11 @@ class LabMenuScreen extends StatelessWidget {
             subtitle: 'Timer vẫn chạy sau khi màn đã đóng — nhìn console',
             destination: DisposeLeakScreen(),
           ),
-          // Key Trap sẽ thêm ở vòng 2.
+          _LabTile(
+            title: 'Key Trap',
+            subtitle: 'Xoá phần tử đầu, xem state nhảy sang widget khác',
+            destination: KeyTrapScreen(),
+          ),
         ],
       ),
     );

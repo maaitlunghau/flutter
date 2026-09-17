@@ -179,8 +179,8 @@
       </tr>
       <tr>
         <td><code>didUpdateWidget()</code></td>
-        <td>Khi cha dựng lại với tham số mới</td>
-        <td>Phản ứng với tham số đổi — ví dụ đổi URL thì tải lại</td>
+        <td><strong>Mỗi lần cha dựng lại</strong> — kể cả khi không tham số nào đổi</td>
+        <td>So <code>oldWidget</code> với <code>widget</code> <strong>trước</strong>, rồi mới phản ứng</td>
       </tr>
       <tr>
         <td><code>dispose()</code></td>
@@ -255,10 +255,13 @@
       — vì đó là một <code>State</code> mới.</p>
     </li>
     <li>
-      <p><strong>Đổi tham số của widget.</strong> Vẫn màn đó, bấm nút đổi tiêu đề.</p>
-      <p class="expect">Phải thấy <code>didUpdateWidget</code> chạy, và
-      <code>initState</code> <em>không</em> chạy lại. Widget là cái mới, nhưng
-      <code>State</code> vẫn là cái cũ.</p>
+      <p><strong>Bẫy của <code>didUpdateWidget</code>.</strong> So hai dòng
+      <code>didUpdateWidget</code> và <code>↳ title thật sự đổi</code> sau khi
+      bấm mỗi nút.</p>
+      <p class="expect">Phải thấy hai con số <strong>lệch nhau</strong>. Bấm “ép
+      rebuild” 5 lần thì <code>didUpdateWidget</code> lên 5, còn dòng dưới vẫn 0
+      — nó chạy vì <em>cha dựng lại</em>, không phải vì có gì đổi. Và
+      <code>initState</code> vẫn đứng ở 1.</p>
     </li>
     <li>
       <p><strong>Để nó rò rỉ.</strong> Màn <em>Dispose Leak</em>, tắt công tắc

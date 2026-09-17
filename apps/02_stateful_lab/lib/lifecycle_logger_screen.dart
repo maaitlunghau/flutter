@@ -74,6 +74,10 @@ class _ChildState extends State<_Child> {
   int _didUpdateCount = 0;
   int _buildCount = 0;
 
+  // Đếm riêng số lần title THẬT SỰ đổi. Hai con số này lệch nhau chính là bài
+  // học: didUpdateWidget chạy mỗi lần cha dựng lại, kể cả khi không có gì đổi.
+  int _titleReallyChangedCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -92,7 +96,16 @@ class _ChildState extends State<_Child> {
   void didUpdateWidget(covariant _Child oldWidget) {
     super.didUpdateWidget(oldWidget);
     _didUpdateCount++;
-    debugPrint('didUpdateWidget: "${oldWidget.title}" → "${widget.title}"');
+
+    // Đây là cách dùng didUpdateWidget trong code thật: so cũ với mới, chỉ làm
+    // việc nặng khi đúng thứ mình quan tâm đã đổi. Không so mà tải lại dữ liệu
+    // ngay ở đây là tự gọi mạng mỗi lần cha dựng lại.
+    if (oldWidget.title != widget.title) {
+      _titleReallyChangedCount++;
+      debugPrint('title đổi: "${oldWidget.title}" → "${widget.title}"');
+    } else {
+      debugPrint('didUpdateWidget chạy, nhưng title KHÔNG đổi');
+    }
   }
 
   @override
@@ -117,9 +130,13 @@ class _ChildState extends State<_Child> {
           _Counter('initState', _initStateCount),
           _Counter('didChangeDependencies', _didChangeDepsCount),
           _Counter('didUpdateWidget', _didUpdateCount),
+          _Counter('  ↳ title thật sự đổi', _titleReallyChangedCount),
           _Counter('build', _buildCount),
           const SizedBox(height: 20),
           Text(
+            'Hai dòng didUpdateWidget lệch nhau: nó chạy mỗi lần cha dựng lại, '
+            'kể cả khi không có gì đổi. Đó là lý do trong đó phải so oldWidget '
+            'với widget trước khi làm việc nặng.\n\n'
             'Thoát màn rồi vào lại: mọi con số về 1 — vì đó là một State mới. '
             'dispose của State cũ in ra console.',
             style: theme.textTheme.bodySmall,

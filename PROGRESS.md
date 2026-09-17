@@ -6,7 +6,7 @@
 ## Đang ở đâu
 
 - **Module hiện tại:** M02 — Stateful & vòng đời
-- **Vòng:** M02 vòng 1/2 — bài giảng và lab xong, chờ người học tự dựng lại
+- **Vòng:** M02 — cả 2 vòng bài giảng + lab đã xong, chờ người học tự dựng lại rồi làm capstone
 - **Cập nhật lần cuối:** 2026-09-17
 
 ## Việc tiếp theo
@@ -28,7 +28,8 @@ M02 chia **2 vòng**: vòng 1 vòng đời + `dispose`, vòng 2 `Key` + capstone
 - [x] Đề bài M02
 - [x] **Vòng 1** — bài `0005` + lab `apps/02_stateful_lab` (Lifecycle Logger, Dispose Leak)
 - [ ] **Vòng 1** — người học tự dựng lại 2 màn trong `apps/practice/lib/m02/`
-- [ ] Vòng 2 — bài `0006` về `Key` + lab Key Trap
+- [x] **Vòng 2** — bài `0006` + lab Key Trap
+- [ ] **Vòng 2** — người học tự dựng lại màn Key Trap trong `apps/practice/lib/m02/`
 - [ ] **Capstone: màn Login trong `userhub`** — gộp cả phần layout còn nợ của M01
 
 > **Nợ từ M01:** `apps/userhub` vẫn **chưa có dòng code nào của người học**. Màn
