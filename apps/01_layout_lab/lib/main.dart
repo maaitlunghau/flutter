@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'center_mystery_screen.dart';
 import 'constraints_probe_screen.dart';
+import 'expanded_vs_flexible_screen.dart';
+import 'flex_overflow_screen.dart';
 import 'tight_vs_loose_screen.dart';
+import 'unbounded_height_screen.dart';
 
 void main() {
   runApp(const LayoutLabApp());
@@ -46,6 +49,21 @@ class LabMenuScreen extends StatelessWidget {
             title: 'Tight vs Loose',
             subtitle: 'Cùng một SizedBox(50, 50) dưới hai loại constraints',
             destination: TightVsLooseScreen(),
+          ),
+          _LabTile(
+            title: 'Flex Overflow',
+            subtitle: 'Thêm ô cho tới khi sọc vàng đen hiện ra',
+            destination: FlexOverflowScreen(),
+          ),
+          _LabTile(
+            title: 'Expanded vs Flexible',
+            subtitle: 'Cùng một ô 60px, bốn cách bọc khác nhau',
+            destination: ExpandedVsFlexibleScreen(),
+          ),
+          _LabTile(
+            title: 'Unbounded Height',
+            subtitle: 'ListView trong Column, và hai cách chữa',
+            destination: UnboundedHeightScreen(),
           ),
         ],
       ),
