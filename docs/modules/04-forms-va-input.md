@@ -66,8 +66,11 @@ mở lab khi bí.
 > `docs/reference/forms-va-input.md` lúc đóng module. Một file thay hai bài.
 >
 > Hệ quả: M04 chỉ có **một** bài giảng (`0010`). Số bài kế tiếp là `0011`, dành
-> cho M05. Claude nối route `/m04/...` vào cây route của `practice` khi bạn
-có màn, không viết gì thêm.
+> cho M05.
+
+Năm màn M04 **không nằm trong cây route** của `practice` — form không cần địa
+chỉ, nên chúng mở bằng `Navigator.push` từ menu, giống các bài M00–M02. Chỉ thứ
+cần deep link mới sống trong cây route.
 
 ### Vòng 1 — hai màn
 
