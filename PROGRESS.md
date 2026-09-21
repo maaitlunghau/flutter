@@ -5,32 +5,43 @@
 
 ## Đang ở đâu
 
-- **Module hiện tại:** M03 — Navigation & Routing *(chưa bắt đầu)*
-- **Vòng:** M02 đóng 2026-09-17, cả 2 vòng + capstone
-- **Cập nhật lần cuối:** 2026-09-17
+- **Module hiện tại:** M03 — Navigation & Routing *(đang làm — xong vòng 1)*
+- **Vòng:** vòng 1 (Navigator mệnh lệnh) xong 2026-09-21. Vòng 2 (`go_router`)
+  và vòng 3 (deep link) chưa bắt đầu. Capstone chưa.
+- **Cập nhật lần cuối:** 2026-09-21
 
 ## Việc tiếp theo
 
 **M02 xong ngày 2026-09-17**, đủ cả 2 vòng, tự dựng lại và capstone.
 
-**`apps/userhub` đã có code thật đầu tiên**: `login_screen.dart` — layout chống
-overflow, nút con mắt ẩn/hiện mật khẩu, validate rỗng bằng tay,
-`TextEditingController` được `dispose`. Template counter của `flutter create` đã
-xoá hẳn.
+**M03 đã chạy hết vòng 1** ngày 2026-09-21: Navigator dạng mệnh lệnh — `push`,
+`pop`, `pushReplacement`, `pushAndRemoveUntil`, trả kết quả qua `Future`, và
+`PopScope` chặn rời màn.
 
-Sản phẩm M02: [bài 0005](docs/lessons/0005-vong-doi-cua-state.html) ·
-[bài 0006](docs/lessons/0006-key-va-cach-ghep-state.html) ·
-[cheat sheet](docs/reference/stateful-vong-doi-va-key.html) ·
-[record 0002](docs/learning-records/0002-didupdatewidget-chay-moi-lan-cha-dung-lai.md)
+Đã xong:
 
-**Tiếp theo — M03 Navigation & Routing, 3 ngày.**
+- [x] Đề bài `docs/modules/03-navigation-va-routing.md`
+- [x] [Bài 0007 — Navigator là một cái stack](docs/lessons/0007-navigator-la-mot-cai-stack.html)
+- [x] Lab `apps/03_navigation_lab` — 3 màn vòng 1
+- [x] Tự dựng lại `apps/practice/lib/m03/` — Stack Visualizer, trả kết quả,
+      chặn rời màn
 
-- [ ] Đề bài `docs/modules/03-*.md` — chưa viết
-- [ ] Lab `apps/03_navigation_lab` — chưa tạo
-- [ ] Capstone: route tree Splash → Login → Home → User detail
+Còn lại của M03:
 
-> **Nợ mang sang M03:** màn **User list** (M01 hoãn, M02 hoãn). M03 có điều hướng
-> rồi thì dựng nó luôn — lúc đó mới có đường đi tới.
+- [ ] Bài 0008 — route tree khai báo với `go_router`
+- [ ] Vòng 2 trong `practice`: `/m03/items`, `/m03/items/:id`, màn 404, và
+      `redirect` làm auth guard
+- [ ] Bài 0009 + vòng 3 — deep link, chứng minh bằng `adb`
+- [ ] Capstone `userhub`: route tree Splash → Login → Home → User detail
+- [ ] Review cả `practice` lẫn `userhub`
+
+> **Nợ mang sang M03:** màn **User list** (M01 hoãn, M02 hoãn). Vẫn chưa dựng.
+> Nó là nơi User detail được mở ra từ, nên phải làm cùng capstone M03.
+
+**Bẫy đã dẫm phải ở vòng 1:** chép màn hình từ lab sang `practice` mà quên
+`navigatorObservers` ở `MaterialApp` → bảng stack trống trơn trong khi code màn
+hình đúng 100%. `NavigatorObserver` gắn vào `Navigator`, không gắn vào màn hình.
+Kèm theo: không đặt `RouteSettings(name:)` thì mọi dòng trong bảng đều vô danh.
 
 Chạy bằng `/flutter-module 03`.
 
@@ -46,7 +57,7 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 | 00 | Khởi động & công cụ | ✅ |
 | 01 | Widget & Layout | ✅ |
 | 02 | Stateful & vòng đời | ✅ |
-| 03 | Navigation & Routing | ⬜ |
+| 03 | Navigation & Routing | 🔄 vòng 1 xong |
 | 04 | Forms & Input | ⬜ |
 | 05 | Async & tầng dữ liệu | ⬜ |
 | 06 | State nền tảng | ⬜ |
