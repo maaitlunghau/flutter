@@ -238,3 +238,15 @@ không cảnh báo. Cờ này đặt trong thẻ `<activity>` của `AndroidMani
   https://docs.flutter.dev/ui/navigation/deep-linking
 - `go_router` package (do đội Flutter duy trì):
   https://pub.dev/packages/go_router
+
+---
+
+**M03 xong ngày 2026-09-21.** Sản phẩm:
+[bài 0007](../lessons/0007-navigator-la-mot-cai-stack.html) ·
+[bài 0008](../lessons/0008-route-tree-khai-bao-voi-go-router.html) ·
+[bài 0009](../lessons/0009-deep-link-he-dieu-hanh-go-cua-app.html) ·
+[cheat sheet `go_router`](../reference/go-router.md) ·
+lab `apps/03_navigation_lab` · `apps/practice/lib/m03/` ·
+**capstone `apps/userhub` — 9 file, route tree + auth guard + deep link.**
+
+Món nợ **User list** mang từ M01 qua M02 đã trả xong ở đây.

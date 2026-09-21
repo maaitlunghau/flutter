@@ -5,8 +5,8 @@
 
 ## Đang ở đâu
 
-- **Module hiện tại:** M03 — Navigation & Routing *(đang làm — xong cả 3 vòng)*
-- **Vòng:** cả 3 vòng xong 2026-09-21. **Chỉ còn capstone `userhub`** và review.
+- **Module hiện tại:** M04 — Forms & Input *(chưa bắt đầu)*
+- **Vòng:** M03 đóng 2026-09-21, đủ 3 vòng + capstone + review
 - **Cập nhật lần cuối:** 2026-09-21
 
 ## Việc tiếp theo
@@ -39,11 +39,29 @@ Còn lại của M03:
       `navlab`, đã kiểm chứng bằng `adb` cả cold start lẫn warm start
 - [x] Vòng 3 trong `practice` — scheme `practicelab`, màn `/m03/deeplink` tra
       lệnh `adb`, đã kiểm chứng cold start lẫn warm start
-- [ ] Capstone `userhub`: route tree Splash → Login → Home → User detail
-- [ ] Review cả `practice` lẫn `userhub`
+- [x] Capstone `userhub`: route tree `/splash` → `/login` → `/users` → `/users/:id`,
+      `redirect` làm auth guard, deep link scheme `userhub`
+- [x] Review `userhub` — 2026-09-21
 
-> **Nợ mang sang M03:** màn **User list** (M01 hoãn, M02 hoãn). Vẫn chưa dựng.
-> Nó là nơi User detail được mở ra từ, nên phải làm cùng capstone M03.
+> **Nợ M01 đã trả xong.** Màn **User list** dựng ở `user_list_screen.dart`, data
+> hardcode trong `fake_users.dart`. Hoãn từ M01, hoãn tiếp ở M02, xong ở M03.
+
+**Capstone M03 — 9 commit, 9 file, 636 dòng.** Kiểm chứng bằng `adb`: cold start,
+warm start, chưa-đăng-nhập-bị-chặn, hai-dấu-gạch ra 404, đường dẫn rác ra 404.
+
+Điểm đáng nhớ nhất của capstone: **deep link lúc chưa đăng nhập vẫn tới đúng
+đích.** `redirect` gắn địa chỉ đang định tới vào `/login?from=...`, đăng nhập
+xong trả về đúng chỗ đó. Không có nó thì mọi link gửi cho người chưa đăng nhập
+đều rơi về danh sách.
+
+**Ba việc nợ lại từ review**, không chặn M04:
+
+- `?from=` chưa lọc — hình dạng của lỗ hổng open redirect. Chỉ nên nhận giá trị
+  bắt đầu bằng `/`
+- `fake_users.dart` dùng `name[0]` — cắt theo UTF-16 code unit, sẽ ra ký tự rác
+  khi API trả tên có emoji ở M05. Dùng `name.characters.first`
+- Ngôn ngữ chuỗi UI đang lệch: `user_detail_screen` và `not_found_screen` tiếng
+  Anh, ba màn còn lại tiếng Việt
 
 **Bẫy phát hiện ở vòng 3:** deep link `scheme://users/3` **không** chạy — host
 nuốt mất `users`, path còn `/3`, `go_router` không khớp và rơi vào màn 404. Phải
@@ -69,7 +87,7 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 | 00 | Khởi động & công cụ | ✅ |
 | 01 | Widget & Layout | ✅ |
 | 02 | Stateful & vòng đời | ✅ |
-| 03 | Navigation & Routing | 🔄 còn capstone |
+| 03 | Navigation & Routing | ✅ |
 | 04 | Forms & Input | ⬜ |
 | 05 | Async & tầng dữ liệu | ⬜ |
 | 06 | State nền tảng | ⬜ |
