@@ -8,6 +8,11 @@ import 'package:practice/m02/lifecycle_logger_screen.dart';
 import 'package:practice/m03/pick_result_screen.dart';
 import 'package:practice/m03/stack_visualizer_screen.dart';
 import 'package:practice/m03/unsaved_changes_screen.dart';
+import 'package:practice/m04/autovalidate_modes_screen.dart';
+import 'package:practice/m04/focus_chain_screen.dart';
+import 'package:practice/m04/keyboard_inset_screen.dart';
+import 'package:practice/m04/password_match_screen.dart';
+import 'package:practice/m04/validate_all_screen.dart';
 
 import 'app_router.dart';
 import 'm00/counter_screen.dart';
@@ -115,6 +120,34 @@ class PracticeMenuScreen extends StatelessWidget {
             title: 'Deep link',
             subtitle: 'Mở từ ngoài vào — lệnh adb để tự kiểm chứng',
             location: '/m03/deeplink',
+          ),
+
+          // M04 - Forms & Input
+          _SectionHeader('M04 — Forms & Input'),
+          _ExerciseTile(
+            title: 'Validate cả form',
+            subtitle: 'Một lời gọi, mọi ô sai cùng báo lỗi',
+            screen: ValidateAllScreen(),
+          ),
+          _ExerciseTile(
+            title: 'Lỗi hiện lúc nào',
+            subtitle: 'Ba autovalidateMode, khác đúng một tham số',
+            screen: AutovalidateModesScreen(),
+          ),
+          _ExerciseTile(
+            title: 'Bàn phím đi tiếp',
+            subtitle: 'FocusNode, textInputAction, ô chỉ nhận số',
+            screen: FocusChainScreen(),
+          ),
+          _ExerciseTile(
+            title: 'Bàn phím che ô',
+            subtitle: 'viewInsets.bottom và resizeToAvoidBottomInset',
+            screen: KeyboardInsetScreen(),
+          ),
+          _ExerciseTile(
+            title: 'Hai ô phải khớp',
+            subtitle: 'Validate chéo — và cái bẫy khi sửa ô thứ nhất',
+            screen: PasswordMatchScreen(),
           ),
         ],
       ),
