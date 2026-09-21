@@ -243,7 +243,7 @@ Hai lần người học gọi *"code hộ tui"* (vòng 2–3 của `practice` M
 đã có nên **không còn chặn**, nhưng đọc `docs/reference/backend-api.md` trước khi
 viết đề bài — nó bẻ lại hình dạng module (không có endpoint auth).
 
-**M05 sẽ gồm:** `Future`/`async` trong UI · `http` · parse envelope dùng chung ·
+**M05 sẽ gồm:** `Future`/`async` trong UI · HTTP client · parse envelope dùng chung ·
 `PageResponse` + phân trang (`page` đếm từ 0, `last` để dừng infinite scroll) ·
 `Repository` · `ApiException` phân loại theo status · **map `data` của lỗi 400 vào
 `errorText` từng ô** (nối thẳng vào M04) · trạng thái đang-tải / lỗi / rỗng.
@@ -260,6 +260,13 @@ viết đề bài — nó bẻ lại hình dạng module (không có endpoint au
 Kèm hai thứ chặn ngay phút đầu: base URL phải là **`10.0.2.2:8081`** (emulator
 không thấy `localhost` của máy host), và `AndroidManifest.xml` cần
 `android:usesCleartextTraffic="true"` — không có thì Android 9+ chặn HTTP thường.
+
+**CHƯA CHỐT: `http` hay `dio`?** `docs/roadmap.md` ghi Dio *(viết từ 2026-09-10,
+trước khi có spec)*; `docs/reference/backend-api.md` mục 7 gợi ý `http: ^1.2.0`
+và có sẵn code mẫu cho `http`. **Hỏi người học trước khi viết đề bài M05.**
+Đánh đổi: `http` gọn và gần chuẩn, nhưng M08 cần **interceptor** để gắn
+`Authorization` — đó là thứ `dio` có sẵn còn `http` phải tự bọc client. Chọn
+`http` bây giờ nghĩa là M08 sẽ có thêm việc.
 
 **Ba việc cố ý KHÔNG sửa** — sửa bây giờ là lấy mất bài học của module sau:
 hai biến toàn cục (`authState`, `appRouter`) → M06/M07, và `appRouter` không test
