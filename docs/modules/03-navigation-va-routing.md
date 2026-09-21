@@ -153,7 +153,7 @@ thật** và trả nốt món nợ User list.
 
 - `/home` hiện danh sách user, **data hardcode** — đây là món nợ của M01
 - Bấm một user → `/users/:id`, màn detail đọc `id` từ đường dẫn
-- Deep link `userhub://users/7` mở thẳng màn detail, kiểm chứng bằng `adb`
+- Deep link `userhub:///users/7` mở thẳng màn detail, kiểm chứng bằng `adb`
 
 **Cố ý chưa làm ở module này:**
 
@@ -173,8 +173,9 @@ là chủ ý — cùng logic với "validate bằng tay ở M02".
 - [ ] Chưa đăng nhập, ép vào `/home` → bị đẩy về `/login`
 - [ ] Đăng nhập → `/home`; Đăng xuất → `/login` và Back **không** quay lại `/home`
 - [ ] `/home` có danh sách user hardcode, bấm vào ra `/users/:id` đúng người
-- [ ] `adb shell am start -a android.intent.action.VIEW -d "userhub://users/7"`
+- [ ] `adb shell am start -a android.intent.action.VIEW -d "userhub:///users/7"`
       mở đúng màn detail của user 7, cả khi app đang đóng lẫn đang chạy
+      (**ba** dấu gạch — xem bẫy 6)
 - [ ] Đường dẫn không tồn tại → màn 404, app không crash
 - [ ] Giải thích được bằng lời: `go` khác `push` chỗ nào, và khi nào dùng cái nào
 - [ ] Giải thích được bằng lời: vì sao auth guard đặt ở `redirect` chứ không phải
@@ -193,6 +194,28 @@ tuyệt đối nên không bao giờ lộ ra chuyện này. Máy đang để ở
 
 Thêm vào `PATH` trong `~/.zshrc`, hoặc gõ nguyên đường dẫn. Đã xác minh
 2026-09-21 khi cài lab lên emulator.
+
+**6. Deep link hai dấu gạch thì host nuốt mất đoạn đầu đường dẫn.**
+
+`scheme://users/3` phân tích ra `host = users`, `path = /3` — và `go_router`
+khớp route theo **path**, nên nó đi tìm route tên `/3`, không thấy, rơi vào
+`errorBuilder`. Màn 404 hiện ra dù cấu hình manifest đúng hết.
+
+```bash
+ADB=~/Library/Android/sdk/platform-tools/adb
+$ADB shell am start -a android.intent.action.VIEW -d "navlab://users/3"   # → 404
+$ADB shell am start -a android.intent.action.VIEW -d "navlab:///users/3"  # → đúng màn
+```
+
+**Ba** dấu gạch nghĩa là host rỗng, nhờ vậy cả `/users/3` nằm trọn trong path.
+Đã xác minh trên `apps/03_navigation_lab` ngày 2026-09-21, cả hai dạng, cả cold
+start lẫn warm start. Chi tiết: [bài 0009](../lessons/0009-deep-link-he-dieu-hanh-go-cua-app.html).
+
+**7. Thiếu `flutter_deeplinking_enabled` thì hỏng âm thầm.**
+
+App **vẫn mở** khi nhận link, nên rất dễ tưởng đã xong — nhưng URI không tới
+được `Router` và bạn thấy màn ở `initialLocation` y như vừa bấm icon. Không lỗi,
+không cảnh báo. Cờ này đặt trong thẻ `<activity>` của `AndroidManifest.xml`.
 
 ## Nguồn
 

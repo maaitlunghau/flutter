@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0009 — Deep link: hệ điều hành gõ cửa app</title>
+<style>
+  :root {
+    --bg: #fdfcfa; --ink: #1a1a1a; --muted: #6b6862; --rule: #e3ded6;
+    --accent: #7c4a2d; --code-bg: #f4f1ec; --keep: #2d6a4f; --wipe: #9b2c2c;
+    --measure: 34rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513; --ink: #e8e4dd; --muted: #9a958c; --rule: #33302b;
+      --accent: #d9a273; --code-bg: #201e1b; --keep: #6ac292; --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 4rem 1.5rem 6rem;
+    background: var(--bg); color: var(--ink);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 46rem; margin: 2.5rem auto; }
+  .eyebrow {
+    font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .9rem;
+  }
+  h1 { font: 600 2.1rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .6rem; letter-spacing: -.015em; }
+  .standfirst { color: var(--muted); font-size: 1.06rem; margin: 0 0 2.5rem; }
+  h2 {
+    font: 600 1.28rem/1.3 ui-serif, Georgia, serif;
+    margin: 3rem 0 .9rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--rule); letter-spacing: -.01em;
+  }
+  h3 { font: 600 1rem/1.4 ui-sans-serif, system-ui, sans-serif; margin: 1.8rem 0 .5rem; }
+  p { margin: 0 0 1.1rem; }
+  strong { font-weight: 600; }
+  code {
+    font: 400 .88em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .12em .38em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: 1rem 1.1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1.3rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; line-height: 1.6; }
+  table { border-collapse: collapse; width: 100%; margin: 1.4rem 0; font-size: .93rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 .78rem/1.3 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  td code { font-size: .84em; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: 1rem 1.2rem; margin: 1.6rem 0; border-radius: 0 4px 4px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: .5rem;
+  }
+  .callout.warn { border-left-color: var(--wipe); background: color-mix(in srgb, var(--wipe) 7%, transparent); }
+  .callout.warn .label { color: var(--wipe); }
+  figure { margin: 2.2rem 0; }
+  figcaption { font-size: .85rem; color: var(--muted); margin-top: .8rem; text-align: center; }
+  svg { width: 100%; height: auto; display: block; }
+  .exp { counter-reset: exp; list-style: none; padding: 0; margin: 1.4rem 0; }
+  .exp li {
+    counter-increment: exp; border: 1px solid var(--rule); border-radius: 5px;
+    padding: 1rem 1.1rem 1rem 3rem; margin-bottom: .9rem; position: relative;
+  }
+  .exp li::before {
+    content: counter(exp); position: absolute; left: 1rem; top: 1rem;
+    font: 600 .8rem/1.5 ui-sans-serif, system-ui, sans-serif;
+    width: 1.5rem; height: 1.5rem; text-align: center;
+    background: var(--accent); color: var(--bg); border-radius: 50%;
+  }
+  .exp li p:last-child { margin-bottom: 0; }
+  .exp .expect { font-size: .9rem; color: var(--muted); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  footer { margin-top: 4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--muted); }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+    h2 { page-break-after: avoid; }
+    figure, pre, .exp li, .callout { page-break-inside: avoid; }
+    footer { page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Bài 0009 · Module M03 · Vòng 3</div>
+  <h1>Deep link: hệ điều hành gõ cửa app</h1>
+  <p class="standfirst">
+    Hai bài trước, <em>bạn</em> là người ra lệnh điều hướng. Bài này người ra
+    lệnh là <strong>Android</strong> — nó đưa vào một cái URI và app phải mở
+    đúng màn, kể cả khi vừa nãy còn chưa chạy.
+  </p>
+
+  <h2>1. Deep link không phải tính năng của Flutter</h2>
+
+  <p>
+    Đây là chỗ hay hiểu nhầm. Không có widget nào tên <code>DeepLink</code>, và
+    cũng không có package nào phải cài.
+  </p>
+
+  <p>
+    Deep link là một <strong>thoả thuận giữa app và hệ điều hành</strong>: app
+    đăng ký với Android rằng "những URI hình dạng thế này là của tôi". Android
+    giữ sổ đăng ký đó. Khi ai đó mở một URI khớp, nó khởi động app và **đưa URI
+    vào**. Flutter chỉ nhận cái URI ở đầu bên kia.
+  </p>
+
+  <p>
+    Nên toàn bộ phần cấu hình nằm trong <strong>một file XML của Android</strong>,
+    không nằm trong Dart.
+  </p>
+
+  <h2>2. Hai mảnh phải có</h2>
+
+  <p>
+    Cả hai nằm trong <code>android/app/src/main/AndroidManifest.xml</code>, bên
+    trong thẻ <code>&lt;activity&gt;</code>.
+  </p>
+
+  <h3>Mảnh 1 — đăng ký với Android</h3>
+
+  <pre><code>&lt;intent-filter&gt;
+    &lt;action android:name="android.intent.action.VIEW"/&gt;
+    &lt;category android:name="android.intent.category.DEFAULT"/&gt;
+    &lt;category android:name="android.intent.category.BROWSABLE"/&gt;
+    &lt;data android:scheme="navlab"/&gt;
+&lt;/intent-filter&gt;</code></pre>
+
+  <p>
+    Đọc là: <em>"Tôi nhận mọi URI bắt đầu bằng <code>navlab:</code>, mở bằng
+    hành động VIEW, và cho phép cả trình duyệt gọi tới."</em>
+  </p>
+
+  <h3>Mảnh 2 — bảo Flutter thật sự đọc cái URI đó</h3>
+
+  <pre><code>&lt;meta-data
+    android:name="flutter_deeplinking_enabled"
+    android:value="true" /&gt;</code></pre>
+
+  <div class="callout warn">
+    <span class="label">Thiếu mảnh 2 thì hỏng âm thầm</span>
+    <p>
+      App <strong>vẫn mở</strong> — nên rất dễ tưởng là xong. Nhưng URI không
+      bao giờ tới được <code>Router</code>, và bạn nhìn thấy màn ở
+      <code>initialLocation</code> y như vừa bấm icon. Không có lỗi, không có
+      cảnh báo, chỉ có màn sai.
+    </p>
+  </div>
+
+  <h2>3. Cái bẫy ăn mất đoạn đầu đường dẫn</h2>
+
+  <p>
+    Đây là chỗ ngã của gần như tất cả mọi người, và nó không phải lỗi của Flutter
+    — nó là luật phân tích URI, có từ trước khi Flutter ra đời.
+  </p>
+
+  <figure class="wide">
+    <svg viewBox="0 0 640 210" role="img" aria-label="So sánh hai dấu gạch và ba dấu gạch trong URI">
+      <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+        <text x="8" y="16" fill="var(--wipe)" font-size="11">HAI DẤU GẠCH — 404</text>
+
+        <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="13">
+          <text x="14" y="46" fill="var(--ink)">navlab://users/3</text>
+        </g>
+        <text x="14" y="70" fill="var(--muted)" font-size="11">scheme = navlab</text>
+        <text x="14" y="88" fill="var(--wipe)" font-size="11">host   = users   ← bị nuốt mất</text>
+        <text x="14" y="106" fill="var(--wipe)" font-size="11">path   = /3      ← router đi tìm route "/3"</text>
+
+        <line x1="320" y1="8" x2="320" y2="200" stroke="var(--rule)" stroke-width="1"/>
+
+        <text x="340" y="16" fill="var(--keep)" font-size="11">BA DẤU GẠCH — ĐÚNG</text>
+
+        <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="13">
+          <text x="346" y="46" fill="var(--ink)">navlab:///users/3</text>
+        </g>
+        <text x="346" y="70" fill="var(--muted)" font-size="11">scheme = navlab</text>
+        <text x="346" y="88" fill="var(--keep)" font-size="11">host   = (rỗng)</text>
+        <text x="346" y="106" fill="var(--keep)" font-size="11">path   = /users/3  ← khớp /users/:id</text>
+
+        <line x1="8" y1="134" x2="632" y2="134" stroke="var(--rule)" stroke-width="1"/>
+
+        <text x="8" y="158" fill="var(--ink)" font-size="12">Đoạn ngay sau `//` luôn được đọc là HOST, không phải path.</text>
+        <text x="8" y="178" fill="var(--ink)" font-size="12">Muốn cả `/users/3` nằm trong path thì phải để host rỗng —</text>
+        <text x="8" y="196" fill="var(--ink)" font-size="12">và "host rỗng" viết ra chính là dấu gạch thứ ba.</text>
+      </g>
+    </svg>
+    <figcaption>Cùng một app, cùng một cấu hình. Khác đúng một ký tự.</figcaption>
+  </figure>
+
+  <p>
+    <code>go_router</code> khớp route dựa trên <strong>path</strong>. Với
+    <code>navlab://users/3</code>, path chỉ là <code>/3</code> — không có route
+    nào tên vậy, nên bạn rơi vào <code>errorBuilder</code>. Màn 404 bạn viết ở
+    bài trước vừa cứu bạn khỏi một màn lỗi khó hiểu.
+  </p>
+
+  <h2>4. Vì sao Back không văng ra ngoài</h2>
+
+  <p>
+    Deep link thẳng vào <code>/users/3</code>, màn danh sách chưa từng được mở.
+    Vậy mà bấm Back lại về được danh sách.
+  </p>
+
+  <p>
+    Vì stack không do ai push. Nó được <strong>suy ra từ cây route</strong> —
+    đúng thứ bài 0008 nói. <code>:id</code> là con của <code>/users</code>, nên
+    bất kỳ cách nào tới được <code>/users/3</code> cũng sinh ra stack hai tầng.
+  </p>
+
+  <p>
+    Đây chính là lý do đáng giá nhất để dùng route tree khai báo. Với
+    <code>Navigator.push</code> thuần, bạn sẽ phải tự viết đoạn "dựng lại stack
+    cho deep link" — và tự nhớ cập nhật nó mỗi lần thêm màn.
+  </p>
+
+  <h2>5. Hai trạng thái phải thử riêng</h2>
+
+  <table>
+    <thead>
+      <tr><th>Trạng thái</th><th>Android làm gì</th><th>Hay hỏng ở đâu</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>App đang đóng</strong> (cold start)</td>
+        <td>Khởi động process, URI nằm sẵn trong intent đầu tiên</td>
+        <td>Router đọc URI trước khi state kịp sẵn sàng</td>
+      </tr>
+      <tr>
+        <td><strong>App đang chạy</strong> (warm)</td>
+        <td>Gửi intent mới vào activity đang sống</td>
+        <td>Thiếu <code>launchMode="singleTop"</code> thì Android dựng activity thứ hai</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    <code>flutter create</code> đã đặt sẵn <code>singleTop</code>, nên nhánh thứ
+    hai thường chạy đúng mà bạn không phải làm gì. Nhưng vẫn phải <em>thử</em>
+    cả hai — chúng đi hai đường code khác nhau.
+  </p>
+
+  <h2>6. Thí nghiệm — bằng chứng nằm ở <code>adb</code>, không phải ở nút bấm</h2>
+
+  <p>
+    Chạy lab <code>apps/03_navigation_lab</code> lên emulator trước.
+    <code>adb</code> không nằm trong <code>PATH</code>, gõ nguyên đường dẫn:
+  </p>
+
+  <pre><code>ADB=~/Library/Android/sdk/platform-tools/adb</code></pre>
+
+  <ol class="exp">
+    <li>
+      <p><strong>Hai dấu gạch.</strong></p>
+      <pre><code>$ADB shell am start -a android.intent.action.VIEW \
+  -d "navlab://users/3"</code></pre>
+      <p class="expect">Phải thấy: màn <strong>404</strong>, hiện nguyên
+      <code>navlab://users/3</code>. Đây là cái bẫy ở mục 3.</p>
+    </li>
+    <li>
+      <p><strong>Ba dấu gạch.</strong></p>
+      <pre><code>$ADB shell am start -a android.intent.action.VIEW \
+  -d "navlab:///users/3"</code></pre>
+      <p class="expect">Phải thấy: màn chi tiết của Phạm Thu Hà, tiêu đề
+      <code>/users/3</code>, và <strong>có mũi tên Back</strong>.</p>
+    </li>
+    <li>
+      <p><strong>Bấm Back từ đó.</strong></p>
+      <p class="expect">Phải thấy: về <code>/users</code>. Không thoát app — dù
+      danh sách chưa từng được push.</p>
+    </li>
+    <li>
+      <p><strong>Cold start.</strong> Tắt hẳn app rồi mới gọi link.</p>
+      <pre><code>$ADB shell am force-stop com.example.navigation_lab
+$ADB shell am start -a android.intent.action.VIEW \
+  -d "navlab:///users/5"</code></pre>
+      <p class="expect">Phải thấy: app khởi động từ đầu và vào thẳng
+      <code>/users/5</code>, vẫn có Back về danh sách.</p>
+    </li>
+  </ol>
+
+  <h2>7. Ngoài đời thật dùng gì</h2>
+
+  <p>
+    Scheme riêng (<code>navlab:</code>, <code>userhub:</code>) dễ làm và đủ để
+    học, nhưng có hai nhược điểm: <strong>ai cũng đăng ký trùng được</strong>, và
+    nó không mở được từ một link trong tin nhắn hay email.
+  </p>
+
+  <p>
+    Sản phẩm thật dùng <strong>App Links</strong> — scheme <code>https</code> với
+    host là tên miền của bạn, cộng một file xác thực đặt trên máy chủ. Lúc đó
+    host là tên miền, và <code>/users/7</code> nằm trọn trong path một cách tự
+    nhiên — cái bẫy ba dấu gạch biến mất luôn.
+  </p>
+
+  <p>
+    Cấu hình thì dài hơn, nhưng phần Flutter <strong>y hệt</strong>: vẫn là cây
+    route đó, vẫn là <code>errorBuilder</code> đó. Đổi mỗi thẻ
+    <code>&lt;data&gt;</code> trong manifest.
+  </p>
+
+  <div class="callout">
+    <span class="label">Nhớ một câu</span>
+    <p>
+      <strong>Deep link chỉ là một cách khác để nói "tôi muốn ở địa chỉ
+      này".</strong> Cây route bạn đã khai báo ở bài 0008 làm hết phần còn lại —
+      kể cả dựng stack để nút Back có chỗ mà về.
+    </p>
+  </div>
+
+  <footer>
+    Nguồn chính thống:
+    <a href="https://docs.flutter.dev/ui/navigation/deep-linking">Flutter docs — Deep linking</a> ·
+    <a href="https://developer.android.com/training/app-links/deep-linking">Android — Create deep links to app content</a> ·
+    <a href="https://pub.dev/packages/go_router">pub.dev — go_router</a>.
+    <br>
+    Bài trước: <a href="0008-route-tree-khai-bao-voi-go-router.html">0008 — Route tree khai báo với go_router</a>.
+    <br>
+    Tra nhanh: <a href="../reference/go-router.md">cheat sheet <code>go_router</code></a>.
+  </footer>
+</div>
+
+</body>
+</html>

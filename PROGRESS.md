@@ -35,12 +35,20 @@ Còn lại của M03:
 - [x] Vòng 2 trong `practice` — `apps/practice` chuyển sang `MaterialApp.router`:
       `/m03/items`, `/m03/items/:id`, màn 404, `/m03/locked` + `redirect` làm
       auth guard
-- [ ] Bài 0009 + vòng 3 — deep link, chứng minh bằng `adb`
+- [x] [Bài 0009 — deep link, hệ điều hành gõ cửa app](docs/lessons/0009-deep-link-he-dieu-hanh-go-cua-app.html)
+- [x] Deep link ở lab — `AndroidManifest.xml` của `03_navigation_lab`, scheme
+      `navlab`, đã kiểm chứng bằng `adb` cả cold start lẫn warm start
+- [ ] Vòng 3 trong `practice` — màn 5, mở từ link ngoài
 - [ ] Capstone `userhub`: route tree Splash → Login → Home → User detail
 - [ ] Review cả `practice` lẫn `userhub`
 
 > **Nợ mang sang M03:** màn **User list** (M01 hoãn, M02 hoãn). Vẫn chưa dựng.
 > Nó là nơi User detail được mở ra từ, nên phải làm cùng capstone M03.
+
+**Bẫy phát hiện ở vòng 3:** deep link `scheme://users/3` **không** chạy — host
+nuốt mất `users`, path còn `/3`, `go_router` không khớp và rơi vào màn 404. Phải
+viết `scheme:///users/3`, **ba** dấu gạch. Tiêu chí Xong trong đề bài đã sửa lại
+cho đúng. Bẫy 6 và 7 trong `docs/modules/03-navigation-va-routing.md`.
 
 **Bẫy đã dẫm phải ở vòng 1:** chép màn hình từ lab sang `practice` mà quên
 `navigatorObservers` ở `MaterialApp` → bảng stack trống trơn trong khi code màn
