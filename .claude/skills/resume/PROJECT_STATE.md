@@ -1,6 +1,6 @@
 # PROJECT STATE — Flutter Learning Workspace
 
-**Last synced commit:** `51e8706` — *commit ngay sau nó chỉ là chính lần sync này,
+**Last synced commit:** `b72f8ae` — *commit ngay sau nó chỉ là chính lần sync này,
 không phải việc mới; đừng đi tìm thay đổi nào khác.*
 **Last synced:** 2026-09-22
 **Repo:** `/Users/maaitlunghau/Documents/SelfStudy/flutter` · branch `main` · working tree sạch
@@ -30,8 +30,11 @@ Neo cho mọi bài giảng: *thứ này giúp gì cho việc ship `userhub`?*
 
 ## Đang ở đâu
 
-**M00 ✅ 2026-09-15 · M01 ✅ 2026-09-17 · M02 ✅ 2026-09-17 · M03 ✅ 2026-09-21.**
-**Đang ở M04 — Forms & Input, chưa bắt đầu** (chưa có đề bài, chưa có lab).
+**M00 ✅ · M01 ✅ · M02 ✅ · M03 ✅ 2026-09-21 · M04 ✅ 2026-09-22.**
+**Đang ở M05 — Async & tầng dữ liệu, chưa bắt đầu** (chưa có đề bài, chưa có lab).
+
+**M05 BỊ CHẶN: chưa có spec API Spring Boot.** Đây là lần đầu món nợ này thật sự
+chặn đường — xem mục *Nợ kỹ thuật*.
 
 M03 chạy đủ 3 vòng + capstone + review: vòng 1 `Navigator` mệnh lệnh · vòng 2
 `go_router` (route tree, `:id`, màn 404, `redirect` làm auth guard) · vòng 3 deep
@@ -81,8 +84,8 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | `apps/01_layout_lab` — lab M01, **6 màn** | xong, đã verify bằng ảnh chụp |
 | `apps/02_stateful_lab` — lab M02, 3 màn | xong |
 | `apps/03_navigation_lab` — lab M03, 3 vòng | xong, `MaterialApp.router`, scheme deep link `navlab` |
-| `apps/practice` — sân tập, **một menu phẳng duy nhất** | `lib/m00/`→`lib/m03/` đều có bài; đã chuyển sang `MaterialApp.router`, scheme `practicelab` |
-| `apps/userhub` — capstone | **9 file**: `MaterialApp.router` + `app_router.dart` (auth guard ở `redirect`), Splash · Login · User list · User detail · 404, `authState` trong RAM, deep link scheme `userhub` |
+| `apps/practice` — sân tập, **một menu phẳng duy nhất** | `lib/m00/`→`lib/m04/` đều có bài; `MaterialApp.router`, scheme `practicelab`. M04 **không** dùng route — form không cần địa chỉ |
+| `apps/userhub` — capstone | **11 file**: `MaterialApp.router` + `app_router.dart` (auth guard ở `redirect`, khái niệm *đường công khai*), Splash · Login · **Register** · User list · User detail · 404, `authState` trong RAM, `validators.dart`, deep link scheme `userhub`. Login và Register đều dùng `Form` |
 | Hook `commit-msg` + `pre-commit` (husky) | xong, hoạt động thật |
 | `analysis_options.yaml` dùng chung | xong |
 | Skill `/flutter-module` | xong |
@@ -94,9 +97,14 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | `docs/reference/hot-reload-va-devtools.html` — cheat sheet M00 | xong |
 | `docs/reference/stateful-vong-doi-va-key.html` — cheat sheet M02 | xong, có mục *Giải phẫu một màn stateful* do người học tự vẽ |
 | `docs/reference/go-router.md` — cheat sheet M03 | xong, viết theo hướng áp dụng vào project thật |
+| `docs/lessons/0010` Form/FormState/validator — **bài duy nhất của M04** | xong |
+| `docs/reference/forms-va-input.md` — cheat sheet M04 | xong, **thay cho hai bài `0011`/`0012` đã bỏ** |
 | `docs/learning-records/0001` thiếu Scaffold · `0002` didUpdateWidget | xong |
 
-`docs/learning-records/` có **2 file**, `docs/reference/` có **3**.
+`docs/learning-records/` có **2 file**, `docs/reference/` có **4**.
+
+**Đánh số bài giảng:** bài cuối là `0010`. Số kế tiếp là `0011` — dành cho M05,
+vì `0011`/`0012` của M04 đã bỏ chứ không phải đã dùng.
 
 ---
 
@@ -124,6 +132,8 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | **Danh sách user ở `/users`, không phải `/home`** | 2026-09-21 | Đề bài ban đầu để danh sách ở `/home` còn chi tiết ở `/users/:id` — hai đường không có quan hệ cha–con nên `go_router` không dựng được stack, và Back từ deep link sẽ thoát app. Đặt danh sách ở `/users` rồi cho chi tiết làm route con `:id` thì stack `[danh sách, chi tiết]` tự có. Đề bài và Tiêu chí Xong đã sửa theo. |
 | **Capstone M03 do Claude viết theo yêu cầu, chia 8 step có duyệt** | 2026-09-21 | Người học nói thẳng *"thay vì tui code, bạn hãy triển khai dùm tôi từng step"* vì đã hiểu phần này. Quy trình: Claude làm một step → mô tả đã sửa file nào và vì sao → người học duyệt → commit → step kế. **Không phải tiền lệ** — mặc định `userhub` vẫn thuộc về người học. |
 | **Chuỗi UI trong `userhub` dùng tiếng Anh** | 2026-09-22 | Người học chọn khi thống nhất lại 5 màn đang lệch nhau. Tên người và `role` trong `fake_users.dart` vẫn tiếng Việt — đó là **dữ liệu**, không phải nhãn giao diện. Chưa phải i18n thật; i18n là M10. |
+| **Bỏ bài giảng khi code đã dạy đủ** | 2026-09-22 | Bài `0011` và `0012` của M04 bị bỏ hẳn: người học gọi *"code dùm tui"* nên cả 5 màn `practice/lib/m04/` được viết kèm doc comment dạy đúng nội dung hai bài đó. Phần tra cứu lại được dồn vào cheat sheet. **Số bài giảng kế tiếp là `0011`, dành cho M05.** Tiền lệ: khi người học đã đọc code và hiểu, bài giảng viết lại là thừa — hỏi trước khi viết. |
+| **`redirect` dùng khái niệm "đường công khai"** | 2026-09-22 | M04 thêm `/register`, và nó phải vào được khi chưa đăng nhập. Thay vì thêm nhánh `if`, đặt `isPublic = location == '/login' \|\| location == '/register'`. **Cả hai vế của `redirect` phải đổi theo** — quên vế `loggedIn && isPublic` thì người đã đăng nhập vào `/register` vẫn thấy form đăng ký. |
 | **`userhub` không mang comment** | 2026-09-22 | Người học gỡ hết comment, kể cả comment mới Claude thêm ở từng lần sửa. **Claude không tự thêm comment vào `userhub` nữa.** Lưu ý: `CLAUDE.md` vẫn ghi "comment tiếng Việt ở mọi nơi, kể cả `userhub`" — hai thứ đang lệch nhau, chưa quyết sửa bên nào. |
 
 ---
@@ -198,5 +208,7 @@ cho `authState.email` · chuỗi UI sang tiếng Anh. Chi tiết ở `PROGRESS.m
 
 **Ba việc cố ý KHÔNG sửa** — sửa bây giờ là lấy mất bài học của module sau:
 hai biến toàn cục (`authState`, `appRouter`) → M06/M07, và `appRouter` không test
-được → M14 · Splash cứng 1 giây → M09 · nút Đăng nhập không có trạng thái đang
-xử lý → M05.
+được → M14 · Splash cứng 1 giây → M09 · nút Đăng nhập/Đăng ký không có trạng thái
+đang xử lý → M05.
+
+**Vào M05 thì gọi `/flutter-module 05`** — nhưng hỏi spec API trước, nó chặn thật.
