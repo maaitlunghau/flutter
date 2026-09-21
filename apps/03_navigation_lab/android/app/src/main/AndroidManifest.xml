@@ -20,9 +20,24 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- Bật deep link của Flutter. Thiếu cờ này thì intent-filter dưới
+                 vẫn mở được app, nhưng URI không bao giờ tới được Router —
+                 app mở ra ở initialLocation như bấm icon. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <!-- Deep link không phải tính năng của Flutter. Nó là thoả thuận
+                 giữa app và hệ điều hành, khai báo ở đây — Flutter chỉ nhận
+                 cái URI mà Android đưa vào. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="navlab"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
