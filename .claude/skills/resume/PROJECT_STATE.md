@@ -1,6 +1,6 @@
 # PROJECT STATE — Flutter Learning Workspace
 
-**Last synced commit:** `f079367` — *commit ngay sau nó chỉ là chính lần sync này,
+**Last synced commit:** `1468fe2` — *commit ngay sau nó chỉ là chính lần sync này,
 không phải việc mới; đừng đi tìm thay đổi nào khác.*
 **Last synced:** 2026-09-21
 **Repo:** `/Users/maaitlunghau/Documents/SelfStudy/flutter` · branch `main` · working tree sạch
@@ -30,22 +30,20 @@ Neo cho mọi bài giảng: *thứ này giúp gì cho việc ship `userhub`?*
 
 ## Đang ở đâu
 
-**M00 ✅ 2026-09-15 · M01 ✅ 2026-09-17 · M02 ✅ 2026-09-17.**
-**Đang ở M03 — Navigation & Routing: xong cả 3 vòng ngày 2026-09-21.**
-Còn đúng hai việc để đóng module: **capstone `userhub`** (người học viết) và
-**review**.
+**M00 ✅ 2026-09-15 · M01 ✅ 2026-09-17 · M02 ✅ 2026-09-17 · M03 ✅ 2026-09-21.**
+**Đang ở M04 — Forms & Input, chưa bắt đầu** (chưa có đề bài, chưa có lab).
 
-Ba vòng của M03 đã chạy: vòng 1 `Navigator` mệnh lệnh · vòng 2 `go_router`
-(route tree, `:id`, màn 404, `redirect` làm auth guard) · vòng 3 deep link
-Android. Cả lab lẫn `practice` đều đã kiểm chứng bằng `adb`, cold start lẫn
-warm start.
+M03 chạy đủ 3 vòng + capstone + review: vòng 1 `Navigator` mệnh lệnh · vòng 2
+`go_router` (route tree, `:id`, màn 404, `redirect` làm auth guard) · vòng 3 deep
+link Android. Lab, `practice` và `userhub` đều đã kiểm chứng bằng `adb`, cold
+start lẫn warm start.
 
 **M01 đóng sớm theo yêu cầu người học:** vòng 1 làm đủ; vòng 2 (Flex, overflow)
 bỏ bước tự dựng lại sau khi đã chạy và hiểu lab; vòng 3 (`Stack`) và capstone
 **không làm** — capstone gộp sang M02.
 
-**Nợ vẫn treo:** màn **User list** trong `userhub` (M01 hoãn, M02 hoãn, M03 chưa
-làm). Nó là chỗ User detail được mở ra từ, nên phải dựng cùng capstone M03.
+**Nợ User list đã trả xong** ở capstone M03 (`user_list_screen.dart` +
+`fake_users.dart`). Không còn nợ nào mang sang M04.
 
 Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`.
 
@@ -84,7 +82,7 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | `apps/02_stateful_lab` — lab M02, 3 màn | xong |
 | `apps/03_navigation_lab` — lab M03, 3 vòng | xong, `MaterialApp.router`, scheme deep link `navlab` |
 | `apps/practice` — sân tập, **một menu phẳng duy nhất** | `lib/m00/`→`lib/m03/` đều có bài; đã chuyển sang `MaterialApp.router`, scheme `practicelab` |
-| `apps/userhub` — capstone | **mới có** `main.dart` + `login_screen.dart`; chưa có `go_router`, `home:` vẫn trỏ thẳng Login |
+| `apps/userhub` — capstone | **9 file**: `MaterialApp.router` + `app_router.dart` (auth guard ở `redirect`), Splash · Login · User list · User detail · 404, `authState` trong RAM, deep link scheme `userhub` |
 | Hook `commit-msg` + `pre-commit` (husky) | xong, hoạt động thật |
 | `analysis_options.yaml` dùng chung | xong |
 | Skill `/flutter-module` | xong |
@@ -123,6 +121,8 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | **`go_router` là router chính thức của repo** | 2026-09-21 | Bản `18.0.1`. `Navigator` mệnh lệnh vẫn dùng cho các bài M00–M02 trong `practice` — chúng không cần địa chỉ. Chỉ thứ cần deep link mới sống trong cây route. |
 | **Auth guard đặt ở `redirect`, không ở `build`** | 2026-09-21 | Một chỗ duy nhất chặn được cả điều hướng trong app lẫn deep link từ ngoài. Kèm `refreshListenable` — thiếu nó thì đổi cờ xong router không chạy lại `redirect`. |
 | **Người học gọi "code hộ tui" cho cả vòng 2 và vòng 3 của `practice`** | 2026-09-21 | Đúng ngoại lệ của luật capstone. Đã viết hoàn chỉnh. Không phải tiền lệ — mặc định vẫn là người học tự viết. |
+| **Danh sách user ở `/users`, không phải `/home`** | 2026-09-21 | Đề bài ban đầu để danh sách ở `/home` còn chi tiết ở `/users/:id` — hai đường không có quan hệ cha–con nên `go_router` không dựng được stack, và Back từ deep link sẽ thoát app. Đặt danh sách ở `/users` rồi cho chi tiết làm route con `:id` thì stack `[danh sách, chi tiết]` tự có. Đề bài và Tiêu chí Xong đã sửa theo. |
+| **Capstone M03 do Claude viết theo yêu cầu, chia 8 step có duyệt** | 2026-09-21 | Người học nói thẳng *"thay vì tui code, bạn hãy triển khai dùm tôi từng step"* vì đã hiểu phần này. Quy trình: Claude làm một step → mô tả đã sửa file nào và vì sao → người học duyệt → commit → step kế. **Không phải tiền lệ** — mặc định `userhub` vẫn thuộc về người học. |
 
 ---
 
@@ -187,10 +187,18 @@ bảng đều vô danh. Dùng `go_router` thì observer chuyển vào `GoRouter.
 
 Vào học thì gọi `/flutter-module 03`.
 
-**Việc còn lại để đóng M03**, theo thứ tự: capstone `userhub` (người học viết —
-đề bài ở `docs/modules/03-navigation-va-routing.md` mục *Capstone task*) → review
-diff cả `practice` lẫn `userhub` → lật M03 thành ✅ ở **cả** `README.md` lẫn
-`docs/roadmap.md` (hiện `README.md` vẫn ghi ⬜) → commit scope `m03`.
+**M03 đã đóng hoàn toàn** — PROGRESS, README, roadmap, đề bài đều đã lật ✅.
+Vào M04 thì gọi `/flutter-module 04`; chưa có đề bài lẫn lab.
 
-Capstone cần `flutter pub add go_router` trong `apps/userhub` rồi `flutter pub
-get` ở root, và một `intent-filter` scheme `userhub` trong `AndroidManifest.xml`.
+**Ba việc nợ lại từ review capstone M03**, không chặn M04:
+
+- `app_router.dart` — `?from=` trả thẳng từ query, **không lọc**. Đúng hình dạng
+  lỗ hổng open redirect. Chỉ nên nhận giá trị bắt đầu bằng `/`.
+- `fake_users.dart` — `initials` dùng `name[0]`, cắt theo **UTF-16 code unit**.
+  Sẽ ra ký tự rác khi API trả tên có emoji ở M05. Dùng `name.characters.first`.
+- Ngôn ngữ chuỗi UI trong `userhub` đang lệch: `user_detail_screen.dart` và
+  `not_found_screen.dart` tiếng Anh, ba màn còn lại tiếng Việt. `CLAUDE.md`
+  không quy định ngôn ngữ chuỗi UI nên không sai luật, nhưng nên chọn một bên.
+
+Người học đã gỡ gần hết comment trong `userhub` (7/9 file không còn comment nào)
+— đó là lựa chọn của họ, **đừng tự thêm lại**.
