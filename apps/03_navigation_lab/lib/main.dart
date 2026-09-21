@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import 'app_router.dart';
 import 'pick_result_screen.dart';
-import 'stack_observer.dart';
-import 'stack_visualizer_screen.dart';
 import 'unsaved_changes_screen.dart';
+import 'stack_visualizer_screen.dart';
 
 void main() {
   runApp(const NavigationLabApp());
@@ -14,15 +15,15 @@ class NavigationLabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // `MaterialApp.router` thay cho `MaterialApp`: không còn `home:`, vì màn
+    // đầu tiên giờ là hệ quả của `initialLocation` trong cây route.
+    // Observer chuyển sang `GoRouter.observers` — xem app_router.dart.
+    return MaterialApp.router(
       title: 'Navigation Lab',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
-      // Gắn observer ở đây thì nó nghe được *mọi* thao tác điều hướng của app,
-      // kể cả những thao tác xảy ra trong màn khác.
-      navigatorObservers: <NavigatorObserver>[stackObserver],
-      home: const LabMenuScreen(),
+      routerConfig: appRouter,
     );
   }
 }
@@ -53,6 +54,12 @@ class LabMenuScreen extends StatelessWidget {
             subtitle: 'PopScope: hỏi lại khi còn dữ liệu chưa lưu',
             routeName: 'Chặn rời màn',
             destination: UnsavedChangesScreen(),
+          ),
+          Divider(height: 32),
+          _LocationTile(
+            title: 'Route tree bằng go_router',
+            subtitle: 'path param, màn 404, redirect làm auth guard',
+            location: '/users',
           ),
         ],
       ),
@@ -85,6 +92,30 @@ class _LabTile extends StatelessWidget {
           settings: RouteSettings(name: routeName),
         ),
       ),
+    );
+  }
+}
+
+/// Khác [_LabTile] đúng một chỗ: nó không biết màn đích là widget nào, chỉ biết
+/// **địa chỉ**. Đó là cả điểm mạnh — màn này không cần `import` màn kia nữa.
+class _LocationTile extends StatelessWidget {
+  const _LocationTile({
+    required this.title,
+    required this.subtitle,
+    required this.location,
+  });
+
+  final String title;
+  final String subtitle;
+  final String location;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.alt_route),
+      onTap: () => context.go(location),
     );
   }
 }
