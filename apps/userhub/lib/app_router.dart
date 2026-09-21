@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'auth_state.dart';
 import 'login_screen.dart';
 import 'not_found_screen.dart';
+import 'register_screen.dart';
 import 'splash_screen.dart';
 import 'user_detail_screen.dart';
 import 'user_list_screen.dart';
@@ -22,9 +23,9 @@ final GoRouter appRouter = GoRouter(
     if (location == '/splash') return null;
 
     final bool loggedIn = authState.isLoggedIn;
-    final bool goingToLogin = location == '/login';
+    final bool isPublic = location == '/login' || location == '/register';
 
-    if (!loggedIn && !goingToLogin) {
+    if (!loggedIn && !isPublic) {
       final Uri uri = state.uri;
       final String target = uri.hasQuery
           ? '${uri.path}?${uri.query}'
@@ -33,7 +34,7 @@ final GoRouter appRouter = GoRouter(
       return '/login?from=${Uri.encodeComponent(target)}';
     }
 
-    if (loggedIn && goingToLogin) {
+    if (loggedIn && isPublic) {
       final String? from = state.uri.queryParameters['from'];
 
       final bool isInternal =
@@ -55,6 +56,11 @@ final GoRouter appRouter = GoRouter(
       path: '/login',
       builder: (BuildContext context, GoRouterState state) =>
           const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (BuildContext context, GoRouterState state) =>
+          const RegisterScreen(),
     ),
     GoRoute(
       path: '/users',

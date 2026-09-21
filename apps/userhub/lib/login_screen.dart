@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'auth_state.dart';
 import 'validators.dart';
@@ -131,6 +132,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: const Text('Sign in'),
+                  ),
+                  const SizedBox(height: 8),
+
+                  TextButton(
+                    onPressed: () => context.push('/register'),
+                    child: const Text('No account yet? Create one'),
                   ),
                 ],
               ),
