@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0007 — Navigator là một cái stack</title>
+<style>
+  :root {
+    --bg: #fdfcfa; --ink: #1a1a1a; --muted: #6b6862; --rule: #e3ded6;
+    --accent: #7c4a2d; --code-bg: #f4f1ec; --keep: #2d6a4f; --wipe: #9b2c2c;
+    --measure: 34rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513; --ink: #e8e4dd; --muted: #9a958c; --rule: #33302b;
+      --accent: #d9a273; --code-bg: #201e1b; --keep: #6ac292; --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 4rem 1.5rem 6rem;
+    background: var(--bg); color: var(--ink);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 46rem; margin: 2.5rem auto; }
+  .eyebrow {
+    font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .9rem;
+  }
+  h1 { font: 600 2.1rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .6rem; letter-spacing: -.015em; }
+  .standfirst { color: var(--muted); font-size: 1.06rem; margin: 0 0 2.5rem; }
+  h2 {
+    font: 600 1.28rem/1.3 ui-serif, Georgia, serif;
+    margin: 3rem 0 .9rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--rule); letter-spacing: -.01em;
+  }
+  h3 { font: 600 1rem/1.4 ui-sans-serif, system-ui, sans-serif; margin: 1.8rem 0 .5rem; }
+  p { margin: 0 0 1.1rem; }
+  strong { font-weight: 600; }
+  code {
+    font: 400 .88em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .12em .38em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: 1rem 1.1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1.3rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; line-height: 1.6; }
+  table { border-collapse: collapse; width: 100%; margin: 1.4rem 0; font-size: .93rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 .78rem/1.3 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  td code { font-size: .84em; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: 1rem 1.2rem; margin: 1.6rem 0; border-radius: 0 4px 4px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: .5rem;
+  }
+  .callout.warn { border-left-color: var(--wipe); background: color-mix(in srgb, var(--wipe) 7%, transparent); }
+  .callout.warn .label { color: var(--wipe); }
+  figure { margin: 2.2rem 0; }
+  figcaption { font-size: .85rem; color: var(--muted); margin-top: .8rem; text-align: center; }
+  svg { width: 100%; height: auto; display: block; }
+  .exp { counter-reset: exp; list-style: none; padding: 0; margin: 1.4rem 0; }
+  .exp li {
+    counter-increment: exp; border: 1px solid var(--rule); border-radius: 5px;
+    padding: 1rem 1.1rem 1rem 3rem; margin-bottom: .9rem; position: relative;
+  }
+  .exp li::before {
+    content: counter(exp); position: absolute; left: 1rem; top: 1rem;
+    font: 600 .8rem/1.5 ui-sans-serif, system-ui, sans-serif;
+    width: 1.5rem; height: 1.5rem; text-align: center;
+    background: var(--accent); color: var(--bg); border-radius: 50%;
+  }
+  .exp li p:last-child { margin-bottom: 0; }
+  .exp .expect { font-size: .9rem; color: var(--muted); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  footer { margin-top: 4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--muted); }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+    h2 { page-break-after: avoid; }
+    figure, pre, .exp li, .callout { page-break-inside: avoid; }
+    footer { page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Bài 0007 · Module M03 · Vòng 1</div>
+  <h1>Navigator là một cái stack</h1>
+  <p class="standfirst">
+    Hai module vừa rồi chỉ có <strong>một màn</strong>. Giờ thêm màn thứ hai, và
+    câu hỏi thật sự không phải “mở màn mới thế nào” — mà là
+    <em>bấm Back thì về đâu.</em>
+  </p>
+
+  <h2>1. Chỉ có hai việc</h2>
+
+  <p>
+    <code>Navigator</code> quản một <strong>stack</strong> các route. Đúng nghĩa
+    stack trong cấu trúc dữ liệu: chồng lên bằng <code>push</code>, bóc ra bằng
+    <code>pop</code>, và bạn chỉ nhìn thấy cái trên cùng.
+  </p>
+
+  <pre><code>// đi tới màn chi tiết
+Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => const UserDetailScreen()),
+);
+
+// quay lại
+Navigator.pop(context);</code></pre>
+
+  <p>
+    Mọi lệnh điều hướng khác trong Flutter chỉ là <strong>tổ hợp của hai việc
+    này</strong>. Không có lệnh nào “nhảy ngang”.
+  </p>
+
+  <div class="callout">
+    <span class="label">Vì sao cần context</span>
+    <p>
+      <code>Navigator.push(context, …)</code> là cách viết ngắn của
+      <code>Navigator.of(context).push(…)</code>. Nó đi ngược lên cây widget để
+      tìm <code>Navigator</code> <strong>gần nhất</strong> — thứ do
+      <code>MaterialApp</code> dựng sẵn cho bạn. Đây là lý do một
+      <code>context</code> lấy sai chỗ sẽ đẩy màn vào nhầm stack, chuyện sẽ gặp
+      khi có route lồng nhau ở bài sau.
+    </p>
+  </div>
+
+  <h2>2. Ba cách chồng, ba hình dạng stack</h2>
+
+  <figure class="wide">
+    <svg viewBox="0 0 640 265" role="img" aria-label="So sánh push, pushReplacement và pushAndRemoveUntil làm biến dạng stack">
+      <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+        <text x="150" y="16" fill="var(--muted)" font-size="11">TRƯỚC (dưới → trên)</text>
+        <text x="390" y="16" fill="var(--muted)" font-size="11">SAU</text>
+
+        <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="11">
+          <text x="8" y="50" fill="var(--ink)">push(C)</text>
+
+          <text x="8" y="126" fill="var(--ink)">pushReplacement(C)</text>
+
+          <text x="8" y="200" fill="var(--ink)">pushAndRemoveUntil(</text>
+          <text x="8" y="214" fill="var(--ink)">  C, (r) =&gt; false)</text>
+        </g>
+
+        <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="12" fill="#1a1a1a">
+          <rect x="150" y="34" width="58" height="26" rx="4" fill="#cfd8dc"/><text x="173" y="52">A</text>
+          <rect x="212" y="34" width="58" height="26" rx="4" fill="#cfd8dc"/><text x="235" y="52">B</text>
+          <text x="340" y="52" fill="var(--muted)" font-size="18">→</text>
+          <rect x="390" y="34" width="58" height="26" rx="4" fill="#cfd8dc"/><text x="413" y="52">A</text>
+          <rect x="452" y="34" width="58" height="26" rx="4" fill="#cfd8dc"/><text x="475" y="52">B</text>
+          <rect x="514" y="34" width="58" height="26" rx="4" fill="#a5d6a7"/><text x="537" y="52">C</text>
+
+          <rect x="150" y="110" width="58" height="26" rx="4" fill="#cfd8dc"/><text x="173" y="128">A</text>
+          <rect x="212" y="110" width="58" height="26" rx="4" fill="#ef9a9a"/><text x="235" y="128">B</text>
+          <text x="340" y="128" fill="var(--muted)" font-size="18">→</text>
+          <rect x="390" y="110" width="58" height="26" rx="4" fill="#cfd8dc"/><text x="413" y="128">A</text>
+          <rect x="452" y="110" width="58" height="26" rx="4" fill="#a5d6a7"/><text x="475" y="128">C</text>
+
+          <rect x="150" y="186" width="58" height="26" rx="4" fill="#ef9a9a"/><text x="173" y="204">A</text>
+          <rect x="212" y="186" width="58" height="26" rx="4" fill="#ef9a9a"/><text x="235" y="204">B</text>
+          <text x="340" y="204" fill="var(--muted)" font-size="18">→</text>
+          <rect x="390" y="186" width="58" height="26" rx="4" fill="#a5d6a7"/><text x="413" y="204">C</text>
+        </g>
+
+        <text x="150" y="245" fill="var(--wipe)" font-size="11">đỏ = bị gỡ khỏi stack</text>
+        <text x="390" y="245" fill="var(--keep)" font-size="11">xanh = màn mới</text>
+      </g>
+    </svg>
+    <figcaption>
+      Cùng một đích đến <code>C</code>. Khác nhau ở chỗ <strong>bấm Back từ C thì
+      còn gì ở dưới</strong>.
+    </figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th>Lệnh</th><th>Dùng khi</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>push</code></td>
+        <td><strong>Mặc định.</strong> Đi sâu vào một nhánh mà vẫn quay lui được</td>
+      </tr>
+      <tr>
+        <td><code>pushReplacement</code></td>
+        <td>Màn hiện tại đã xong việc và <strong>không nên quay lại</strong> — Splash xong thì vào Login</td>
+      </tr>
+      <tr>
+        <td><code>pushAndRemoveUntil</code></td>
+        <td>Dọn sạch stack. <strong>Đăng xuất</strong> là ca kinh điển: sau đó Back không được phép về Home</td>
+      </tr>
+      <tr>
+        <td><code>popUntil</code></td>
+        <td>Bóc nhiều màn một lúc để về một màn đã có sẵn trong stack</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <span class="label">Đăng xuất bằng push là lỗ hổng thật</span>
+    <p>
+      Đăng xuất mà chỉ <code>push</code> màn Login thì màn Home <strong>vẫn còn
+      nguyên bên dưới</strong>. Người dùng bấm Back một cái là nhìn lại được dữ
+      liệu của tài khoản vừa thoát. Đây chính là tiêu chí Xong của capstone
+      module này.
+    </p>
+  </div>
+
+  <h2>3. <code>push</code> trả về một <code>Future</code></h2>
+
+  <p>
+    Đây là phần hay bị bỏ qua. <code>push</code> không trả về ngay — nó trả về
+    một <code>Future</code> <strong>hoàn thành lúc màn kia <code>pop</code></strong>,
+    và giá trị truyền vào <code>pop</code> chính là kết quả.
+  </p>
+
+  <pre><code>// màn A — hỏi
+final String? picked = await Navigator.push&lt;String&gt;(
+  context,
+  MaterialPageRoute(builder: (context) => const PickerScreen()),
+);
+
+// màn B — trả lời
+Navigator.pop(context, 'Cam');</code></pre>
+
+  <p>
+    Kiểu trả về là <code>String?</code> chứ không phải <code>String</code>, và
+    dấu <code>?</code> đó là cả một tình huống: người dùng có thể
+    <strong>bấm Back</strong> thay vì chọn. Lúc đó màn <code>pop</code> mà không
+    kèm giá trị nào, và bạn nhận <code>null</code>.
+  </p>
+
+  <div class="callout warn">
+    <span class="label">Bẫy — đừng đè giá trị cũ bằng null</span>
+    <p>
+      Viết <code>setState(() => selected = picked)</code> là người dùng bấm Back
+      một cái thì mất luôn lựa chọn đang có. Phải kiểm tra
+      <code>null</code> trước khi gán.
+    </p>
+  </div>
+
+  <h2>4. Nút Back của Android cũng chỉ là <code>pop</code></h2>
+
+  <p>
+    Không có API riêng nào cho nút Back. Hệ điều hành báo xuống, Flutter
+    <code>pop</code> route trên cùng. Hệ quả: <strong>khi stack chỉ còn một
+    màn</strong>, không còn gì để bóc — và app lui xuống nền. Đó là lý do bấm
+    Back ở màn gốc trông như “thoát app”.
+  </p>
+
+  <p>
+    Muốn chặn — form còn dữ liệu chưa lưu chẳng hạn — thì bọc bằng
+    <code>PopScope</code>:
+  </p>
+
+  <pre><code>PopScope(
+  // false = chặn lại, tự mình quyết định
+  canPop: !hasUnsavedChanges,
+  onPopInvokedWithResult: (bool didPop, Object? result) async {
+    if (didPop) return;
+    final bool confirmed = await _askToDiscard(context);
+    if (confirmed && context.mounted) {
+      Navigator.pop(context);
+    }
+  },
+  child: ...,
+)</code></pre>
+
+  <div class="callout">
+    <span class="label">Tutorial cũ sẽ nói khác</span>
+    <p>
+      Rất nhiều bài trên mạng dùng <code>WillPopScope</code>. Nó là API
+      <strong>đời trước và đã bị gỡ</strong> — gặp thì bỏ qua, dùng
+      <code>PopScope</code>. Bản thân <code>onPopInvoked</code> cũng đã được thay
+      bằng <code>onPopInvokedWithResult</code>.
+    </p>
+  </div>
+
+  <p>
+    Chú ý <code>context.mounted</code> sau mỗi <code>await</code>. Cùng một lý do
+    với <code>mounted</code> ở
+    <a href="0005-vong-doi-cua-state.html">bài 0005</a>: chờ xong thì màn có thể
+    đã biến mất rồi.
+  </p>
+
+  <h2>5. Hai thí nghiệm</h2>
+
+  <ol class="exp">
+    <li>
+      <p><strong>Đếm stack.</strong> Màn <em>Stack Visualizer</em>, bấm
+      <code>push</code> ba lần rồi bấm <code>pushReplacement</code> một lần.</p>
+      <p class="expect">Phải thấy: ba lần đầu độ sâu lên 2, 3, 4. Lần thứ tư độ
+      sâu <strong>vẫn là 4</strong> — và bấm Back từ đó bỏ qua màn vừa bị thay
+      thế.</p>
+    </li>
+    <li>
+      <p><strong>Bấm Back thay vì chọn.</strong> Màn <em>Trả kết quả về</em>,
+      chọn “Cam”, quay lại, rồi vào lần nữa và bấm Back.</p>
+      <p class="expect">Phải thấy: lần hai giá trị <strong>vẫn là “Cam”</strong>,
+      không bị xoá trắng. Nếu nó trắng, code đang gán thẳng <code>null</code> đè
+      lên.</p>
+    </li>
+  </ol>
+
+  <div class="callout">
+    <span class="label">Nhớ một câu</span>
+    <p>
+      <strong>Câu hỏi đúng không phải “mở màn nào”, mà là “sau đó stack còn
+      gì”.</strong> Trả lời được câu sau thì nút Back không bao giờ làm bạn bất ngờ.
+    </p>
+  </div>
+
+  <footer>
+    Nguồn chính thống:
+    <a href="https://api.flutter.dev/flutter/widgets/Navigator-class.html">Flutter API — Navigator</a> ·
+    <a href="https://api.flutter.dev/flutter/widgets/PopScope-class.html">Flutter API — PopScope</a> ·
+    <a href="https://docs.flutter.dev/ui/navigation">Flutter docs — Navigation and routing</a>.
+    <br>
+    Bài trước: <a href="0006-key-va-cach-ghep-state.html">0006 — Key &amp; cách Flutter ghép State</a>.
+    <br>
+    Tiếp theo: <strong>0008</strong> — cùng bài toán này, viết theo kiểu khai báo bằng <code>go_router</code>.
+  </footer>
+</div>
+
+</body>
+</html>
