@@ -4,6 +4,10 @@ import 'package:practice/m01/constraints_probe_screen.dart';
 import 'package:practice/m01/tight_vs_loose_screen.dart';
 import 'package:practice/m02/key_trap_screen.dart';
 import 'package:practice/m02/lifecycle_logger_screen.dart';
+import 'package:practice/m03/pick_result_screen.dart';
+import 'package:practice/m03/stack_observer.dart';
+import 'package:practice/m03/stack_visualizer_screen.dart';
+import 'package:practice/m03/unsaved_changes_screen.dart';
 
 import 'm00/counter_screen.dart';
 import 'm02/dispose_leak_screen.dart';
@@ -22,6 +26,9 @@ class PracticeApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
       ),
+      // Observer phải gắn vào Navigator do MaterialApp dựng ra. Màn hình chỉ
+      // đọc được stackObserver.routes, nó không tự đăng ký nghe cho mình được.
+      navigatorObservers: <NavigatorObserver>[stackObserver],
       home: const PracticeMenuScreen(),
     );
   }
@@ -36,6 +43,7 @@ class PracticeMenuScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Practice — sân tập')),
       body: ListView(
         children: const [
+          // M00
           _SectionHeader('M00 — Khởi động'),
           _ExerciseTile(
             title: 'Bộ đếm',
@@ -43,6 +51,7 @@ class PracticeMenuScreen extends StatelessWidget {
             screen: CounterScreen(),
           ),
 
+          // M01
           _SectionHeader('M01 — Widget & Layout'),
           _ExerciseTile(
             title: 'Center Mystery',
@@ -60,6 +69,7 @@ class PracticeMenuScreen extends StatelessWidget {
             screen: TightVsLooseScreen(),
           ),
 
+          // M02
           _SectionHeader('M02 — StatefulWidget'),
           _ExerciseTile(
             title: 'Key Trap',
@@ -75,6 +85,25 @@ class PracticeMenuScreen extends StatelessWidget {
             title: 'StatefulBuilder',
             subtitle: 'Cách dùng StatefulBuilder để setState trong builder',
             screen: LifecycleLoggerScreen(),
+          ),
+
+          // M03 - Navigator & Routing
+          _SectionHeader('M03 — Navigator & Routing'),
+          _ExerciseTile(
+            title: 'Stack Visualizer',
+            subtitle: 'Xem stack của Navigator',
+            screen: StackVisualizerScreen(),
+            routeName: 'Màn #1',
+          ),
+          _ExerciseTile(
+            title: 'Login Screen',
+            subtitle: 'Màn đăng nhập cơ bản',
+            screen: PickResultScreen(),
+          ),
+          _ExerciseTile(
+            title: 'Login Screen (Form)',
+            subtitle: 'Màn đăng nhập cơ bản, dùng Form + validator',
+            screen: UnsavedChangesScreen(),
           ),
         ],
       ),
@@ -108,12 +137,17 @@ class _ExerciseTile extends StatelessWidget {
   const _ExerciseTile({
     required this.title,
     required this.subtitle,
-    required this.screen,
+    this.screen,
+    this.routeName,
   });
 
   final String title;
   final String subtitle;
-  final Widget screen;
+  final Widget? screen;
+
+  /// Tên route là thứ duy nhất [StackObserver] nhìn thấy được. Để trống thì
+  /// lấy luôn [title] — mọi bài tập đều có tên đọc được mà không phải khai lại.
+  final String? routeName;
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +155,24 @@ class _ExerciseTile extends StatelessWidget {
       title: Text(title),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () =>
-          Navigator.of(context)
-              .push(MaterialPageRoute<void>(builder: (_) => screen)),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => screen ?? const NOtImplementedScreen(),
+          settings: RouteSettings(name: routeName ?? title),
+        ),
+      ),
+    );
+  }
+}
+
+class NOtImplementedScreen extends StatelessWidget {
+  const NOtImplementedScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('No screen yet.')),
+      body: const Center(child: Text('No screen yet.')),
     );
   }
 }
