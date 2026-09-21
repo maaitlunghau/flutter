@@ -63,6 +63,9 @@ final GoRouter practiceRouter = GoRouter(
           const PracticeMenuScreen(),
     ),
     GoRoute(
+      // Không có tile nào trong menu trỏ tới đây, và đó là đúng: màn khoá là
+      // chốt chặn chứ không phải đích đến. Chỉ `redirect` mới đẩy người dùng
+      // vào, khi họ định vào `/m03/items` lúc chưa đăng nhập.
       path: _lockedPath,
       builder: (BuildContext context, GoRouterState state) =>
           LockedScreen(from: state.uri.queryParameters['from']),

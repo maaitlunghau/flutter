@@ -108,13 +108,8 @@ class PracticeMenuScreen extends StatelessWidget {
           ),
           _LocationTile(
             title: 'Cây đường đi (go_router)',
-            subtitle: '/m03/items, path param :id, màn 404',
+            subtitle: 'path param :id, màn 404, redirect làm auth guard',
             location: '/m03/items',
-          ),
-          _LocationTile(
-            title: 'Cửa có khoá',
-            subtitle: 'redirect làm auth guard, nhớ chỗ đang định vào',
-            location: '/m03/locked',
           ),
           _LocationTile(
             title: 'Deep link',
