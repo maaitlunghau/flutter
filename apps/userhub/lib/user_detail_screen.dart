@@ -14,7 +14,7 @@ class UserDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(user?.name ?? 'Not found user!')),
-      body: user == null ? _NotFound(userId: userId) : _Detail(user: user),
+      body: user == null ? _UserNotFound(userId: userId) : _Detail(user: user),
     );
   }
 }
@@ -85,8 +85,11 @@ class _Field extends StatelessWidget {
   }
 }
 
-class _NotFound extends StatelessWidget {
-  const _NotFound({required this.userId});
+/// Tên phải nói rõ *cái gì* không tìm thấy. [NotFoundScreen] ở
+/// `not_found_screen.dart` là chuyện khác hẳn: ở đó **địa chỉ** không khớp
+/// route nào; ở đây địa chỉ hợp lệ, chỉ là không có user nào mang mã đó.
+class _UserNotFound extends StatelessWidget {
+  const _UserNotFound({required this.userId});
 
   final String userId;
 
