@@ -1,3 +1,5 @@
+import 'package:characters/characters.dart';
+
 class User {
   const User({
     required this.id,
@@ -11,7 +13,8 @@ class User {
   final String email;
   final String role;
 
-  String get initials => name.isEmpty ? '?' : name[0].toUpperCase();
+  String get initials =>
+      name.isEmpty ? '?' : name.characters.first.toUpperCase();
 }
 
 const List<User> fakeUsers = <User>[
