@@ -219,3 +219,14 @@ Form dài hơn màn hình. Có một công tắc bật/tắt cách chữa, và h
   https://api.flutter.dev/flutter/widgets/FocusNode-class.html
 - Flutter — Focus and text fields:
   https://docs.flutter.dev/get-started/fundamentals/user-input
+
+---
+
+**M04 xong ngày 2026-09-22.** Sản phẩm:
+[bài 0010](../lessons/0010-form-formstate-va-validator.html) ·
+[cheat sheet Forms & Input](../reference/forms-va-input.md) ·
+lab `apps/04_forms_lab` 2 màn · `apps/practice/lib/m04/` 5 màn ·
+**capstone `apps/userhub`** — `login_screen.dart` chuyển sang `Form` (163 → 143
+dòng), `register_screen.dart` mới, và `redirect` học khái niệm "đường công khai".
+
+Bài `0011` và `0012` **đã bỏ** — xem khối quyết định ở mục *Tự dựng lại*.

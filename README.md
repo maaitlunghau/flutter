@@ -24,7 +24,7 @@ hay `class`. Phần đó đã học ở repo trước:
 | 01 | Widget & Layout | ✅ |
 | 02 | Stateful & vòng đời | ✅ |
 | 03 | Navigation & Routing | ✅ |
-| 04 | Forms & Input | ⬜ |
+| 04 | Forms & Input | ✅ |
 | 05 | Async & tầng dữ liệu | ⬜ |
 | 06 | State nền tảng | ⬜ |
 | 07 | Riverpod | ⬜ |
