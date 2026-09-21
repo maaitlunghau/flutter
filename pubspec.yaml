@@ -10,5 +10,6 @@ workspace:
   - apps/01_layout_lab
   - apps/02_stateful_lab
   - apps/03_navigation_lab
+  - apps/04_forms_lab
   - apps/practice
   - apps/userhub
