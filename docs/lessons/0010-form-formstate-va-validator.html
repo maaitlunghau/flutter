@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0010 — Form, FormState &amp; validator</title>
+<style>
+  :root {
+    --bg: #fdfcfa; --ink: #1a1a1a; --muted: #6b6862; --rule: #e3ded6;
+    --accent: #7c4a2d; --code-bg: #f4f1ec; --keep: #2d6a4f; --wipe: #9b2c2c;
+    --measure: 34rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513; --ink: #e8e4dd; --muted: #9a958c; --rule: #33302b;
+      --accent: #d9a273; --code-bg: #201e1b; --keep: #6ac292; --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 4rem 1.5rem 6rem;
+    background: var(--bg); color: var(--ink);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 46rem; margin: 2.5rem auto; }
+  .eyebrow {
+    font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .9rem;
+  }
+  h1 { font: 600 2.1rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .6rem; letter-spacing: -.015em; }
+  .standfirst { color: var(--muted); font-size: 1.06rem; margin: 0 0 2.5rem; }
+  h2 {
+    font: 600 1.28rem/1.3 ui-serif, Georgia, serif;
+    margin: 3rem 0 .9rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--rule); letter-spacing: -.01em;
+  }
+  h3 { font: 600 1rem/1.4 ui-sans-serif, system-ui, sans-serif; margin: 1.8rem 0 .5rem; }
+  p { margin: 0 0 1.1rem; }
+  strong { font-weight: 600; }
+  code {
+    font: 400 .88em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .12em .38em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: 1rem 1.1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1.3rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; line-height: 1.6; }
+  table { border-collapse: collapse; width: 100%; margin: 1.4rem 0; font-size: .93rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 .78rem/1.3 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  td code { font-size: .84em; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: 1rem 1.2rem; margin: 1.6rem 0; border-radius: 0 4px 4px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: .5rem;
+  }
+  .callout.warn { border-left-color: var(--wipe); background: color-mix(in srgb, var(--wipe) 7%, transparent); }
+  .callout.warn .label { color: var(--wipe); }
+  figure { margin: 2.2rem 0; }
+  figcaption { font-size: .85rem; color: var(--muted); margin-top: .8rem; text-align: center; }
+  svg { width: 100%; height: auto; display: block; }
+  .exp { counter-reset: exp; list-style: none; padding: 0; margin: 1.4rem 0; }
+  .exp li {
+    counter-increment: exp; border: 1px solid var(--rule); border-radius: 5px;
+    padding: 1rem 1.1rem 1rem 3rem; margin-bottom: .9rem; position: relative;
+  }
+  .exp li::before {
+    content: counter(exp); position: absolute; left: 1rem; top: 1rem;
+    font: 600 .8rem/1.5 ui-sans-serif, system-ui, sans-serif;
+    width: 1.5rem; height: 1.5rem; text-align: center;
+    background: var(--accent); color: var(--bg); border-radius: 50%;
+  }
+  .exp li p:last-child { margin-bottom: 0; }
+  .exp .expect { font-size: .9rem; color: var(--muted); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  footer { margin-top: 4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--muted); }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+    h2 { page-break-after: avoid; }
+    figure, pre, .exp li, .callout { page-break-inside: avoid; }
+    footer { page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Bài 0010 · Module M04 · Vòng 1</div>
+  <h1>Form, FormState &amp; validator</h1>
+  <p class="standfirst">
+    Ở M02 bạn đã validate bằng tay một lần, và M03 để nguyên như vậy. Đó là
+    chủ ý — để hôm nay bạn so được hai bản cạnh nhau, thay vì tin lời rằng
+    <code>Form</code> tốt hơn.
+  </p>
+
+  <h2>1. Cái bạn đang có</h2>
+
+  <p>
+    Màn Login trong <code>userhub</code> hiện giữ <strong>một biến lỗi cho mỗi
+    ô</strong>, và mỗi ô phải tự dọn lỗi của mình khi người dùng gõ:
+  </p>
+
+  <pre><code>String? _emailError;
+String? _passwordError;
+
+void _submit() {
+  setState(() {
+    _emailError = email.isEmpty ? 'Email is required' : null;
+    _passwordError = password.isEmpty ? 'Password is required' : null;
+  });
+  if (_emailError != null || _passwordError != null) return;
+  ...
+}
+
+// và ở mỗi ô, lặp lại:
+onChanged: (_) {
+  if (_emailError != null) setState(() => _emailError = null);
+},</code></pre>
+
+  <p>
+    Hai ô thì còn chịu được. Màn Register có <strong>bốn</strong> ô: bốn biến,
+    bốn dòng trong <code>_submit</code>, bốn cái <code>onChanged</code> gần giống
+    hệt nhau, và một biểu thức <code>if</code> dài dần ra. Mỗi ô thêm vào là sửa
+    ba chỗ.
+  </p>
+
+  <h2>2. <code>Form</code> không vẽ gì cả</h2>
+
+  <p>
+    Đây là chỗ dễ hiểu nhầm nhất. <code>Form</code> <strong>không</strong> có
+    khung viền, không có khoảng cách, không sắp xếp gì hết. Nó là một widget
+    <strong>vô hình</strong> làm đúng một việc: nhận diện mọi
+    <code>FormField</code> nằm dưới nó trong cây, để bạn ra lệnh cho cả đám cùng
+    lúc.
+  </p>
+
+  <figure class="wide">
+    <svg viewBox="0 0 640 250" role="img" aria-label="Form đứng trên cây widget, gom các FormField con lại để validate một lượt">
+      <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+        <rect x="200" y="14" width="240" height="34" rx="5" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="320" y="36" text-anchor="middle" fill="var(--accent)" font-family="ui-monospace, SF Mono, Menlo, monospace">Form (vô hình)</text>
+
+        <path d="M320 48 L320 72" stroke="var(--rule)" stroke-width="1.5"/>
+        <path d="M120 72 L520 72" stroke="var(--rule)" stroke-width="1.5"/>
+        <path d="M120 72 L120 96 M320 72 L320 96 M520 72 L520 96" stroke="var(--rule)" stroke-width="1.5"/>
+
+        <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="11" fill="#1a1a1a">
+          <rect x="52" y="96" width="136" height="30" rx="4" fill="#cfd8dc"/><text x="120" y="116" text-anchor="middle">TextFormField</text>
+          <rect x="252" y="96" width="136" height="30" rx="4" fill="#cfd8dc"/><text x="320" y="116" text-anchor="middle">TextFormField</text>
+          <rect x="452" y="96" width="136" height="30" rx="4" fill="#cfd8dc"/><text x="520" y="116" text-anchor="middle">TextFormField</text>
+        </g>
+
+        <text x="120" y="146" text-anchor="middle" font-size="11" fill="var(--muted)">validator</text>
+        <text x="320" y="146" text-anchor="middle" font-size="11" fill="var(--muted)">validator</text>
+        <text x="520" y="146" text-anchor="middle" font-size="11" fill="var(--muted)">validator</text>
+
+        <path d="M120 156 L120 176 M320 156 L320 176 M520 156 L520 176" stroke="var(--keep)" stroke-width="1.5"/>
+        <path d="M120 176 L520 176" stroke="var(--keep)" stroke-width="1.5"/>
+        <path d="M320 176 L320 196" stroke="var(--keep)" stroke-width="1.5"/>
+
+        <rect x="196" y="196" width="248" height="34" rx="5" fill="var(--keep)"/>
+        <text x="320" y="218" text-anchor="middle" fill="#fff" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="11">_formKey.currentState!.validate()</text>
+      </g>
+    </svg>
+    <figcaption>
+      Một lời gọi chạy hết mọi <code>validator</code> bên dưới, rồi trả về
+      <code>true</code> nếu <strong>tất cả</strong> đều sạch.
+    </figcaption>
+  </figure>
+
+  <h2>3. Ba thứ phải có</h2>
+
+  <pre><code>// 1. Cái chìa — phải là field của State, KHÔNG tạo trong build()
+final _formKey = GlobalKey&lt;FormState&gt;();
+
+// 2. Cái khung
+Form(
+  key: _formKey,
+  child: Column(
+    children: [
+      // 3. Ô biết tự kiểm tra
+      TextFormField(
+        controller: _emailController,
+        decoration: const InputDecoration(labelText: 'Email'),
+        validator: (String? value) {
+          if (value == null || value.trim().isEmpty) {
+            return 'Email is required';
+          }
+          return null; // null = hợp lệ
+        },
+      ),
+    ],
+  ),
+)
+
+// rồi chỗ nào cũng gọi được:
+if (_formKey.currentState!.validate()) {
+  // mọi ô đều sạch
+}</code></pre>
+
+  <p>
+    Không còn <code>_emailError</code>. Không còn <code>setState</code> để dọn
+    lỗi. Không còn <code>onChanged</code>. <code>FormField</code> tự giữ trạng
+    thái lỗi của chính nó và tự vẽ lại.
+  </p>
+
+  <div class="callout warn">
+    <span class="label">Đừng tạo key trong build</span>
+    <p>
+      <code>final _formKey = GlobalKey&lt;FormState&gt;();</code> phải là
+      <strong>field của <code>State</code></strong>. Đặt nó trong
+      <code>build()</code> là mỗi lần vẽ lại sinh một chìa mới, chìa cũ mất liên
+      lạc với <code>FormState</code>, và <code>validate()</code> im lặng không
+      làm gì. Đây đúng là bài học vòng đời của
+      <a href="0005-vong-doi-cua-state.html">bài 0005</a>, gặp lại ở bối cảnh khác.
+    </p>
+  </div>
+
+  <h2>4. Vì sao lại là <code>GlobalKey</code></h2>
+
+  <p>
+    <a href="0006-key-va-cach-ghep-state.html">Bài 0006</a> nói
+    <code>GlobalKey</code> <strong>đắt</strong> và đừng rải bừa. Giờ lại bảo dùng.
+    Không mâu thuẫn — đây chính là ca nó sinh ra để giải quyết.
+  </p>
+
+  <p>
+    <code>FormState</code> nằm <em>bên trong</em> widget <code>Form</code>. Nút
+    Gửi thì nằm ở đâu đó khác trong cây. Muốn nút ra lệnh cho
+    <code>FormState</code>, bạn cần một tay cầm chạm được vào <code>State</code>
+    của một widget <strong>từ bên ngoài</strong> — và đó đúng là định nghĩa của
+    <code>GlobalKey</code>.
+  </p>
+
+  <table>
+    <thead><tr><th>Tình huống</th><th>Dùng <code>GlobalKey</code>?</th></tr></thead>
+    <tbody>
+      <tr><td>Chữa state nhảy sai chỗ trong danh sách</td><td><strong>Không</strong> — dùng <code>ValueKey</code> (bài 0006)</td></tr>
+      <tr><td>Nút Gửi cần ra lệnh cho <code>FormState</code></td><td><strong>Có</strong> — không có cách khác</td></tr>
+      <tr><td>Rải cho chắc</td><td>Không. Nó tốn bộ nhớ thật</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. <code>autovalidateMode</code> — lỗi hiện lúc nào</h2>
+
+  <p>
+    Validate <em>cái gì</em> là việc của <code>validator</code>. Còn hiện lỗi
+    <em>lúc nào</em> là việc của tham số này — và chọn sai thì form đúng về logic
+    vẫn khó chịu để dùng.
+  </p>
+
+  <table>
+    <thead><tr><th>Giá trị</th><th>Lỗi hiện khi</th><th>Hợp với</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>disabled</code></td>
+        <td>Chỉ khi bạn gọi <code>validate()</code></td>
+        <td>Mặc định. Form ngắn, một nút Gửi</td>
+      </tr>
+      <tr>
+        <td><code>onUserInteraction</code></td>
+        <td>Sau khi người dùng chạm vào <strong>ô đó</strong></td>
+        <td><strong>Gần như luôn là cái đúng</strong> cho form dài</td>
+      </tr>
+      <tr>
+        <td><code>always</code></td>
+        <td>Ngay khi màn mở ra</td>
+        <td>Hiếm. Màn sửa dữ liệu đã có sẵn</td>
+      </tr>
+      <tr>
+        <td><code>onUnfocus</code></td>
+        <td>Khi con trỏ rời khỏi ô đó</td>
+        <td>Nằm giữa. Hợp với ô cần gõ xong mới kiểm được</td>
+      </tr>
+      <tr>
+        <td><code>onUserInteractionIfError</code></td>
+        <td>Sau khi ô đó đã <strong>từng sai</strong> một lần</td>
+        <td>Im lặng hoàn toàn với người gõ đúng ngay từ đầu</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Ba cái đầu là ba cái bạn sẽ thật sự cân nhắc. Hai cái sau tồn tại cho những
+    ca hẹp — biết mặt là đủ. <strong>Nhưng đừng quên chúng khi viết
+    <code>switch</code></strong>: analyzer của repo này báo lỗi nếu bạn bỏ sót
+    nhánh nào.
+  </p>
+
+  <div class="callout warn">
+    <span class="label">Vì sao always tệ cho màn đăng ký</span>
+    <p>
+      Người dùng mở màn Register và thấy <strong>bốn dòng chữ đỏ</strong> trước
+      khi kịp gõ một ký tự nào. Về mặt kỹ thuật là đúng — bốn ô đang rỗng thật.
+      Về mặt cảm giác thì giống như bị mắng vì chưa làm gì cả.
+    </p>
+  </div>
+
+  <h2>6. <code>onSaved</code> — biết mặt, chưa dùng</h2>
+
+  <p>
+    Cookbook của Flutter hay dạy kiểu "<code>Form</code> thuần": bỏ
+    <code>controller</code>, dùng <code>initialValue</code> để đặt giá trị đầu và
+    <code>onSaved</code> để gom giá trị lúc <code>save()</code>.
+  </p>
+
+  <p>
+    Repo này <strong>giữ <code>controller</code></strong>, vì một lý do cụ thể:
+    <code>onSaved</code> chỉ chạy khi bạn gọi <code>save()</code>, tức là
+    <strong>sau</strong> khi validate xong. Ở vòng 3 bạn sẽ cần
+    <code>validator</code> của ô "xác nhận mật khẩu" đọc được giá trị ô mật khẩu
+    <em>ngay trong lúc đang validate</em> — lúc đó <code>onSaved</code> chưa chạy,
+    nên nó vô dụng. M05 gọi API cũng cần giá trị ngay trong tay.
+  </p>
+
+  <h2>7. Hai thí nghiệm</h2>
+
+  <ol class="exp">
+    <li>
+      <p><strong>Đếm số dòng.</strong> Màn <em>Tay vs Form</em> trong lab hiện
+      sẵn số dòng của hai bản. Đọc cả hai, rồi tự hỏi: thêm ô thứ tư thì bên nào
+      phải sửa mấy chỗ?</p>
+      <p class="expect">Phải thấy: bản thủ công sửa <strong>ba</strong> chỗ cho
+      mỗi ô mới (biến lỗi, dòng trong <code>_submit</code>,
+      <code>onChanged</code>). Bản <code>Form</code> sửa <strong>một</strong>.</p>
+    </li>
+    <li>
+      <p><strong>Dời cái chìa vào <code>build</code>.</strong> Sửa lab cho
+      <code>_formKey</code> được tạo bên trong <code>build()</code>, hot reload,
+      rồi bấm Gửi.</p>
+      <p class="expect">Phải thấy: bấm Gửi <strong>không có gì xảy ra</strong> —
+      không lỗi, không crash, không log. Đó là thứ làm nó khó tìm. Chìa mới
+      không trỏ vào <code>FormState</code> nào cả.</p>
+    </li>
+  </ol>
+
+  <div class="callout">
+    <span class="label">Nhớ một câu</span>
+    <p>
+      <strong><code>Form</code> không đổi việc bạn kiểm tra cái gì — nó đổi chỗ
+      đặt việc đó.</strong> Luật chuyển từ màn hình xuống nằm ngay cạnh ô nhập,
+      và trạng thái lỗi thôi thuộc về bạn.
+    </p>
+  </div>
+
+  <footer>
+    Nguồn chính thống:
+    <a href="https://docs.flutter.dev/cookbook/forms/validation">Flutter cookbook — Build a form with validation</a> ·
+    <a href="https://api.flutter.dev/flutter/widgets/Form-class.html">Flutter API — Form</a> ·
+    <a href="https://api.flutter.dev/flutter/widgets/FormState-class.html">Flutter API — FormState</a>.
+    <br>
+    Bài trước: <a href="0009-deep-link-he-dieu-hanh-go-cua-app.html">0009 — Deep link</a> ·
+    Liên quan: <a href="0006-key-va-cach-ghep-state.html">0006 — Key</a>.
+    <br>
+    Tiếp theo: <strong>0011</strong> — <code>FocusNode</code>, bàn phím và <code>TextInputFormatter</code>.
+  </footer>
+</div>
+
+</body>
+</html>
