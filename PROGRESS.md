@@ -5,9 +5,8 @@
 
 ## Đang ở đâu
 
-- **Module hiện tại:** M03 — Navigation & Routing *(đang làm — xong vòng 1 và 2)*
-- **Vòng:** vòng 1 (Navigator mệnh lệnh) và vòng 2 (`go_router`) xong
-  2026-09-21. Vòng 3 (deep link) chưa bắt đầu. Capstone chưa.
+- **Module hiện tại:** M03 — Navigation & Routing *(đang làm — xong cả 3 vòng)*
+- **Vòng:** cả 3 vòng xong 2026-09-21. **Chỉ còn capstone `userhub`** và review.
 - **Cập nhật lần cuối:** 2026-09-21
 
 ## Việc tiếp theo
@@ -38,7 +37,8 @@ Còn lại của M03:
 - [x] [Bài 0009 — deep link, hệ điều hành gõ cửa app](docs/lessons/0009-deep-link-he-dieu-hanh-go-cua-app.html)
 - [x] Deep link ở lab — `AndroidManifest.xml` của `03_navigation_lab`, scheme
       `navlab`, đã kiểm chứng bằng `adb` cả cold start lẫn warm start
-- [ ] Vòng 3 trong `practice` — màn 5, mở từ link ngoài
+- [x] Vòng 3 trong `practice` — scheme `practicelab`, màn `/m03/deeplink` tra
+      lệnh `adb`, đã kiểm chứng cold start lẫn warm start
 - [ ] Capstone `userhub`: route tree Splash → Login → Home → User detail
 - [ ] Review cả `practice` lẫn `userhub`
 
@@ -69,7 +69,7 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 | 00 | Khởi động & công cụ | ✅ |
 | 01 | Widget & Layout | ✅ |
 | 02 | Stateful & vòng đời | ✅ |
-| 03 | Navigation & Routing | 🔄 vòng 1-2 xong |
+| 03 | Navigation & Routing | 🔄 còn capstone |
 | 04 | Forms & Input | ⬜ |
 | 05 | Async & tầng dữ liệu | ⬜ |
 | 06 | State nền tảng | ⬜ |
