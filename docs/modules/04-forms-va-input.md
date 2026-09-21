@@ -53,7 +53,20 @@ Học xong module này bạn có thể:
 ## Tự dựng lại — `apps/practice/lib/m04/`
 
 Bước này **làm đủ**. Mô tả là **hành vi và tiêu chí Xong**, không phải code; chỉ
-mở lab khi bí. Claude nối route `/m04/...` vào cây route của `practice` khi bạn
+mở lab khi bí.
+
+> **Chốt 2026-09-22: bỏ hẳn bài `0011` và `0012`.** Người học gọi *"code dùm tui
+> practice/lib/m04 cho hoàn chỉnh"*, nên cả 5 màn được viết một lượt kèm doc
+> comment giải thích đúng những gì hai bài đó định dạy — vòng đời `FocusNode`,
+> `textInputAction` vs `onFieldSubmitted`, bàn phím thu nhỏ viewport chứ không
+> che, formatter chặn lúc gõ còn validator chặn sau khi gõ, và thời điểm chạy
+> lại `validator` khi validate chéo. Viết lại thành HTML là nói lần thứ hai.
+>
+> Phần đáng giữ — thứ tra cứu lại được — dồn vào **cheat sheet**
+> `docs/reference/forms-va-input.md` lúc đóng module. Một file thay hai bài.
+>
+> Hệ quả: M04 chỉ có **một** bài giảng (`0010`). Số bài kế tiếp là `0011`, dành
+> cho M05. Claude nối route `/m04/...` vào cây route của `practice` khi bạn
 có màn, không viết gì thêm.
 
 ### Vòng 1 — hai màn
@@ -86,7 +99,7 @@ Cùng một form hai ô, nhưng có ba nút chuyển qua lại giữa `disabled`
 
 ### Vòng 2 — hai màn
 
-*Bài giảng: `0011` — `FocusNode`, bàn phím và `TextInputFormatter`.*
+*Bài giảng `0011` **đã bỏ** — xem khối quyết định ở đầu mục này.*
 
 **Màn 3 — bàn phím tự đi tiếp**
 
@@ -112,7 +125,7 @@ Form dài hơn màn hình. Có một công tắc bật/tắt cách chữa, và h
 
 ### Vòng 3 — một màn
 
-*Bài giảng: `0012` — validate chéo và luồng submit.*
+*Bài giảng `0012` **đã bỏ** — xem khối quyết định ở đầu mục này.*
 
 **Màn 5 — hai ô phải khớp nhau**
 
@@ -132,8 +145,8 @@ Form dài hơn màn hình. Có một công tắc bật/tắt cách chữa, và h
 | Vòng | Nội dung | Ra cái gì |
 |---|---|---|
 | 1 | `Form`, `GlobalKey<FormState>`, `validator`, `autovalidateMode` | bài `0010` + lab màn 1-2 + practice màn 1-2 + **capstone: Login chuyển sang `Form`** |
-| 2 | `FocusNode`, `textInputAction`, bàn phím, `TextInputFormatter` | bài `0011` + lab màn 3 + practice màn 3-4 |
-| 3 | Validate chéo, luồng submit | bài `0012` + lab màn 4 + practice màn 5 + **capstone: màn Register** |
+| 2 | `FocusNode`, `textInputAction`, bàn phím, `TextInputFormatter` | ~~bài `0011`~~ (bỏ) + lab màn 3 + practice màn 3-4 |
+| 3 | Validate chéo, luồng submit | ~~bài `0012`~~ (bỏ) + lab màn 4 + practice màn 5 + **capstone: màn Register** |
 
 ## Capstone task
 
