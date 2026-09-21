@@ -5,9 +5,9 @@
 
 ## Đang ở đâu
 
-- **Module hiện tại:** M03 — Navigation & Routing *(đang làm — xong vòng 1)*
-- **Vòng:** vòng 1 (Navigator mệnh lệnh) xong 2026-09-21. Vòng 2 (`go_router`)
-  và vòng 3 (deep link) chưa bắt đầu. Capstone chưa.
+- **Module hiện tại:** M03 — Navigation & Routing *(đang làm — xong vòng 1 và 2)*
+- **Vòng:** vòng 1 (Navigator mệnh lệnh) và vòng 2 (`go_router`) xong
+  2026-09-21. Vòng 3 (deep link) chưa bắt đầu. Capstone chưa.
 - **Cập nhật lần cuối:** 2026-09-21
 
 ## Việc tiếp theo
@@ -31,8 +31,10 @@ Còn lại của M03:
 - [x] [Bài 0008 — route tree khai báo với `go_router`](docs/lessons/0008-route-tree-khai-bao-voi-go-router.html)
 - [x] Lab màn 4 — `apps/03_navigation_lab` chuyển sang `MaterialApp.router`,
       có `/users/:id`, màn 404 và `redirect` làm auth guard
-- [ ] Vòng 2 trong `practice`: `/m03/items`, `/m03/items/:id`, màn 404, và
-      `redirect` làm auth guard
+- [x] [Cheat sheet `go_router`](docs/reference/go-router.md)
+- [x] Vòng 2 trong `practice` — `apps/practice` chuyển sang `MaterialApp.router`:
+      `/m03/items`, `/m03/items/:id`, màn 404, `/m03/locked` + `redirect` làm
+      auth guard
 - [ ] Bài 0009 + vòng 3 — deep link, chứng minh bằng `adb`
 - [ ] Capstone `userhub`: route tree Splash → Login → Home → User detail
 - [ ] Review cả `practice` lẫn `userhub`
@@ -59,7 +61,7 @@ Chỉ nửa capstone mới bắt buộc đứng sau M09. Xem
 | 00 | Khởi động & công cụ | ✅ |
 | 01 | Widget & Layout | ✅ |
 | 02 | Stateful & vòng đời | ✅ |
-| 03 | Navigation & Routing | 🔄 vòng 1 xong |
+| 03 | Navigation & Routing | 🔄 vòng 1-2 xong |
 | 04 | Forms & Input | ⬜ |
 | 05 | Async & tầng dữ liệu | ⬜ |
 | 06 | State nền tảng | ⬜ |
