@@ -25,17 +25,17 @@ final GoRouter appRouter = GoRouter(
     final bool goingToLogin = location == '/login';
 
     if (!loggedIn && !goingToLogin) {
-      final String from = Uri.encodeComponent(state.uri.toString());
-      return '/login?from=$from';
+      final Uri uri = state.uri;
+      final String target = uri.hasQuery
+          ? '${uri.path}?${uri.query}'
+          : uri.path;
+
+      return '/login?from=${Uri.encodeComponent(target)}';
     }
 
     if (loggedIn && goingToLogin) {
       final String? from = state.uri.queryParameters['from'];
 
-      // Chỉ nhận đường dẫn nội bộ. Không lọc thì màn đăng nhập thành bàn đạp
-      // chuyển hướng: ai đó gửi `/login?from=https://...` là đăng nhập xong bị
-      // ném thẳng ra ngoài. `//host` cũng phải chặn — nó bắt đầu bằng `/`
-      // nhưng là URL tương đối giao thức, vẫn trỏ ra ngoài.
       final bool isInternal =
           from != null && from.startsWith('/') && !from.startsWith('//');
 
