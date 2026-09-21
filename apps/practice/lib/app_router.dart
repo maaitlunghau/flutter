@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import 'm03/deep_link_screen.dart';
 import 'm03/item_detail_screen.dart';
 import 'm03/item_list_screen.dart';
 import 'm03/locked_screen.dart';
@@ -65,6 +66,12 @@ final GoRouter practiceRouter = GoRouter(
       path: _lockedPath,
       builder: (BuildContext context, GoRouterState state) =>
           LockedScreen(from: state.uri.queryParameters['from']),
+    ),
+    GoRoute(
+      // Nằm ngoài vùng gác: đây là bảng tra lệnh, không phải dữ liệu.
+      path: '/m03/deeplink',
+      builder: (BuildContext context, GoRouterState state) =>
+          const DeepLinkScreen(),
     ),
     GoRoute(
       path: _guardedPrefix,

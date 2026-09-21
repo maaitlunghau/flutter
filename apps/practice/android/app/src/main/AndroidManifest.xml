@@ -20,9 +20,23 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- Bật deep link của Flutter. Thiếu cờ này thì intent-filter dưới
+                 vẫn mở được app, nhưng URI không bao giờ tới được Router —
+                 app mở ra ở initialLocation y như bấm icon, không lỗi gì cả. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <!-- Scheme riêng của app practice, khác `navlab` của lab để hai app
+                 không giành nhau cùng một URI trên máy. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="practicelab"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

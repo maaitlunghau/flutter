@@ -116,6 +116,11 @@ class PracticeMenuScreen extends StatelessWidget {
             subtitle: 'redirect làm auth guard, nhớ chỗ đang định vào',
             location: '/m03/locked',
           ),
+          _LocationTile(
+            title: 'Deep link',
+            subtitle: 'Mở từ ngoài vào — lệnh adb để tự kiểm chứng',
+            location: '/m03/deeplink',
+          ),
         ],
       ),
     );
