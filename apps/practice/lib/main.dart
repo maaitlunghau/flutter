@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:practice/m01/center_mystery_screen.dart';
 import 'package:practice/m01/constraints_probe_screen.dart';
 import 'package:practice/m01/tight_vs_loose_screen.dart';
 import 'package:practice/m02/key_trap_screen.dart';
 import 'package:practice/m02/lifecycle_logger_screen.dart';
 import 'package:practice/m03/pick_result_screen.dart';
-import 'package:practice/m03/stack_observer.dart';
 import 'package:practice/m03/stack_visualizer_screen.dart';
 import 'package:practice/m03/unsaved_changes_screen.dart';
 
+import 'app_router.dart';
 import 'm00/counter_screen.dart';
 import 'm02/dispose_leak_screen.dart';
 
@@ -21,15 +22,15 @@ class PracticeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // `MaterialApp.router` thay cho `MaterialApp`: không còn `home:`, vì màn
+    // đầu tiên giờ là hệ quả của `initialLocation` trong cây route.
+    // `stackObserver` chuyển sang `GoRouter.observers` — xem app_router.dart.
+    return MaterialApp.router(
       title: 'Practice',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
       ),
-      // Observer phải gắn vào Navigator do MaterialApp dựng ra. Màn hình chỉ
-      // đọc được stackObserver.routes, nó không tự đăng ký nghe cho mình được.
-      navigatorObservers: <NavigatorObserver>[stackObserver],
-      home: const PracticeMenuScreen(),
+      routerConfig: practiceRouter,
     );
   }
 }
@@ -96,14 +97,24 @@ class PracticeMenuScreen extends StatelessWidget {
             routeName: 'Màn #1',
           ),
           _ExerciseTile(
-            title: 'Login Screen',
-            subtitle: 'Màn đăng nhập cơ bản',
+            title: 'Trả kết quả về',
+            subtitle: 'push trả Future — bấm Back thì nhận null',
             screen: PickResultScreen(),
           ),
           _ExerciseTile(
-            title: 'Login Screen (Form)',
-            subtitle: 'Màn đăng nhập cơ bản, dùng Form + validator',
+            title: 'Chặn rời màn',
+            subtitle: 'PopScope: hỏi lại khi còn dữ liệu chưa lưu',
             screen: UnsavedChangesScreen(),
+          ),
+          _LocationTile(
+            title: 'Cây đường đi (go_router)',
+            subtitle: '/m03/items, path param :id, màn 404',
+            location: '/m03/items',
+          ),
+          _LocationTile(
+            title: 'Cửa có khoá',
+            subtitle: 'redirect làm auth guard, nhớ chỗ đang định vào',
+            location: '/m03/locked',
           ),
         ],
       ),
@@ -161,6 +172,30 @@ class _ExerciseTile extends StatelessWidget {
           settings: RouteSettings(name: routeName ?? title),
         ),
       ),
+    );
+  }
+}
+
+/// Khác [_ExerciseTile] đúng một chỗ: nó không biết màn đích là widget nào, chỉ
+/// biết **địa chỉ**. Đó là cả điểm mạnh — menu không cần `import` màn kia nữa.
+class _LocationTile extends StatelessWidget {
+  const _LocationTile({
+    required this.title,
+    required this.subtitle,
+    required this.location,
+  });
+
+  final String title;
+  final String subtitle;
+  final String location;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.alt_route),
+      onTap: () => context.go(location),
     );
   }
 }
