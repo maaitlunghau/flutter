@@ -76,8 +76,11 @@ Từ M05 trở đi, capstone cần base URL của API:
 
 ```bash
 cd apps/userhub
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8081
 ```
+
+Backend chạy ở cổng **8081**. Cách khởi động và toàn bộ endpoint:
+[docs/reference/backend-api.md](docs/reference/backend-api.md).
 
 Chép `.env.example` thành `.env` cho thiết lập local. `.env` không được commit.
 Emulator Android không dùng được `localhost` — `10.0.2.2` mới là địa chỉ trỏ về
@@ -85,15 +88,19 @@ máy host.
 
 ## Capstone — `userhub`
 
-App quản lý người dùng, gọi tới API Spring Boot ở repo riêng. Đăng nhập bằng JWT,
-danh sách và chi tiết user, xem được khi mất mạng, có dark mode, nhận push
-notification qua FCM ở M12, release lên máy thật ở M13.
+App quản lý người dùng, gọi tới API Spring Boot ở repo riêng: danh sách và chi
+tiết user, xem được khi mất mạng, có dark mode, nhận push notification qua FCM ở
+M12, release lên máy thật ở M13.
+
+**Đăng nhập vẫn là fake.** Backend chưa có module Auth — không có
+`/api/auth/login`, `/register` hay refresh token. Tầng data của M05 chừa sẵn chỗ
+gắn header `Authorization`; khi backend có auth thật thì chỉ đổi một hàm.
 
 Ảnh chụp màn hình sẽ bổ sung dần.
 
 ## Tech stack
 
-Flutter 3.47 · Dart 3.13 · Pub workspaces · Riverpod (từ M07) · Dio (M05) ·
+Flutter 3.47 · Dart 3.13 · Pub workspaces · Riverpod (từ M07) · `http` hoặc `dio` (M05, chưa chốt) ·
 go_router (M03) · drift + flutter_secure_storage (M09) · Firebase — FCM,
 Crashlytics, Storage, Analytics (M12)
 

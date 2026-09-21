@@ -1,6 +1,6 @@
 # PROJECT STATE — Flutter Learning Workspace
 
-**Last synced commit:** `cb8df11` — *commit ngay sau nó chỉ là chính lần sync này,
+**Last synced commit:** `6908a60` — *commit ngay sau nó chỉ là chính lần sync này,
 không phải việc mới; đừng đi tìm thay đổi nào khác.*
 **Last synced:** 2026-09-22
 **Repo:** `/Users/maaitlunghau/Documents/SelfStudy/flutter` · branch `main` · working tree sạch
@@ -85,6 +85,7 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | `apps/01_layout_lab` — lab M01, **6 màn** | xong, đã verify bằng ảnh chụp |
 | `apps/02_stateful_lab` — lab M02, 3 màn | xong |
 | `apps/03_navigation_lab` — lab M03, 3 vòng | xong, `MaterialApp.router`, scheme deep link `navlab` |
+| `apps/04_forms_lab` — lab M04, 2 màn | xong. Ít màn hơn dự định vì người học gọi *"code dùm tui"* cho `practice` — xem quyết định *Bỏ bài giảng khi code đã dạy đủ* |
 | `apps/practice` — sân tập, **một menu phẳng duy nhất** | `lib/m00/`→`lib/m04/` đều có bài; `MaterialApp.router`, scheme `practicelab`. M04 **không** dùng route — form không cần địa chỉ |
 | `apps/userhub` — capstone | **11 file**: `MaterialApp.router` + `app_router.dart` (auth guard ở `redirect`, khái niệm *đường công khai*), Splash · Login · **Register** · User list · User detail · 404, `authState` trong RAM, `validators.dart`, deep link scheme `userhub`. Login và Register đều dùng `Form` |
 | Hook `commit-msg` + `pre-commit` (husky) | xong, hoạt động thật |
@@ -189,7 +190,15 @@ là **host**, path chỉ còn `/3`, router không khớp và rơi vào màn 404.
 meta-data `flutter_deeplinking_enabled` thì deep link **im lặng không chạy**,
 không báo lỗi gì.
 
-**4. `NavigatorObserver` gắn vào `Navigator`, không gắn vào màn hình.** Người
+**4. `adb` không nằm trong `PATH`.** Gõ thẳng `adb` là `command not found` —
+Flutter gọi nó bằng đường dẫn tuyệt đối nên chuyện này không bao giờ lộ ra cho
+tới lúc cần `adb` thật (deep link, screenshot, `input text`). Máy đang để ở:
+
+```bash
+~/Library/Android/sdk/platform-tools/adb
+```
+
+**5. `NavigatorObserver` gắn vào `Navigator`, không gắn vào màn hình.** Người
 học chép màn Stack Visualizer từ lab sang `practice` mà quên
 `navigatorObservers` ở `MaterialApp` → bảng stack trống trơn trong khi code màn
 hình đúng 100%. Kèm theo: không đặt `RouteSettings(name:)` thì mọi dòng trong
@@ -197,25 +206,62 @@ bảng đều vô danh. Dùng `go_router` thì observer chuyển vào `GoRouter.
 
 ---
 
+## Cách làm việc đã thành nếp
+
+Ba thói quen hình thành qua M03 và M04, người học không phản đối lần nào:
+
+**1. Chia step → mô tả → người học duyệt → commit → step kế.** Mỗi step là một
+commit. Phần mô tả phải nói rõ **sửa file nào** và **vì sao**, rồi kết bằng mục
+*"Chỗ đáng verify"* 3–5 gạch đầu dòng. Người học đọc phần mô tả chứ ít khi mở
+diff, nên mô tả sơ sài là họ duyệt mù.
+
+**2. Kiểm chứng bằng `adb` trên emulator, không bằng suy luận.** `flutter analyze`
+sạch **không** có nghĩa là chạy đúng — bài học đắt nhất của session này là bộ lọc
+`?from=` làm hỏng deep link mà analyzer im lặng suốt. Cài APK, `input tap`,
+`input text`, `screencap`, rồi đọc ảnh. Kèm `logcat -d | grep E/flutter`.
+
+**3. Người học gỡ hết comment trong `userhub`.** Kể cả comment mới thêm ở từng
+lần sửa. Đừng thêm lại, và đừng coi đó là lỗi — họ đọc phần mô tả của Claude thay
+cho comment.
+
+Hai lần người học gọi *"code hộ tui"* (vòng 2–3 của `practice` M03, toàn bộ
+`practice/lib/m04` và capstone M04) đều **không phải tiền lệ**. Mặc định
+`userhub` và `practice` vẫn thuộc về người học — chờ họ nói.
+
+---
+
 ## Khi vào phiên mới nên làm gì
 
 1. Đọc `PROGRESS.md` — nguồn sự thật về vị trí hiện tại
 2. Đối chiếu với `git log --oneline -10` và `git status --short`
-3. Báo lại cho người học: đang ở module nào, vòng mấy, việc tiếp theo là gì
+3. Báo lại cho người học: đang ở module nào, việc tiếp theo là gì
 4. **Chờ chỉ đạo.** Đừng tự đoán bước kế tiếp.
 
-Vào học thì gọi `/flutter-module 03`.
+**M03 và M04 đã đóng hoàn toàn** — PROGRESS, README, roadmap, đề bài đều đã lật ✅.
 
-**M03 đã đóng hoàn toàn** — PROGRESS, README, roadmap, đề bài đều đã lật ✅.
-Vào M04 thì gọi `/flutter-module 04`; chưa có đề bài lẫn lab.
+**Vào M05 thì gọi `/flutter-module 05`.** Chưa có đề bài, chưa có lab. Spec API
+đã có nên **không còn chặn**, nhưng đọc `docs/reference/backend-api.md` trước khi
+viết đề bài — nó bẻ lại hình dạng module (không có endpoint auth).
 
-**Năm việc từ review capstone đã sửa xong 2026-09-22** (`61a3413` → `51e8706`):
-lọc `?from=` · `characters.first` · đổi tên `_UserNotFound` · `ListenableBuilder`
-cho `authState.email` · chuỗi UI sang tiếng Anh. Chi tiết ở `PROGRESS.md`.
+**M05 sẽ gồm:** `Future`/`async` trong UI · `http` · parse envelope dùng chung ·
+`PageResponse` + phân trang (`page` đếm từ 0, `last` để dừng infinite scroll) ·
+`Repository` · `ApiException` phân loại theo status · **map `data` của lỗi 400 vào
+`errorText` từng ô** (nối thẳng vào M04) · trạng thái đang-tải / lỗi / rỗng.
+
+**Bốn việc sửa bắt buộc khi vào M05**, do spec backend:
+
+| Chỗ | Hiện tại | Phải thành |
+|---|---|---|
+| `fake_users.dart` | `final int id` · `findUserById(int)` | `String` (UUID) |
+| `user_detail_screen.dart` | `int.tryParse(userId)` | bỏ hẳn |
+| Deep link + Tiêu chí Xong M03 | `userhub:///users/7` | `userhub:///users/<uuid>` |
+| Model | `name` | `fullName`, thêm `enabled`, `imageUrl`, `emailVerified`… |
+
+Kèm hai thứ chặn ngay phút đầu: base URL phải là **`10.0.2.2:8081`** (emulator
+không thấy `localhost` của máy host), và `AndroidManifest.xml` cần
+`android:usesCleartextTraffic="true"` — không có thì Android 9+ chặn HTTP thường.
 
 **Ba việc cố ý KHÔNG sửa** — sửa bây giờ là lấy mất bài học của module sau:
 hai biến toàn cục (`authState`, `appRouter`) → M06/M07, và `appRouter` không test
 được → M14 · Splash cứng 1 giây → M09 · nút Đăng nhập/Đăng ký không có trạng thái
-đang xử lý → M05.
-
-**Vào M05 thì gọi `/flutter-module 05`** — nhưng hỏi spec API trước, nó chặn thật.
+đang xử lý → **M05 sẽ làm, vì lúc đó mới có `await` thật để khoá**.
