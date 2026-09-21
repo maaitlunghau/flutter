@@ -1,10 +1,12 @@
 # PROJECT STATE — Flutter Learning Workspace
 
-**Last synced commit:** `3c4307f` — *commit ngay sau nó chỉ là chính lần sync này,
+**Last synced commit:** `45f703b` — *commit ngay sau nó chỉ là chính lần sync này,
 không phải việc mới; đừng đi tìm thay đổi nào khác.*
-**Last synced:** 2026-09-15
+**Last synced:** 2026-09-21
 **Repo:** `/Users/maaitlunghau/Documents/SelfStudy/flutter` · branch `main` · working tree sạch
-**Remote:** chưa có — repo mới chỉ nằm ở máy
+**Remote:** `origin` → `https://github.com/maaitlunghau/flutter.git`, `main` đã
+đồng bộ. **Chưa xác minh được public hay private** (máy không có `gh`) — chuyện
+này ảnh hưởng quyết định `google-services.json` ở M12, xem mục Nợ kỹ thuật.
 
 > Cập nhật file này khi HEAD tiến lên đáng kể hoặc khi có quyết định mới.
 > Quy tắc làm việc chi tiết nằm ở `.claude/CLAUDE.md` — **đọc file đó trước**.
@@ -28,10 +30,17 @@ Neo cho mọi bài giảng: *thứ này giúp gì cho việc ship `userhub`?*
 
 ## Đang ở đâu
 
-**M00 xong ngày 2026-09-15** — cả 2 vòng, checklist tick hết bằng kiểm chứng thật.
-**Đang ở M01 — Widget & Layout**, vòng 1/3: bài giảng và lab đã xong.
+**M00 ✅ 2026-09-15 · M01 ✅ 2026-09-17 · M02 ✅ 2026-09-17.**
+**Đang ở M03 — Navigation & Routing, chưa bắt đầu** (chưa có đề bài, chưa có lab).
 
-Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`. Đề bài M01: `docs/modules/01-widget-va-layout.md`.
+**M01 đóng sớm theo yêu cầu người học:** vòng 1 làm đủ; vòng 2 (Flex, overflow)
+bỏ bước tự dựng lại sau khi đã chạy và hiểu lab; vòng 3 (`Stack`) và capstone
+**không làm** — capstone gộp sang M02.
+
+**Nợ mang sang M03:** màn **User list** trong `userhub` (M01 hoãn, M02 hoãn).
+M03 có điều hướng rồi thì dựng luôn.
+
+Chi tiết và danh sách việc tiếp theo: `PROGRESS.md`.
 
 Bản đồ 15 module M00→M14: `docs/roadmap.md`.
 
@@ -64,20 +73,22 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 |---|---|
 | Pub workspace ở root (Dart 3.6+, không dùng Melos) | xong |
 | `apps/00_hello_flutter` | xong, comment tiếng Việt |
-| `apps/01_layout_lab` — lab M01, 3 màn constraints | xong, đã verify bằng ảnh chụp |
-| `apps/practice` — sân tập của người học | vỏ app + menu gốc, `lib/m01/` còn trống |
-| `apps/userhub` — capstone, `applicationId com.maaitlunghau.userhub` | đã khởi tạo, **chưa viết gì** |
+| `apps/01_layout_lab` — lab M01, **6 màn** | xong, đã verify bằng ảnh chụp |
+| `apps/02_stateful_lab` — lab M02, 3 màn | xong |
+| `apps/practice` — sân tập, **một menu phẳng duy nhất** | `lib/m00/`, `lib/m01/`, `lib/m02/` đều đã có bài của người học |
+| `apps/userhub` — capstone | **đã có code thật**: `main.dart` + `login_screen.dart` |
 | Hook `commit-msg` + `pre-commit` (husky) | xong, hoạt động thật |
 | `analysis_options.yaml` dùng chung | xong |
 | Skill `/flutter-module` | xong |
 | Emulator `pixel_dev` (Android 16, API 36, arm64) | chạy được |
 | `docs/lessons/0001-giai-phau-project-va-hot-reload.html` | xong |
 | `docs/lessons/0002-devtools-widget-inspector.html` | xong |
+| `docs/lessons/0003` constraints · `0004` Flex · `0005` vòng đời · `0006` Key | xong |
 | `docs/reference/hot-reload-va-devtools.html` — cheat sheet M00 | xong |
-| `docs/learning-records/0001-thieu-scaffold-khong-crash.md` | xong |
+| `docs/reference/stateful-vong-doi-va-key.html` — cheat sheet M02 | xong, có mục *Giải phẫu một màn stateful* do người học tự vẽ |
+| `docs/learning-records/0001` thiếu Scaffold · `0002` didUpdateWidget | xong |
 
-`docs/learning-records/` và `docs/reference/` mỗi thư mục có **1 file** từ M00 —
-sẽ đầy dần theo từng module.
+`docs/learning-records/` và `docs/reference/` mỗi thư mục có **2 file**.
 
 ---
 
@@ -94,6 +105,10 @@ sẽ đầy dần theo từng module.
 | **Firebase là M12 — bổ sung, không thay backend** | 2026-09-15 | Roadmap 14 → 15 module; Release xuống M13, Testing xuống M14. Spring Boot vẫn là nguồn dữ liệu của `userhub`; Firebase chỉ lo FCM, Crashlytics, Storage, Analytics. Đặt sau M09 vì Firestore bật offline bằng một dòng, học sớm là M09 mất lý do tồn tại; đặt trước Release vì Crashlytics chỉ có nghĩa với release build trên máy thật. Lý do đầy đủ: `docs/roadmap.md` mục *M12 — Firebase*. |
 | **Bước "phá lab" đổi thành "tự dựng lại"** | 2026-09-15 | Người học thấy đọc code người khác thì chán và khó vào. Lab giờ là bản tham chiếu; người học tự dựng lại trong `apps/practice/lib/mNN/` theo đề bài ở module brief, chỉ mở lab khi bí. Vòng học thành 5 bước. Quyết theo từng module — M11 (lab cố tình viết xấu) thì không dựng lại. |
 | **`apps/practice/` thuộc về người học** | 2026-09-15 | Luật capstone áp dụng luôn cho thư mục này. Claude chỉ dựng vỏ app và menu từng module, không viết gì thêm trừ khi được bảo thẳng. |
+| **`apps/practice` chỉ có MỘT menu phẳng** | 2026-09-15 | Người học bác bỏ tầng menu con: M00 có 1 màn mà bắt bấm 2 lần là thừa. Gom nhóm bằng `_SectionHeader` ngay trong danh sách gốc, **không bao giờ** bằng màn menu trung gian. Đã ghi vào `CLAUDE.md`. |
+| **Tự dựng lại là mặc định** | 2026-09-17 | M01 vòng 2 bỏ một lần theo yêu cầu; quyết định đó **không** áp dụng tiếp. Chỉ bỏ khi người học ra lệnh từng lần. |
+| **Capstone M01 gộp vào M02** | 2026-09-17 | M01 đóng mà chưa dựng Login. Dựng một lần ở M02: layout là nợ M01, hiện/ẩn mật khẩu + validate là phần M02. |
+| **`userhub` validate bằng tay ở M02** | 2026-09-17 | Không dùng `Form`/`validator` — đó là M04. Tự làm một lần rồi mới thấy `Form` tiết kiệm gì. Cùng logic M06 → M07. |
 | **Lab M12 làm được lệch thứ tự** | 2026-09-15 | `apps/12_firebase_lab` độc lập với `userhub`, nên làm được ngay khi lớp dạy tới Firebase. Chỉ nửa capstone mới buộc đứng sau M09. |
 
 ---
@@ -107,8 +122,9 @@ Danh sách đầy đủ ở `PROGRESS.md`. Cái **chặn tiến độ** chỉ c�
 > token. Quyết định này ảnh hưởng kiến trúc `packages/api_client` ở M08.
 
 Ngoài ra **chưa dựng Firebase project** — cần trước lab M12, và phải chốt xem
-`google-services.json` có commit hay không (mặc định hiện tại: `.gitignore`, vì
-repo có thể public sau). Chưa chặn gì.
+`google-services.json` có commit hay không. Mặc định hiện tại là `.gitignore`.
+**Lý do của mặc định đó giờ đã thành hiện thực: repo đã lên GitHub.** Trước khi
+vào M12, hỏi người học repo là public hay private rồi mới chốt. Chưa chặn gì.
 
 Ba cái còn lại là nhiễu của toolchain, **không chặn gì**, đã ghi đầy đủ trong
 `docs/modules/00-khoi-dong.md` mục *"Bẫy thường gặp"* (5 bẫy, kèm cách kiểm
@@ -143,4 +159,4 @@ tồn tại.
 3. Báo lại cho người học: đang ở module nào, vòng mấy, việc tiếp theo là gì
 4. **Chờ chỉ đạo.** Đừng tự đoán bước kế tiếp.
 
-Vào học thì gọi `/flutter-module 01`.
+Vào học thì gọi `/flutter-module 03`.
