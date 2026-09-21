@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'auth_state.dart';
+
 /// Chưa gọi API (M05)
 /// Chưa dùng `Form`/`validator` (M04)
-/// Chưa điều hướng (M03).
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -40,10 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (_emailError != null || _passwordError != null) return;
 
-    // Chưa có backend để hỏi. M05 sẽ thay dòng này bằng lời gọi API thật.
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Đăng nhập với $email — API sẽ nối ở M05')),
-    );
+    // Không gọi `context.go` ở đây. Đổi cờ là đủ — `redirect` nghe qua
+    // `refreshListenable` rồi tự đưa đi, kể cả về đúng màn người dùng định tới
+    // trước khi bị chặn. Cùng lý do với nút Đăng xuất: chỉ một chỗ quyết định.
+    authState.logIn(email);
   }
 
   @override
