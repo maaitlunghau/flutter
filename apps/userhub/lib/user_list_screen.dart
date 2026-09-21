@@ -13,11 +13,11 @@ class UserListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Người dùng'),
+        title: const Text('Users'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Đăng xuất',
+            tooltip: 'Sign out',
             onPressed: authState.logOut,
           ),
         ],
@@ -30,7 +30,7 @@ class UserListScreen extends StatelessWidget {
             builder: (BuildContext context, Widget? child) => Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Text(
-                'Đang đăng nhập: ${authState.email ?? '—'}',
+                'Signed in as ${authState.email ?? '—'}',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

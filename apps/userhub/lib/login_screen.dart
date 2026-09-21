@@ -35,8 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text;
 
     setState(() {
-      _emailError = email.isEmpty ? 'Email không được để trống' : null;
-      _passwordError = password.isEmpty ? 'Mật khẩu không được để trống' : null;
+      _emailError = email.isEmpty ? 'Email is required' : null;
+      _passwordError = password.isEmpty ? 'Password is required' : null;
     });
 
     if (_emailError != null || _passwordError != null) return;
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Đăng nhập để tiếp tục',
+                  'Sign in to continue',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _submit(),
                   decoration: InputDecoration(
-                    labelText: 'Mật khẩu',
+                    labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outline),
                     border: const OutlineInputBorder(),
                     errorText: _passwordError,
@@ -113,8 +113,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             : Icons.visibility_off_outlined,
                       ),
                       tooltip: _obscurePassword
-                          ? 'Hiện mật khẩu'
-                          : 'Ẩn mật khẩu',
+                          ? 'Show password'
+                          : 'Hide password',
                       onPressed: () => setState(() {
                         _obscurePassword = !_obscurePassword;
                       }),
@@ -134,11 +134,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Khôi phục mật khẩu — chưa làm'),
+                          content: Text(
+                            'Password recovery — not implemented yet',
+                          ),
                         ),
                       );
                     },
-                    child: const Text('Quên mật khẩu?'),
+                    child: const Text('Forgot password?'),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -148,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text('Đăng nhập'),
+                  child: const Text('Sign in'),
                 ),
               ],
             ),
