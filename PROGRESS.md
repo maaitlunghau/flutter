@@ -7,7 +7,7 @@
 
 - **Module hiện tại:** M04 — Forms & Input *(chưa bắt đầu)*
 - **Vòng:** M03 đóng 2026-09-21, đủ 3 vòng + capstone + review
-- **Cập nhật lần cuối:** 2026-09-21
+- **Cập nhật lần cuối:** 2026-09-22
 
 ## Việc tiếp theo
 
@@ -42,6 +42,7 @@ Còn lại của M03:
 - [x] Capstone `userhub`: route tree `/splash` → `/login` → `/users` → `/users/:id`,
       `redirect` làm auth guard, deep link scheme `userhub`
 - [x] Review `userhub` — 2026-09-21
+- [x] Sửa 5 việc từ review — 2026-09-22
 
 > **Nợ M01 đã trả xong.** Màn **User list** dựng ở `user_list_screen.dart`, data
 > hardcode trong `fake_users.dart`. Hoãn từ M01, hoãn tiếp ở M02, xong ở M03.
@@ -54,14 +55,53 @@ warm start, chưa-đăng-nhập-bị-chặn, hai-dấu-gạch ra 404, đường 
 xong trả về đúng chỗ đó. Không có nó thì mọi link gửi cho người chưa đăng nhập
 đều rơi về danh sách.
 
-**Ba việc nợ lại từ review**, không chặn M04:
+### Năm việc từ review — đã sửa xong 2026-09-22
 
-- `?from=` chưa lọc — hình dạng của lỗ hổng open redirect. Chỉ nên nhận giá trị
-  bắt đầu bằng `/`
-- `fake_users.dart` dùng `name[0]` — cắt theo UTF-16 code unit, sẽ ra ký tự rác
-  khi API trả tên có emoji ở M05. Dùng `name.characters.first`
-- Ngôn ngữ chuỗi UI đang lệch: `user_detail_screen` và `not_found_screen` tiếng
-  Anh, ba màn còn lại tiếng Việt
+| # | Việc | Commit |
+|---|---|---|
+| 1 | Lọc `?from=`, chỉ nhận đường dẫn nội bộ | `61a3413` |
+| 2 | `initials` dùng `characters.first`, thêm dep `characters` | `b760b64` |
+| 3 | `_NotFound` → `_UserNotFound` | `6c9c3c5` |
+| 4 | `ListenableBuilder` cho `authState.email` | `9a2fc65` |
+| — | **Sửa hồi quy do việc 1 gây ra** | `ed07c49` |
+| 5 | Chuỗi UI thống nhất sang tiếng Anh | `51e8706` |
+
+**Bài học lớn nhất của đợt sửa — bộ lọc `?from=` làm hỏng deep link.**
+Khi deep link mở app từ trạng thái **đóng**, `state.uri` là URI **đầy đủ có
+scheme** (`userhub:///users/7`), không phải `/users/7`. Bộ lọc "phải bắt đầu
+bằng `/`" loại luôn giá trị hợp lệ, và người dùng rơi về danh sách thay vì tới
+đúng user.
+
+`flutter analyze` **sạch suốt** trong lúc đó. Chỉ chạy lại `adb` mới phát hiện.
+Cách sửa không phải nới bộ lọc mà là **chuẩn hoá lúc ghi**: chỉ giữ `path`
+(+`query`), vứt scheme và host. Giờ có hai tầng — chuẩn hoá lúc ghi, kiểm tra
+lúc đọc.
+
+> Bản trước khi có bộ lọc cũng đã nhét cả scheme vào `from`, chỉ là `go_router`
+> tự bỏ scheme nên nó vô tình chạy đúng. Bộ lọc không tạo ra lỗi — nó **phơi ra**
+> một chỗ vốn đã cẩu thả.
+
+### Ba việc cố ý KHÔNG sửa
+
+Không phải vì khó, mà vì sửa bây giờ sẽ lấy mất bài học của module sau:
+
+- **Hai biến toàn cục `authState` và `appRouter`** — cách sửa đúng là đưa state
+  xuống qua cây widget, tức là **nội dung của M06** (`InheritedWidget` viết tay)
+  rồi M07 (Riverpod). Thêm: `appRouter` dựng lúc load file nên **không test
+  được** — ghi nhớ khi tới M14.
+- **Splash cứng 1 giây** — hiện không có gì để chờ. M09 mới có token dưới đĩa để
+  đọc. Thay hằng số bằng `Future` giả lúc này là diễn kịch.
+- **Nút Đăng nhập không có trạng thái "đang xử lý"** — `logIn()` chạy đồng bộ,
+  xong trong 0ms. M05 có `await` thật thì mới có cái để khoá.
+
+### Hai quyết định chốt trong đợt sửa
+
+- **Chuỗi UI trong `userhub` dùng tiếng Anh.** Tên người và `role` trong
+  `fake_users.dart` vẫn tiếng Việt — đó là **dữ liệu**, không phải nhãn giao
+  diện. Chưa phải i18n thật (chuỗi nằm cứng trong widget); i18n là M10.
+- **`userhub` không còn comment nào.** Người học gỡ hết theo chủ ý.
+  `CLAUDE.md` vẫn ghi comment phải tiếng Việt — **hai thứ đang lệch nhau**, chưa
+  quyết sửa bên nào. Claude không tự thêm comment vào `userhub` nữa.
 
 **Bẫy phát hiện ở vòng 3:** deep link `scheme://users/3` **không** chạy — host
 nuốt mất `users`, path còn `/3`, `go_router` không khớp và rơi vào màn 404. Phải

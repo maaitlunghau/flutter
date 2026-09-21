@@ -1,8 +1,8 @@
 # PROJECT STATE — Flutter Learning Workspace
 
-**Last synced commit:** `1468fe2` — *commit ngay sau nó chỉ là chính lần sync này,
+**Last synced commit:** `51e8706` — *commit ngay sau nó chỉ là chính lần sync này,
 không phải việc mới; đừng đi tìm thay đổi nào khác.*
-**Last synced:** 2026-09-21
+**Last synced:** 2026-09-22
 **Repo:** `/Users/maaitlunghau/Documents/SelfStudy/flutter` · branch `main` · working tree sạch
 **Remote:** `origin` → `https://github.com/maaitlunghau/flutter.git`, `main` đã
 đồng bộ. **Chưa xác minh được public hay private** (máy không có `gh`) — chuyện
@@ -123,6 +123,8 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | **Người học gọi "code hộ tui" cho cả vòng 2 và vòng 3 của `practice`** | 2026-09-21 | Đúng ngoại lệ của luật capstone. Đã viết hoàn chỉnh. Không phải tiền lệ — mặc định vẫn là người học tự viết. |
 | **Danh sách user ở `/users`, không phải `/home`** | 2026-09-21 | Đề bài ban đầu để danh sách ở `/home` còn chi tiết ở `/users/:id` — hai đường không có quan hệ cha–con nên `go_router` không dựng được stack, và Back từ deep link sẽ thoát app. Đặt danh sách ở `/users` rồi cho chi tiết làm route con `:id` thì stack `[danh sách, chi tiết]` tự có. Đề bài và Tiêu chí Xong đã sửa theo. |
 | **Capstone M03 do Claude viết theo yêu cầu, chia 8 step có duyệt** | 2026-09-21 | Người học nói thẳng *"thay vì tui code, bạn hãy triển khai dùm tôi từng step"* vì đã hiểu phần này. Quy trình: Claude làm một step → mô tả đã sửa file nào và vì sao → người học duyệt → commit → step kế. **Không phải tiền lệ** — mặc định `userhub` vẫn thuộc về người học. |
+| **Chuỗi UI trong `userhub` dùng tiếng Anh** | 2026-09-22 | Người học chọn khi thống nhất lại 5 màn đang lệch nhau. Tên người và `role` trong `fake_users.dart` vẫn tiếng Việt — đó là **dữ liệu**, không phải nhãn giao diện. Chưa phải i18n thật; i18n là M10. |
+| **`userhub` không mang comment** | 2026-09-22 | Người học gỡ hết comment, kể cả comment mới Claude thêm ở từng lần sửa. **Claude không tự thêm comment vào `userhub` nữa.** Lưu ý: `CLAUDE.md` vẫn ghi "comment tiếng Việt ở mọi nơi, kể cả `userhub`" — hai thứ đang lệch nhau, chưa quyết sửa bên nào. |
 
 ---
 
@@ -190,15 +192,11 @@ Vào học thì gọi `/flutter-module 03`.
 **M03 đã đóng hoàn toàn** — PROGRESS, README, roadmap, đề bài đều đã lật ✅.
 Vào M04 thì gọi `/flutter-module 04`; chưa có đề bài lẫn lab.
 
-**Ba việc nợ lại từ review capstone M03**, không chặn M04:
+**Năm việc từ review capstone đã sửa xong 2026-09-22** (`61a3413` → `51e8706`):
+lọc `?from=` · `characters.first` · đổi tên `_UserNotFound` · `ListenableBuilder`
+cho `authState.email` · chuỗi UI sang tiếng Anh. Chi tiết ở `PROGRESS.md`.
 
-- `app_router.dart` — `?from=` trả thẳng từ query, **không lọc**. Đúng hình dạng
-  lỗ hổng open redirect. Chỉ nên nhận giá trị bắt đầu bằng `/`.
-- `fake_users.dart` — `initials` dùng `name[0]`, cắt theo **UTF-16 code unit**.
-  Sẽ ra ký tự rác khi API trả tên có emoji ở M05. Dùng `name.characters.first`.
-- Ngôn ngữ chuỗi UI trong `userhub` đang lệch: `user_detail_screen.dart` và
-  `not_found_screen.dart` tiếng Anh, ba màn còn lại tiếng Việt. `CLAUDE.md`
-  không quy định ngôn ngữ chuỗi UI nên không sai luật, nhưng nên chọn một bên.
-
-Người học đã gỡ gần hết comment trong `userhub` (7/9 file không còn comment nào)
-— đó là lựa chọn của họ, **đừng tự thêm lại**.
+**Ba việc cố ý KHÔNG sửa** — sửa bây giờ là lấy mất bài học của module sau:
+hai biến toàn cục (`authState`, `appRouter`) → M06/M07, và `appRouter` không test
+được → M14 · Splash cứng 1 giây → M09 · nút Đăng nhập không có trạng thái đang
+xử lý → M05.
