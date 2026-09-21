@@ -143,17 +143,26 @@ thật** và trả nốt món nợ User list.
 
 **Vòng 2 — dựng route tree:**
 
-- `/splash` → `/login` → `/home`, chuyển bằng `go_router`
-- Splash đứng ~1 giây rồi tự quyết định đi Login hay Home
+- `/splash` → `/login` → `/users`, chuyển bằng `go_router`
+- Splash đứng ~1 giây rồi tự quyết định đi Login hay danh sách
 - `redirect` làm auth guard: chưa đăng nhập thì mọi đường đều về `/login`
-- Đăng nhập thành công (kiểm tra rỗng bằng tay như M02, **chưa gọi API**) → vào `/home`
-- Ở `/home` có nút Đăng xuất → về `/login`, và **bấm Back không quay lại được `/home`**
+- Đăng nhập thành công (kiểm tra rỗng bằng tay như M02, **chưa gọi API**) → vào `/users`
+- Ở `/users` có nút Đăng xuất → về `/login`, và **bấm Back không quay lại được `/users`**
 
 **Vòng 3 — User list & detail + deep link:**
 
-- `/home` hiện danh sách user, **data hardcode** — đây là món nợ của M01
+- `/users` hiện danh sách user, **data hardcode** — đây là món nợ của M01
 - Bấm một user → `/users/:id`, màn detail đọc `id` từ đường dẫn
 - Deep link `userhub:///users/7` mở thẳng màn detail, kiểm chứng bằng `adb`
+
+> **Vì sao `/users` chứ không phải `/home`** *(sửa 2026-09-21, lúc dựng cây
+> route)*. Bản đầu của đề bài để danh sách ở `/home` còn chi tiết ở `/users/:id`.
+> Hai đường đó không có quan hệ cha–con, nên `go_router` không dựng được stack:
+> deep link vào `/users/7` sẽ ra một màn chi tiết trơ trọi và bấm Back là thoát
+> app — trái đúng tiêu chí của vòng 3. Đặt danh sách ở `/users` rồi cho chi tiết
+> làm route con `:id` thì stack `[danh sách, chi tiết]` tự có, và URI deep link
+> giữ nguyên. Cùng hình dạng với `/m03/items` → `/m03/items/:id` đã dựng ở
+> `practice`.
 
 **Cố ý chưa làm ở module này:**
 
@@ -170,9 +179,9 @@ là chủ ý — cùng logic với "validate bằng tay ở M02".
 ## Tiêu chí Xong
 
 - [ ] `userhub` mở ra là Splash, không phải Login
-- [ ] Chưa đăng nhập, ép vào `/home` → bị đẩy về `/login`
-- [ ] Đăng nhập → `/home`; Đăng xuất → `/login` và Back **không** quay lại `/home`
-- [ ] `/home` có danh sách user hardcode, bấm vào ra `/users/:id` đúng người
+- [ ] Chưa đăng nhập, ép vào `/users` → bị đẩy về `/login`
+- [ ] Đăng nhập → `/users`; Đăng xuất → `/login` và Back **không** quay lại `/users`
+- [ ] `/users` có danh sách user hardcode, bấm vào ra `/users/:id` đúng người
 - [ ] `adb shell am start -a android.intent.action.VIEW -d "userhub:///users/7"`
       mở đúng màn detail của user 7, cả khi app đang đóng lẫn đang chạy
       (**ba** dấu gạch — xem bẫy 6)
