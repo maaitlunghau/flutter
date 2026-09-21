@@ -85,9 +85,6 @@ class _Field extends StatelessWidget {
   }
 }
 
-/// Tên phải nói rõ *cái gì* không tìm thấy. [NotFoundScreen] ở
-/// `not_found_screen.dart` là chuyện khác hẳn: ở đó **địa chỉ** không khớp
-/// route nào; ở đây địa chỉ hợp lệ, chỉ là không có user nào mang mã đó.
 class _UserNotFound extends StatelessWidget {
   const _UserNotFound({required this.userId});
 
