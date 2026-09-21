@@ -28,7 +28,9 @@
 
 Còn lại của M03:
 
-- [ ] Bài 0008 — route tree khai báo với `go_router`
+- [x] [Bài 0008 — route tree khai báo với `go_router`](docs/lessons/0008-route-tree-khai-bao-voi-go-router.html)
+- [x] Lab màn 4 — `apps/03_navigation_lab` chuyển sang `MaterialApp.router`,
+      có `/users/:id`, màn 404 và `redirect` làm auth guard
 - [ ] Vòng 2 trong `practice`: `/m03/items`, `/m03/items/:id`, màn 404, và
       `redirect` làm auth guard
 - [ ] Bài 0009 + vòng 3 — deep link, chứng minh bằng `adb`

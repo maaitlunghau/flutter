@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0008 — Route tree khai báo với go_router</title>
+<style>
+  :root {
+    --bg: #fdfcfa; --ink: #1a1a1a; --muted: #6b6862; --rule: #e3ded6;
+    --accent: #7c4a2d; --code-bg: #f4f1ec; --keep: #2d6a4f; --wipe: #9b2c2c;
+    --measure: 34rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513; --ink: #e8e4dd; --muted: #9a958c; --rule: #33302b;
+      --accent: #d9a273; --code-bg: #201e1b; --keep: #6ac292; --wipe: #e08585;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 4rem 1.5rem 6rem;
+    background: var(--bg); color: var(--ink);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 46rem; margin: 2.5rem auto; }
+  .eyebrow {
+    font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .9rem;
+  }
+  h1 { font: 600 2.1rem/1.2 ui-serif, Georgia, serif; margin: 0 0 .6rem; letter-spacing: -.015em; }
+  .standfirst { color: var(--muted); font-size: 1.06rem; margin: 0 0 2.5rem; }
+  h2 {
+    font: 600 1.28rem/1.3 ui-serif, Georgia, serif;
+    margin: 3rem 0 .9rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--rule); letter-spacing: -.01em;
+  }
+  h3 { font: 600 1rem/1.4 ui-sans-serif, system-ui, sans-serif; margin: 1.8rem 0 .5rem; }
+  p { margin: 0 0 1.1rem; }
+  strong { font-weight: 600; }
+  code {
+    font: 400 .88em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--code-bg); padding: .12em .38em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border-left: 2px solid var(--accent);
+    padding: 1rem 1.1rem; overflow-x: auto; border-radius: 0 4px 4px 0; margin: 1.3rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .84rem; line-height: 1.6; }
+  table { border-collapse: collapse; width: 100%; margin: 1.4rem 0; font-size: .93rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 .78rem/1.3 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  td code { font-size: .84em; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    padding: 1rem 1.2rem; margin: 1.6rem 0; border-radius: 0 4px 4px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: .5rem;
+  }
+  .callout.warn { border-left-color: var(--wipe); background: color-mix(in srgb, var(--wipe) 7%, transparent); }
+  .callout.warn .label { color: var(--wipe); }
+  figure { margin: 2.2rem 0; }
+  figcaption { font-size: .85rem; color: var(--muted); margin-top: .8rem; text-align: center; }
+  svg { width: 100%; height: auto; display: block; }
+  .exp { counter-reset: exp; list-style: none; padding: 0; margin: 1.4rem 0; }
+  .exp li {
+    counter-increment: exp; border: 1px solid var(--rule); border-radius: 5px;
+    padding: 1rem 1.1rem 1rem 3rem; margin-bottom: .9rem; position: relative;
+  }
+  .exp li::before {
+    content: counter(exp); position: absolute; left: 1rem; top: 1rem;
+    font: 600 .8rem/1.5 ui-sans-serif, system-ui, sans-serif;
+    width: 1.5rem; height: 1.5rem; text-align: center;
+    background: var(--accent); color: var(--bg); border-radius: 50%;
+  }
+  .exp li p:last-child { margin-bottom: 0; }
+  .exp .expect { font-size: .9rem; color: var(--muted); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  footer { margin-top: 4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--muted); }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+    h2 { page-break-after: avoid; }
+    figure, pre, .exp li, .callout { page-break-inside: avoid; }
+    footer { page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Bài 0008 · Module M03 · Vòng 2</div>
+  <h1>Route tree khai báo với go_router</h1>
+  <p class="standfirst">
+    Bài trước bạn <em>ra lệnh</em> cho stack: đẩy cái này lên, bóc cái kia ra.
+    Bài này bạn <strong>mô tả</strong> app có những địa chỉ nào — rồi để router
+    tự suy ra stack.
+  </p>
+
+  <h2>1. Vì sao push không đủ</h2>
+
+  <p>
+    <code>Navigator.push</code> hoạt động tốt, nhưng nó có ba chỗ nứt, và cả ba
+    chỉ lộ ra khi app lớn lên.
+  </p>
+
+  <p>
+    <strong>Màn A phải biết màn B tồn tại.</strong> Muốn mở màn chi tiết thì
+    phải <code>import</code> nó vào. Mười màn mở lẫn nhau là mười file import
+    chéo chằng chịt.
+  </p>
+
+  <p>
+    <strong>Không ai đọc được cấu trúc app.</strong> Cây đường đi nằm rải rác
+    trong <code>onPressed</code> của từng nút. Muốn biết app có bao nhiêu màn,
+    bạn phải đi grep.
+  </p>
+
+  <p>
+    <strong>Và cái chí mạng: deep link.</strong> Khi Android đưa vào
+    <code>userhub://users/7</code>, ai là người biết rằng trước màn chi tiết
+    phải có màn danh sách, để nút Back còn chỗ mà về? Với <code>push</code>,
+    câu trả lời là <em>không ai cả</em> — bạn phải tự viết lấy.
+  </p>
+
+  <div class="callout">
+    <span class="label">Đổi câu hỏi</span>
+    <p>
+      Mệnh lệnh hỏi: <em>“giờ đẩy màn nào lên?”</em><br>
+      Khai báo hỏi: <em>“app này có những địa chỉ nào, và địa chỉ nào nằm trong
+      địa chỉ nào?”</em>
+    </p>
+    <p>
+      Trả lời được câu thứ hai một lần, router lo hết phần còn lại — kể cả phần
+      dựng stack cho deep link.
+    </p>
+  </div>
+
+  <h2>2. Cây đường đi nhỏ nhất</h2>
+
+  <p>
+    <code>go_router</code> do chính đội Flutter duy trì. Khai báo gọn thế này:
+  </p>
+
+  <pre><code>final GoRouter router = GoRouter(
+  initialLocation: '/users',
+  routes: &lt;RouteBase&gt;[
+    GoRoute(
+      path: '/users',
+      builder: (BuildContext context, GoRouterState state) =&gt;
+          const UserListScreen(),
+      routes: &lt;RouteBase&gt;[
+        GoRoute(
+          // Route con: KHÔNG có dấu / ở đầu. Đường đầy đủ là /users/:id
+          path: ':id',
+          builder: (BuildContext context, GoRouterState state) =&gt;
+              UserDetailScreen(id: state.pathParameters['id']!),
+        ),
+      ],
+    ),
+  ],
+);</code></pre>
+
+  <p>
+    Rồi nối vào app bằng <code>MaterialApp.router</code> thay cho
+    <code>MaterialApp</code>:
+  </p>
+
+  <pre><code>MaterialApp.router(
+  routerConfig: router,
+)</code></pre>
+
+  <p>
+    Không còn <code>home:</code>. Màn đầu tiên giờ là hệ quả của
+    <code>initialLocation</code>.
+  </p>
+
+  <h2>3. Stack là thứ được suy ra</h2>
+
+  <p>
+    Đây là ý quan trọng nhất của cả bài. Bạn không dựng stack nữa — bạn nói
+    mình đang ở địa chỉ nào, và <strong>hình dạng cây quyết định stack</strong>.
+  </p>
+
+  <figure class="wide">
+    <svg viewBox="0 0 640 250" role="img" aria-label="Cây route bên trái sinh ra stack bên phải khi ở địa chỉ /users/7">
+      <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+        <text x="8" y="16" fill="var(--muted)" font-size="11">BẠN KHAI BÁO</text>
+        <text x="360" y="16" fill="var(--muted)" font-size="11">ROUTER SUY RA — khi ở /users/7</text>
+
+        <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="12">
+          <text x="14" y="52" fill="var(--ink)">GoRoute '/users'</text>
+          <text x="46" y="86" fill="var(--muted)">└─</text>
+          <text x="76" y="86" fill="var(--ink)">GoRoute ':id'</text>
+        </g>
+
+        <text x="14" y="118" fill="var(--muted)" font-size="11">hai dòng, một quan hệ cha–con</text>
+
+        <path d="M245 80 L330 80" stroke="var(--accent)" stroke-width="1.5" fill="none"/>
+        <path d="M330 80 l-7 -4 v8 z" fill="var(--accent)"/>
+
+        <rect x="360" y="34" width="250" height="40" rx="5"
+              fill="color-mix(in srgb, var(--accent) 14%, transparent)"
+              stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="376" y="52" fill="var(--ink)" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="12">/users/7</text>
+        <text x="376" y="67" fill="var(--muted)" font-size="10">đỉnh — đang thấy</text>
+
+        <rect x="360" y="86" width="250" height="40" rx="5"
+              fill="none" stroke="var(--rule)" stroke-width="1.5"/>
+        <text x="376" y="104" fill="var(--ink)" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="12">/users</text>
+        <text x="376" y="119" fill="var(--muted)" font-size="10">đáy — Back về đây</text>
+
+        <text x="360" y="152" fill="var(--muted)" font-size="11">Bạn không hề gọi push cho màn danh sách.</text>
+        <text x="360" y="170" fill="var(--muted)" font-size="11">Nó có mặt vì ':id' là con của '/users'.</text>
+
+        <line x1="8" y1="196" x2="632" y2="196" stroke="var(--rule)" stroke-width="1"/>
+
+        <text x="8" y="220" fill="var(--ink)" font-size="12">Deep link thẳng vào /users/7 cũng sinh ra đúng stack hai tầng này —</text>
+        <text x="8" y="238" fill="var(--ink)" font-size="12">nên bấm Back về danh sách, không văng ra ngoài app.</text>
+      </g>
+    </svg>
+    <figcaption>Quan hệ cha–con trong cây là thứ duy nhất quyết định Back đi về đâu.</figcaption>
+  </figure>
+
+  <h2>4. <code>go</code> khác <code>push</code></h2>
+
+  <p>
+    Hai hàm này trông giống nhau và đây là chỗ nhầm phổ biến nhất khi mới dùng
+    <code>go_router</code>.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Lệnh</th><th>Làm gì với stack</th><th>Dùng khi</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>context.go('/users/7')</code></td>
+        <td><strong>Thay</strong> cả stack bằng stack mà địa chỉ mới sinh ra</td>
+        <td>Đổi chỗ đứng: đăng nhập xong, đăng xuất, chuyển tab</td>
+      </tr>
+      <tr>
+        <td><code>context.push('/users/7')</code></td>
+        <td><strong>Chồng</strong> thêm một tầng lên stack đang có</td>
+        <td>Đi sâu vào trong một luồng đang dở</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Nhầm hai cái này chính là nguồn của triệu chứng “bấm Back ra màn lạ”. Dùng
+    <code>push</code> ở chỗ đáng lẽ phải <code>go</code> thì stack cứ dài mãi;
+    dùng <code>go</code> ở chỗ đáng lẽ <code>push</code> thì Back nhảy cóc.
+  </p>
+
+  <h2>5. Đường không tồn tại</h2>
+
+  <p>
+    Với <code>Navigator</code>, gõ sai đường không phải chuyện — vì chẳng có
+    đường nào để gõ. Với router thì có, nên phải có chỗ đỡ:
+  </p>
+
+  <pre><code>GoRouter(
+  routes: …,
+  errorBuilder: (BuildContext context, GoRouterState state) =&gt;
+      NotFoundScreen(location: state.uri.toString()),
+);</code></pre>
+
+  <p>
+    Thiếu <code>errorBuilder</code> thì <code>go_router</code> vẫn hiện một màn
+    lỗi mặc định — đọc được, nhưng xấu và bằng tiếng Anh. Một màn 404 tự viết
+    tốn năm dòng.
+  </p>
+
+  <h2>6. Auth guard đặt đúng một chỗ</h2>
+
+  <p>
+    <code>redirect</code> chạy <strong>trước mọi lần điều hướng</strong>, kể cả
+    lần đầu mở app và kể cả deep link. Trả về <code>null</code> nghĩa là
+    <em>cứ đi tiếp</em>; trả về một đường dẫn nghĩa là <em>đi chỗ khác</em>.
+  </p>
+
+  <pre><code>GoRouter(
+  redirect: (BuildContext context, GoRouterState state) {
+    final bool loggedIn = authState.isLoggedIn;
+    final bool goingToLogin = state.matchedLocation == '/login';
+
+    if (!loggedIn &amp;&amp; !goingToLogin) return '/login';
+
+    // Đã đăng nhập mà còn đứng ở /login thì đẩy vào trong.
+    if (loggedIn &amp;&amp; goingToLogin) return '/home';
+
+    return null;
+  },
+  routes: …,
+);</code></pre>
+
+  <div class="callout warn">
+    <span class="label">Vòng lặp vô hạn</span>
+    <p>
+      Bỏ mệnh đề <code>goingToLogin</code> đi thì chuyện này xảy ra: chưa đăng
+      nhập → đẩy về <code>/login</code> → <code>redirect</code> chạy lại cho
+      <code>/login</code> → vẫn chưa đăng nhập → đẩy về <code>/login</code> →…
+    </p>
+    <p>
+      <code>go_router</code> đếm số lần chuyển hướng liên tiếp và ném lỗi khi
+      vượt ngưỡng, nên bạn thấy màn lỗi chứ không thấy app treo. Điều kiện chặn
+      vòng lặp luôn có cùng một hình dạng: <strong>đích đến đã là nơi ta định
+      đẩy tới rồi thì thôi.</strong>
+    </p>
+  </div>
+
+  <p>
+    Vì sao không đặt <code>if (!loggedIn) return LoginScreen();</code> trong
+    <code>build</code> của từng màn? Vì bạn sẽ phải nhớ viết nó ở
+    <strong>mọi</strong> màn, và cái màn bạn quên chính là lỗ hổng. Còn
+    <code>redirect</code> là một cửa duy nhất mà mọi lần điều hướng đều phải đi
+    qua — kể cả lần bạn chưa nghĩ tới.
+  </p>
+
+  <h2>7. Thí nghiệm — làm trên lab</h2>
+
+  <p>
+    Mở <code>apps/03_navigation_lab</code>, vào màn <em>Route tree</em>.
+  </p>
+
+  <ol class="exp">
+    <li>
+      <p><strong>Gõ một id không tồn tại.</strong> Dùng ô nhập đường dẫn trong
+      lab, gõ <code>/users/999</code>.</p>
+      <p class="expect">Phải thấy: màn chi tiết vẫn mở, với id 999 và dữ liệu
+      rỗng. Path param <strong>không</strong> tự kiểm tra tính hợp lệ — đó là
+      việc của bạn. Giờ gõ <code>/khong-ton-tai</code>: mới ra màn 404.</p>
+    </li>
+    <li>
+      <p><strong>go rồi bấm Back.</strong> Từ danh sách, bấm một user (lab dùng
+      <code>go</code>), rồi bấm Back.</p>
+      <p class="expect">Phải thấy: về danh sách, không thoát app — dù bạn chưa
+      hề gọi <code>push</code> cho danh sách.</p>
+    </li>
+    <li>
+      <p><strong>Tắt công tắc đăng nhập</strong> rồi thử gõ
+      <code>/users/3</code>.</p>
+      <p class="expect">Phải thấy: bị đẩy về màn khoá. Bật lại công tắc → quay
+      về <strong>đúng</strong> <code>/users/3</code>, không phải trang chủ. Chỗ
+      đó lab lưu địa chỉ cũ vào query param <code>?from=</code>.</p>
+    </li>
+    <li>
+      <p><strong>Đổi <code>go</code> thành <code>push</code></strong> ở nút mở
+      user, hot reload, rồi bấm vào ba user liên tiếp.</p>
+      <p class="expect">Phải thấy: Back ba lần mới ra khỏi. Với <code>go</code>
+      thì một lần. Đây là toàn bộ khác biệt giữa hai hàm, nhìn tận mắt.</p>
+    </li>
+  </ol>
+
+  <div class="callout">
+    <span class="label">Nhớ một câu</span>
+    <p>
+      <strong>Với <code>Navigator</code> bạn dựng stack. Với
+      <code>go_router</code> bạn khai báo cây, và stack là thứ rơi ra từ địa chỉ
+      hiện tại.</strong> Mọi thứ khác — 404, auth guard, deep link — chỉ là hệ
+      quả của việc cái cây đó có thật.
+    </p>
+  </div>
+
+  <footer>
+    Nguồn chính thống:
+    <a href="https://pub.dev/packages/go_router">pub.dev — go_router</a> ·
+    <a href="https://docs.flutter.dev/ui/navigation/deep-linking">Flutter docs — Deep linking</a> ·
+    <a href="https://docs.flutter.dev/ui/navigation">Flutter docs — Navigation and routing</a>.
+    <br>
+    Bài trước: <a href="0007-navigator-la-mot-cai-stack.html">0007 — Navigator là một cái stack</a>.
+    <br>
+    Tiếp theo: <strong>0009</strong> — deep link, khi hệ điều hành gõ cửa app.
+  </footer>
+</div>
+
+</body>
+</html>
