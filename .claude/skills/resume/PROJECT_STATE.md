@@ -1,6 +1,6 @@
 # PROJECT STATE — Flutter Learning Workspace
 
-**Last synced commit:** `b72f8ae` — *commit ngay sau nó chỉ là chính lần sync này,
+**Last synced commit:** `cb8df11` — *commit ngay sau nó chỉ là chính lần sync này,
 không phải việc mới; đừng đi tìm thay đổi nào khác.*
 **Last synced:** 2026-09-22
 **Repo:** `/Users/maaitlunghau/Documents/SelfStudy/flutter` · branch `main` · working tree sạch
@@ -33,8 +33,9 @@ Neo cho mọi bài giảng: *thứ này giúp gì cho việc ship `userhub`?*
 **M00 ✅ · M01 ✅ · M02 ✅ · M03 ✅ 2026-09-21 · M04 ✅ 2026-09-22.**
 **Đang ở M05 — Async & tầng dữ liệu, chưa bắt đầu** (chưa có đề bài, chưa có lab).
 
-**M05 BỊ CHẶN: chưa có spec API Spring Boot.** Đây là lần đầu món nợ này thật sự
-chặn đường — xem mục *Nợ kỹ thuật*.
+**M05 hết chặn** — spec API đã có: `docs/reference/backend-api.md` (2026-09-22,
+backend commit `a873614`). Nhưng spec **bẻ lại hình dạng M05**: backend chưa có
+endpoint auth nào. Xem `PROGRESS.md` mục *Việc tiếp theo*.
 
 M03 chạy đủ 3 vòng + capstone + review: vòng 1 `Navigator` mệnh lệnh · vòng 2
 `go_router` (route tree, `:id`, màn 404, `redirect` làm auth guard) · vòng 3 deep
@@ -97,11 +98,12 @@ viết **hoàn chỉnh**, không TODO, không stub, chạy được ngay. Rồi 
 | `docs/reference/hot-reload-va-devtools.html` — cheat sheet M00 | xong |
 | `docs/reference/stateful-vong-doi-va-key.html` — cheat sheet M02 | xong, có mục *Giải phẫu một màn stateful* do người học tự vẽ |
 | `docs/reference/go-router.md` — cheat sheet M03 | xong, viết theo hướng áp dụng vào project thật |
+| `docs/reference/backend-api.md` — **spec API Spring Boot** | người học viết, copy từ repo backend. Nguồn sự thật ở repo kia — API đổi thì sửa bên đó rồi copy sang |
 | `docs/lessons/0010` Form/FormState/validator — **bài duy nhất của M04** | xong |
 | `docs/reference/forms-va-input.md` — cheat sheet M04 | xong, **thay cho hai bài `0011`/`0012` đã bỏ** |
 | `docs/learning-records/0001` thiếu Scaffold · `0002` didUpdateWidget | xong |
 
-`docs/learning-records/` có **2 file**, `docs/reference/` có **4**.
+`docs/learning-records/` có **2 file**, `docs/reference/` có **5**.
 
 **Đánh số bài giảng:** bài cuối là `0010`. Số kế tiếp là `0011` — dành cho M05,
 vì `0011`/`0012` của M04 đã bỏ chứ không phải đã dùng.
@@ -134,6 +136,9 @@ vì `0011`/`0012` của M04 đã bỏ chứ không phải đã dùng.
 | **Chuỗi UI trong `userhub` dùng tiếng Anh** | 2026-09-22 | Người học chọn khi thống nhất lại 5 màn đang lệch nhau. Tên người và `role` trong `fake_users.dart` vẫn tiếng Việt — đó là **dữ liệu**, không phải nhãn giao diện. Chưa phải i18n thật; i18n là M10. |
 | **Bỏ bài giảng khi code đã dạy đủ** | 2026-09-22 | Bài `0011` và `0012` của M04 bị bỏ hẳn: người học gọi *"code dùm tui"* nên cả 5 màn `practice/lib/m04/` được viết kèm doc comment dạy đúng nội dung hai bài đó. Phần tra cứu lại được dồn vào cheat sheet. **Số bài giảng kế tiếp là `0011`, dành cho M05.** Tiền lệ: khi người học đã đọc code và hiểu, bài giảng viết lại là thừa — hỏi trước khi viết. |
 | **`redirect` dùng khái niệm "đường công khai"** | 2026-09-22 | M04 thêm `/register`, và nó phải vào được khi chưa đăng nhập. Thay vì thêm nhánh `if`, đặt `isPublic = location == '/login' \|\| location == '/register'`. **Cả hai vế của `redirect` phải đổi theo** — quên vế `loggedIn && isPublic` thì người đã đăng nhập vào `/register` vẫn thấy form đăng ký. |
+| **M05 làm đủ, phần auth thì fake** | 2026-09-22 | Backend chưa có endpoint auth. Vẫn dựng `AuthRepository` + interceptor gắn `Authorization` đầy đủ, token do client tự sinh — khi backend có auth thật thì chỉ đổi một hàm. Nửa đọc dữ liệu (`GET /api/users`) là thật 100%. |
+| **Register giữ fake, không nối `POST /api/users`** | 2026-09-22 | Spec tự cảnh báo endpoint đó bắt client gửi `role` nên **về nghiệp vụ là admin-only** — nối vào màn tự đăng ký công khai là lỗ hổng leo thang đặc quyền, và là dạy thói quen sai. Chờ `/api/auth/register` thật. |
+| **`id` của user là UUID chuỗi, không phải `int`** | 2026-09-22 | Theo spec backend. `userhub` đang dùng `int` ở `fake_users.dart` và `int.tryParse` ở `user_detail_screen.dart` — phải sửa ở M05, kèm deep link `users/7` → `users/<uuid>` và Tiêu chí Xong của M03. |
 | **`userhub` không mang comment** | 2026-09-22 | Người học gỡ hết comment, kể cả comment mới Claude thêm ở từng lần sửa. **Claude không tự thêm comment vào `userhub` nữa.** Lưu ý: `CLAUDE.md` vẫn ghi "comment tiếng Việt ở mọi nơi, kể cả `userhub`" — hai thứ đang lệch nhau, chưa quyết sửa bên nào. |
 
 ---
@@ -142,9 +147,11 @@ vì `0011`/`0012` của M04 đã bỏ chứ không phải đã dùng.
 
 Danh sách đầy đủ ở `PROGRESS.md`. Cái **chặn tiến độ** chỉ có một:
 
-> **Chưa có spec API Spring Boot.** Cần trước khi vào **M05** (Async & tầng dữ
-> liệu): danh sách endpoint, hình dạng request/response, JWT thuần hay có refresh
-> token. Quyết định này ảnh hưởng kiến trúc `packages/api_client` ở M08.
+> **Backend chưa có module Auth.** Spec API đã có (hết chặn M05), nhưng
+> `SecurityConfig` đang `permitAll()` và **không có endpoint login/register/refresh
+> nào**. Hệ quả: `authState` của `userhub` vẫn fake sau M05, và **M08 cũng vướng**
+> — "refresh-token interceptor" là một trong bốn việc chính của module đó.
+> Chờ người học build module Auth bên Spring.
 
 Ngoài ra **chưa dựng Firebase project** — cần trước lab M12, và phải chốt xem
 `google-services.json` có commit hay không. Mặc định hiện tại là `.gitignore`.

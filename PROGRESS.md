@@ -23,9 +23,40 @@ lab `apps/04_forms_lab` 2 màn · `apps/practice/lib/m04/` 5 màn ·
 - [ ] Lab `apps/05_api_lab` — chưa tạo
 - [ ] Capstone: nối thật vào Spring API — login → JWT → `GET /users`
 
-> **CHẶN TIẾN ĐỘ: chưa có spec API Spring Boot.** Phải có trước khi bắt đầu M05:
-> danh sách endpoint, hình dạng request/response, JWT thuần hay có refresh token.
-> Quyết định này ảnh hưởng kiến trúc `packages/api_client` ở M08.
+> **Hết chặn — đã có spec API** ngày 2026-09-22:
+> [`docs/reference/backend-api.md`](docs/reference/backend-api.md), đối chiếu
+> backend commit `a873614` branch `feature/user-management`.
+
+**Nhưng spec bẻ lại hình dạng M05.** Roadmap ghi capstone là *"login → JWT →
+GET /users"*. Backend **chưa có endpoint auth nào** — không `/api/auth/login`,
+không register, không refresh; `SecurityConfig` đang `permitAll()`.
+
+Hai quyết định chốt 2026-09-22:
+
+- **M05 vẫn làm đủ, phần auth thì fake.** Dựng `AuthRepository` và interceptor
+  gắn `Authorization` đầy đủ, nhưng token do client tự sinh. Khi backend có auth
+  thật thì chỉ đổi một hàm. Nửa đọc dữ liệu (`GET /api/users`) là thật 100%.
+- **Màn Register giữ fake, không nối vào `POST /api/users`.** Spec tự cảnh báo
+  endpoint đó bắt client gửi `role` nên **về nghiệp vụ là admin-only** — nối vào
+  màn tự đăng ký công khai là dạy một thói quen sai. Chờ `/api/auth/register`.
+
+### Spec làm lộ ra một chỗ phải sửa trong `userhub`
+
+**`id` của backend là UUID chuỗi**, `userhub` đang dùng `int`:
+
+| Chỗ | Hiện tại | Phải thành |
+|---|---|---|
+| `fake_users.dart` | `final int id` · `findUserById(int)` | `String` |
+| `user_detail_screen.dart` | `int.tryParse(userId)` | bỏ hẳn |
+| Deep link | `userhub:///users/7` | `userhub:///users/<uuid>` |
+| Tiêu chí Xong M03 | `users/7` | phải viết lại |
+
+May là `UserDetailScreen` đã nhận `String` thô ngay từ M03 — chỉ bỏ `int.tryParse`
+là xong, không phải sửa kiến trúc. Kèm theo: `name` → `fullName`, và thêm
+`enabled`, `imageUrl`, `emailVerified`…
+
+**M08 cũng bị ảnh hưởng:** "refresh-token interceptor" là một trong bốn việc
+chính của module đó, và nó cũng chờ backend Auth.
 
 Chạy bằng `/flutter-module 05`.
 
