@@ -42,6 +42,20 @@ class DatabaseHelper {
         $colIsFavorite INTEGER
       )
     ''');
+
+    // Thêm dữ liệu mẫu ban đầu như trong Figure 1
+    await db.insert(tableContacts, {
+      colName: 'Alex',
+      colPhone: '0123456789',
+      colEmail: 'alex@example.com',
+      colIsFavorite: 1,
+    });
+    await db.insert(tableContacts, {
+      colName: 'Paul',
+      colPhone: '0987654321',
+      colEmail: 'paul@example.com',
+      colIsFavorite: 0,
+    });
   }
 
   Future<List<Contact>> getAllContacts() async {
