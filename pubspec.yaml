@@ -14,3 +14,4 @@ workspace:
   - apps/practice
   - apps/userhub
   - apps/exam_practice
+  - apps/exam
