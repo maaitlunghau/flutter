@@ -2,7 +2,7 @@ class User {
   final int? id;
   final String name;
   final String password;
-  final int isActive; // 0 = inactive, 1 = active
+  final int isActive;
 
   const User({
     this.id,
