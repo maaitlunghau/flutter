@@ -69,9 +69,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
     });
   }
 
-  // Tạm để trống placeholder cho Step 4 & Step 5
   Future<void> _toggleFavorite(Contact contact) async {
-    // Sẽ hoàn thiện ở Step 4
+    if (contact.id == null) return;
+    final newFavorite = contact.isFavorite == 1 ? 0 : 1;
+    await _dbHelper.updateFavorite(contact.id!, newFavorite);
+    await _loadContacts();
   }
 
   void _showAddContactDialog() {
