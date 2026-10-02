@@ -77,78 +77,21 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   void _showAddContactDialog() {
-    final nameController = TextEditingController();
-    final phoneController = TextEditingController();
-    final emailController = TextEditingController();
-
     showDialog<void>(
       context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text(
-            'Add Contact',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: phoneController,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(labelText: 'Phone Number'),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                final name = nameController.text.trim();
-                final phone = phoneController.text.trim();
-                final email = emailController.text.trim();
-
-                if (name.isEmpty || phone.isEmpty) {
-                  return;
-                }
-
-                final newContact = Contact(
-                  name: name,
-                  phone: phone,
-                  email: email,
-                  isFavorite: 0,
-                );
-
-                await _dbHelper.insertContact(newContact);
-                if (!dialogContext.mounted) return;
-                Navigator.pop(dialogContext);
-                await _loadContacts();
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    ).whenComplete(() {
-      nameController.dispose();
-      phoneController.dispose();
-      emailController.dispose();
-    });
+      builder: (dialogContext) => _AddContactDialog(
+        onAdd: (name, phone, email) async {
+          final newContact = Contact(
+            name: name,
+            phone: phone,
+            email: email,
+            isFavorite: 0,
+          );
+          await _dbHelper.insertContact(newContact);
+          await _loadContacts();
+        },
+      ),
+    );
   }
 
   Widget _buildContactList(List<Contact> contacts) {
@@ -217,6 +160,91 @@ class _ContactsScreenState extends State<ContactsScreen> {
           child: const Icon(Icons.add),
         ),
       ),
+    );
+  }
+}
+
+class _AddContactDialog extends StatefulWidget {
+  final Future<void> Function(String name, String phone, String email) onAdd;
+
+  const _AddContactDialog({required this.onAdd});
+
+  @override
+  State<_AddContactDialog> createState() => _AddContactDialogState();
+}
+
+class _AddContactDialogState extends State<_AddContactDialog> {
+  late final TextEditingController _nameController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _emailController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _emailController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        'Add Contact',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(labelText: 'Phone Number'),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            final name = _nameController.text.trim();
+            final phone = _phoneController.text.trim();
+            final email = _emailController.text.trim();
+
+            if (name.isEmpty || phone.isEmpty) {
+              return;
+            }
+
+            Navigator.pop(context);
+            await widget.onAdd(name, phone, email);
+          },
+          child: const Text('Add'),
+        ),
+      ],
     );
   }
 }
