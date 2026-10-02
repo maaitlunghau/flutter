@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() => _errorMessage = null);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const UserListsScreen()),
+        MaterialPageRoute(builder: (_) => UserListsScreen(currentUser: user)),
       );
     } else {
       _showError('Invalid username/password or User has been Lock!');
