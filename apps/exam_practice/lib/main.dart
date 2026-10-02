@@ -77,7 +77,78 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   void _showAddContactDialog() {
-    // Sẽ hoàn thiện ở Step 5
+    final nameController = TextEditingController();
+    final phoneController = TextEditingController();
+    final emailController = TextEditingController();
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text(
+            'Add Contact',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(labelText: 'Phone Number'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final name = nameController.text.trim();
+                final phone = phoneController.text.trim();
+                final email = emailController.text.trim();
+
+                if (name.isEmpty || phone.isEmpty) {
+                  return;
+                }
+
+                final newContact = Contact(
+                  name: name,
+                  phone: phone,
+                  email: email,
+                  isFavorite: 0,
+                );
+
+                await _dbHelper.insertContact(newContact);
+                if (!dialogContext.mounted) return;
+                Navigator.pop(dialogContext);
+                await _loadContacts();
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    ).whenComplete(() {
+      nameController.dispose();
+      phoneController.dispose();
+      emailController.dispose();
+    });
   }
 
   Widget _buildContactList(List<Contact> contacts) {
